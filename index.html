@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeoBall — Collectif d'Éducateurs Sportifs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════════════ */
+:root {
+  --ardoise:   #1C2B35;
+  --ardoise2:  #2E4555;
+  --ardoise3:  #3D5F74;
+  --vert:      #00A878;
+  --vert2:     #00C98E;
+  --vert-pale: #72D6B8;
+  --vert-fond: #E0EDE8;
+  --creme:     #F2F7F5;
+  --blanc:     #ffffff;
+  --noir:      #18252E;
+  --gris:      #8CA8B5;
+  --gris2:     #C8DDD8;
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --radius:    12px;
+  --radius-lg: 20px;
+  --shadow:    0 4px 24px rgba(28,43,53,0.10);
+  --shadow-lg: 0 12px 48px rgba(28,43,53,0.18);
+  --nav-h:     72px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--blanc);
+  color: var(--noir);
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  background: rgba(28,43,53,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,168,120,0.2);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5vw;
+  transition: all .3s;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.6rem; font-weight: 800;
+  color: var(--blanc); text-decoration: none; letter-spacing: -0.03em;
+}
+.nav-logo span { color: var(--vert); }
+.nav-links {
+  display: flex; gap: 2rem; list-style: none; align-items: center;
+}
+.nav-links a {
+  font-family: var(--font-body); font-size: .9rem; font-weight: 500;
+  color: var(--gris); text-decoration: none;
+  transition: color .2s; padding: 4px 0;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 2px; background: var(--vert); transform: scaleX(0);
+  transition: transform .25s; transform-origin: left;
+}
+.nav-links a:hover { color: var(--blanc); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-cta {
+  background: var(--vert); color: var(--ardoise) !important;
+  padding: 8px 20px !important; border-radius: 50px;
+  font-weight: 700 !important;
+  transition: background .2s, transform .2s !important;
+}
+.nav-cta:hover { background: var(--vert2) !important; transform: translateY(-1px); }
+.nav-cta::after { display: none !important; }
+.nav-links a.nav-active { color: var(--blanc); }
+.nav-links a.nav-active::after { transform: scaleX(1); }
+.hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+.hamburger span { width: 24px; height: 2px; background: var(--blanc); transition: .3s; }
+
+/* ═══════════════════════════════════════════
+   SECTIONS LAYOUT
+═══════════════════════════════════════════ */
+section { display: none; }
+section.active { display: block; }
+.page-wrap { padding-top: var(--nav-h); min-height: 100vh; }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  min-height: calc(100vh - var(--nav-h));
+  background: var(--ardoise);
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: 4rem;
+  padding: 6rem 5vw 4rem;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -20%; right: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,168,120,.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -10%; left: 20%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(0,168,120,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,168,120,.15); border: 1px solid rgba(0,168,120,.4);
+  color: var(--vert); font-size: .8rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 50px; margin-bottom: 1.5rem;
+  letter-spacing: .05em; text-transform: uppercase;
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--vert); animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 800; line-height: 1.05;
+  color: var(--blanc); letter-spacing: -0.03em; margin-bottom: 1.5rem;
+}
+.hero h1 em { color: var(--vert); font-style: normal; }
+.hero p {
+  color: var(--gris); font-size: 1.1rem; line-height: 1.7;
+  max-width: 480px; margin-bottom: 2.5rem;
+}
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 50px;
+  font-family: var(--font-body); font-size: .95rem; font-weight: 600;
+  text-decoration: none; transition: all .25s; cursor: pointer; border: none;
+}
+.btn-primary { background: var(--vert); color: var(--ardoise); }
+.btn-primary:hover { background: var(--vert2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,168,120,.35); }
+.btn-outline { background: transparent; color: var(--blanc); border: 1.5px solid rgba(255,255,255,.25); }
+.btn-outline:hover { border-color: var(--vert); color: var(--vert); transform: translateY(-2px); }
+.hero-visual {
+  display: flex; flex-direction: column; gap: 1rem; position: relative;
+}
+.hero-stats {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
+}
+.stat-card {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); padding: 1.25rem 1rem;
+  text-align: center; backdrop-filter: blur(8px);
+  transition: border-color .3s, background .3s;
+}
+.stat-card:hover { border-color: rgba(0,168,120,.4); background: rgba(0,168,120,.06); }
+.stat-num {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+  color: var(--vert); display: block; line-height: 1;
+}
+.stat-label { font-size: .8rem; color: var(--gris); margin-top: .4rem; }
+.sports-ticker {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); padding: 1rem 1.25rem;
+  overflow: hidden;
+}
+.ticker-label { font-size: .7rem; color: var(--vert); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .5rem; }
+.ticker-track {
+  display: flex; gap: 1rem;
+  animation: ticker 18s linear infinite;
+  white-space: nowrap;
+}
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.ticker-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,168,120,.12); border: 1px solid rgba(0,168,120,.25);
+  color: var(--vert-pale); font-size: .85rem; font-weight: 500;
+  padding: 5px 14px; border-radius: 50px; flex-shrink: 0;
+}
+.hero-guarantees {
+  display: flex; flex-direction: column; gap: .6rem;
+}
+.guarantee {
+  display: flex; align-items: center; gap: .75rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px; padding: .7rem 1rem;
+  font-size: .88rem; color: var(--gris);
+}
+.guarantee-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0,168,120,.15); border: 1px solid rgba(0,168,120,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   SPORTS PAGE
+═══════════════════════════════════════════ */
+.sports-hero {
+  background: var(--ardoise);
+  padding: 5rem 5vw 3rem;
+  text-align: center;
+}
+.sports-hero h2 {
+  font-family: var(--font-display); font-size: clamp(2rem,4vw,3.2rem);
+  font-weight: 800; color: var(--blanc); letter-spacing: -0.03em; margin-bottom: 1rem;
+}
+.sports-hero h2 span { color: var(--vert); }
+.sports-hero p { color: var(--gris); font-size: 1.05rem; max-width: 560px; margin: 0 auto 2rem; }
+.sports-tabs {
+  display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap;
+  padding: 0 5vw 2rem;
+  background: var(--ardoise);
+}
+.sport-tab {
+  padding: 8px 20px; border-radius: 50px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+  color: var(--gris); font-size: .88rem; font-weight: 500;
+  cursor: pointer; transition: all .2s;
+}
+.sport-tab:hover { border-color: var(--vert); color: var(--vert-pale); }
+.sport-tab.active {
+  background: var(--vert); border-color: var(--vert);
+  color: var(--ardoise); font-weight: 700;
+}
+.sports-content { padding: 3rem 5vw; background: var(--creme); }
+.sport-detail { display: none; animation: fadeIn .35s ease; }
+.sport-detail.active { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.sport-info h3 {
+  font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+  color: var(--ardoise); letter-spacing: -0.03em; margin-bottom: .5rem;
+}
+.sport-origin {
+  display: inline-block; background: var(--vert); color: var(--ardoise);
+  font-size: .78rem; font-weight: 700; padding: 3px 12px; border-radius: 50px;
+  margin-bottom: 1.25rem; letter-spacing: .04em; text-transform: uppercase;
+}
+.sport-info p { color: var(--ardoise2); line-height: 1.75; margin-bottom: 1.5rem; }
+.sport-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1.5rem;
+}
+.meta-item {
+  background: var(--blanc); border: 1px solid var(--gris2);
+  border-radius: var(--radius); padding: .875rem;
+}
+.meta-label { font-size: .72rem; font-weight: 700; color: var(--vert); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .25rem; }
+.meta-value { font-size: .9rem; color: var(--ardoise); font-weight: 500; }
+.sport-rules h4 {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+  color: var(--ardoise); margin-bottom: .75rem;
+}
+.rules-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+.rules-list li {
+  display: flex; gap: .75rem; align-items: flex-start;
+  font-size: .9rem; color: var(--ardoise2); line-height: 1.5;
+}
+.rules-list li::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--vert); flex-shrink: 0; margin-top: 6px;
+}
+.sport-video-wrap {
+  position: sticky; top: calc(var(--nav-h) + 1rem);
+}
+.video-container {
+  background: var(--ardoise); border-radius: var(--radius-lg);
+  overflow: hidden; aspect-ratio: 16/9;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; cursor: pointer;
+  box-shadow: var(--shadow-lg);
+}
+.video-placeholder {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 1rem; padding: 2rem;
+  text-align: center;
+}
+.play-btn {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--vert); display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; transition: transform .25s, box-shadow .25s;
+}
+.video-container:hover .play-btn {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 12px rgba(0,168,120,.2);
+}
+.video-title { color: var(--blanc); font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+.video-sub { color: var(--gris); font-size: .85rem; }
+.video-frame { width: 100%; height: 100%; border: none; }
+.video-note {
+  margin-top: 1rem; background: var(--blanc);
+  border: 1px solid var(--gris2); border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  font-size: .85rem; color: var(--ardoise2); line-height: 1.5;
+}
+.video-note strong { color: var(--vert); }
+.sports-avenir {
+  padding: 3rem 5vw; background: var(--ardoise);
+}
+.avenir-title {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 700;
+  color: var(--blanc); margin-bottom: .5rem;
+}
+.avenir-sub { color: var(--gris); font-size: .9rem; margin-bottom: 1.5rem; }
+.avenir-grid { display: flex; flex-wrap: wrap; gap: .75rem; }
+.avenir-card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); padding: .875rem 1.25rem;
+  transition: border-color .2s, background .2s;
+}
+.avenir-card:hover { border-color: var(--vert); background: rgba(0,168,120,.06); }
+.avenir-card-name { font-weight: 700; color: var(--blanc); font-size: .95rem; margin-bottom: .25rem; }
+.avenir-card-desc { color: var(--gris); font-size: .8rem; }
+
+/* ═══════════════════════════════════════════
+   ÉQUIPE
+═══════════════════════════════════════════ */
+.team-hero {
+  background: var(--ardoise); padding: 5rem 5vw 4rem; text-align: center;
+}
+.team-hero h2 {
+  font-family: var(--font-display); font-size: clamp(2rem,4vw,3rem);
+  font-weight: 800; color: var(--blanc); letter-spacing: -0.03em; margin-bottom: 1rem;
+}
+.team-hero h2 span { color: var(--vert); }
+.team-hero p { color: var(--gris); max-width: 520px; margin: 0 auto; line-height: 1.7; }
+.team-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2rem; padding: 4rem 5vw; background: var(--creme);
+}
+.member-card {
+  background: var(--blanc); border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow);
+  transition: transform .3s, box-shadow .3s;
+}
+.member-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.member-top {
+  background: var(--ardoise); padding: 2rem 1.5rem 1.5rem;
+  text-align: center; position: relative;
+}
+.member-avatar {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--vert), var(--ardoise2));
+  margin: 0 auto 1rem;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;
+  color: var(--blanc); border: 3px solid rgba(0,168,120,.4);
+}
+.member-name {
+  font-family: var(--font-display); font-size: 1.2rem; font-weight: 800;
+  color: var(--blanc); margin-bottom: .25rem;
+}
+.member-role {
+  display: inline-block; background: rgba(0,168,120,.15);
+  border: 1px solid rgba(0,168,120,.3); color: var(--vert);
+  font-size: .78rem; font-weight: 600; padding: 3px 12px; border-radius: 50px;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.member-body { padding: 1.5rem; }
+.diplomes-list { list-style: none; margin-bottom: 1.25rem; }
+.diplomes-list li {
+  display: flex; gap: .6rem; align-items: center;
+  font-size: .9rem; color: var(--ardoise2); padding: .4rem 0;
+  border-bottom: 1px solid var(--vert-fond);
+}
+.diplomes-list li:last-child { border-bottom: none; }
+.diplomes-list li::before {
+  content: ''; width: 8px; height: 8px; border-radius: 2px;
+  background: var(--vert); flex-shrink: 0;
+}
+.member-desc { font-size: .88rem; color: var(--ardoise3); line-height: 1.65; }
+.certifs {
+  display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem;
+}
+.certif-badge {
+  background: var(--creme); border: 1px solid var(--gris2);
+  color: var(--ardoise2); font-size: .75rem; font-weight: 600;
+  padding: 4px 10px; border-radius: 50px;
+}
+.team-values {
+  padding: 4rem 5vw; background: var(--ardoise);
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem;
+}
+.value-card {
+  border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius);
+  padding: 1.75rem; transition: border-color .3s;
+}
+.value-card:hover { border-color: var(--vert); }
+.value-icon { font-size: 2rem; margin-bottom: 1rem; }
+.value-title {
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+  color: var(--blanc); margin-bottom: .5rem;
+}
+.value-text { color: var(--gris); font-size: .9rem; line-height: 1.65; }
+
+/* ═══════════════════════════════════════════
+   FORMULES
+═══════════════════════════════════════════ */
+.formules-hero {
+  background: var(--ardoise); padding: 5rem 5vw 4rem; text-align: center;
+}
+.formules-hero h2 {
+  font-family: var(--font-display); font-size: clamp(2rem,4vw,3rem);
+  font-weight: 800; color: var(--blanc); letter-spacing: -0.03em; margin-bottom: 1rem;
+}
+.formules-hero h2 span { color: var(--vert); }
+.formules-hero p { color: var(--gris); max-width: 520px; margin: 0 auto; line-height: 1.7; }
+.formules-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2rem; padding: 4rem 5vw; background: var(--creme);
+}
+.formule-card {
+  background: var(--blanc); border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow); position: relative;
+  transition: transform .3s, box-shadow .3s;
+  display: flex; flex-direction: column;
+}
+.formule-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.formule-card.featured { border: 2px solid var(--vert); }
+.featured-badge {
+  position: absolute; top: -1px; right: 24px;
+  background: var(--vert); color: var(--ardoise);
+  font-size: .72rem; font-weight: 800; padding: 4px 14px;
+  border-radius: 0 0 8px 8px; text-transform: uppercase; letter-spacing: .05em;
+}
+.formule-header { background: var(--ardoise); padding: 1.75rem 1.5rem; }
+.formule-header.green { background: var(--vert); }
+.formule-titre {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+  color: var(--blanc); margin-bottom: .25rem;
+}
+.formule-header.green .formule-titre { color: var(--ardoise); }
+.formule-sous { color: var(--vert-pale); font-size: .88rem; }
+.formule-header.green .formule-sous { color: rgba(28,43,53,.7); }
+.formule-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+.formule-items { list-style: none; margin-bottom: 1.5rem; flex: 1; }
+.formule-items li {
+  display: flex; gap: .75rem; align-items: flex-start;
+  padding: .5rem 0; border-bottom: 1px solid var(--vert-fond);
+  font-size: .9rem; color: var(--ardoise2); line-height: 1.4;
+}
+.formule-items li:last-child { border-bottom: none; }
+.check { color: var(--vert); font-weight: 800; font-size: 1rem; flex-shrink: 0; }
+.formule-note {
+  background: var(--creme); border-radius: 8px;
+  padding: .875rem 1rem; font-size: .82rem; color: var(--ardoise3);
+  margin-bottom: 1.25rem; line-height: 1.5;
+}
+.formule-tarif {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 800;
+  color: var(--vert); margin-bottom: 1rem;
+}
+.formule-tarif span { font-size: .85rem; font-weight: 400; color: var(--gris); }
+.garanties-section { padding: 4rem 5vw; background: var(--ardoise); }
+.garanties-title {
+  font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+  color: var(--blanc); text-align: center; margin-bottom: 2.5rem;
+}
+.garanties-title span { color: var(--vert); }
+.garanties-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem;
+}
+.garantie-item {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); padding: 1.25rem;
+  display: flex; gap: 1rem; align-items: flex-start;
+  transition: border-color .2s;
+}
+.garantie-item:hover { border-color: var(--vert); }
+.garantie-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(0,168,120,.15); border: 1px solid rgba(0,168,120,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.garantie-title { font-weight: 700; color: var(--blanc); font-size: .9rem; margin-bottom: .3rem; }
+.garantie-desc { color: var(--gris); font-size: .82rem; line-height: 1.5; }
+
+/* ═══════════════════════════════════════════
+   SIMULATEUR
+═══════════════════════════════════════════ */
+.devis-hero {
+  background: var(--ardoise); padding: 5rem 5vw 4rem; text-align: center;
+}
+.devis-hero h2 {
+  font-family: var(--font-display); font-size: clamp(2rem,4vw,3rem);
+  font-weight: 800; color: var(--blanc); letter-spacing: -0.03em; margin-bottom: 1rem;
+}
+.devis-hero h2 span { color: var(--vert); }
+.devis-hero p { color: var(--gris); max-width: 520px; margin: 0 auto; line-height: 1.7; }
+.devis-layout {
+  display: grid; grid-template-columns: 1fr 420px;
+  gap: 3rem; padding: 4rem 5vw; background: var(--creme);
+  align-items: start;
+}
+.devis-form-section h3 {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+  color: var(--ardoise); margin-bottom: 2rem;
+}
+.form-group { margin-bottom: 2rem; }
+.form-label {
+  display: block; font-weight: 600; font-size: .9rem;
+  color: var(--ardoise); margin-bottom: .75rem;
+}
+.form-label span { color: var(--vert); }
+.slider-wrap { position: relative; }
+.range-slider {
+  width: 100%; height: 6px; -webkit-appearance: none;
+  background: linear-gradient(to right, var(--vert) 0%, var(--vert) var(--val, 50%), var(--gris2) var(--val, 50%));
+  border-radius: 3px; outline: none; cursor: pointer;
+}
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px;
+  border-radius: 50%; background: var(--vert);
+  box-shadow: 0 2px 8px rgba(0,168,120,.4); cursor: pointer;
+  border: 3px solid var(--blanc);
+}
+.slider-value {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+  color: var(--vert); text-align: right; margin-top: .5rem;
+}
+.devis-result {
+  background: var(--ardoise); border-radius: var(--radius-lg);
+  padding: 2rem; position: sticky; top: calc(var(--nav-h) + 1rem);
+  box-shadow: var(--shadow-lg);
+}
+.result-title {
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+  color: var(--blanc); margin-bottom: 1.5rem; padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.result-rows { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.5rem; }
+.result-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .9rem;
+}
+.result-row-label { color: var(--gris); }
+.result-row-val { color: var(--blanc); font-weight: 600; }
+.result-sep { height: 1px; background: rgba(255,255,255,.1); margin: .5rem 0; }
+.result-total {
+  background: rgba(0,168,120,.12); border: 1px solid rgba(0,168,120,.3);
+  border-radius: var(--radius); padding: 1.25rem;
+  text-align: center; margin-bottom: 1.5rem;
+}
+.result-total-label { color: var(--vert-pale); font-size: .85rem; margin-bottom: .5rem; }
+.result-total-price {
+  font-family: var(--font-display); font-size: 2.4rem; font-weight: 800;
+  color: var(--vert); line-height: 1;
+}
+.result-total-sub { color: var(--gris); font-size: .78rem; margin-top: .4rem; }
+.result-note {
+  font-size: .78rem; color: var(--gris); line-height: 1.5;
+  border-top: 1px solid rgba(255,255,255,.08); padding-top: 1rem;
+}
+
+/* ═══════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════ */
+.contact-layout {
+  display: grid; grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - var(--nav-h));
+}
+.contact-left {
+  background: var(--ardoise); padding: 5rem 4vw;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.contact-left h2 {
+  font-family: var(--font-display); font-size: clamp(2rem,3.5vw,2.8rem);
+  font-weight: 800; color: var(--blanc); letter-spacing: -0.03em; margin-bottom: 1rem;
+}
+.contact-left h2 span { color: var(--vert); }
+.contact-left p { color: var(--gris); line-height: 1.75; margin-bottom: 2.5rem; }
+.contact-infos { display: flex; flex-direction: column; gap: 1.25rem; }
+.contact-info-item { display: flex; gap: 1rem; align-items: center; }
+.contact-info-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(0,168,120,.15); border: 1px solid rgba(0,168,120,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+.contact-info-label { font-size: .75rem; color: var(--gris); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+.contact-info-val { font-size: .95rem; color: var(--blanc); font-weight: 500; }
+.demo-banner {
+  margin-top: 2.5rem;
+  background: linear-gradient(135deg, rgba(0,168,120,.15), rgba(0,168,120,.05));
+  border: 1px solid rgba(0,168,120,.3); border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+}
+.demo-banner h4 {
+  font-family: var(--font-display); font-weight: 700; color: var(--vert);
+  margin-bottom: .5rem; font-size: 1rem;
+}
+.demo-banner p { color: var(--gris); font-size: .85rem; line-height: 1.6; margin-bottom: 0; }
+.contact-right {
+  background: var(--creme); padding: 5rem 4vw;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.contact-right h3 {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 800;
+  color: var(--ardoise); margin-bottom: 2rem;
+}
+.form-field { margin-bottom: 1.25rem; }
+.form-field label {
+  display: block; font-size: .85rem; font-weight: 600;
+  color: var(--ardoise); margin-bottom: .5rem;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%; padding: .875rem 1rem;
+  border: 1.5px solid var(--gris2); border-radius: var(--radius);
+  background: var(--blanc); color: var(--ardoise);
+  font-family: var(--font-body); font-size: .9rem;
+  transition: border-color .2s, box-shadow .2s; outline: none;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--vert);
+  box-shadow: 0 0 0 3px rgba(0,168,120,.12);
+}
+.form-field textarea { resize: vertical; min-height: 110px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-submit {
+  width: 100%; padding: 1rem; border-radius: 50px;
+  background: var(--vert); color: var(--ardoise);
+  font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+  border: none; cursor: pointer; transition: all .25s;
+  margin-top: .5rem;
+}
+.form-submit:hover {
+  background: var(--vert2); transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,168,120,.3);
+}
+.form-success { display: none; text-align: center; padding: 2rem; }
+.form-success.show { display: block; animation: fadeIn .4s ease; }
+.success-icon { font-size: 3rem; margin-bottom: 1rem; }
+.success-title {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+  color: var(--ardoise); margin-bottom: .5rem;
+}
+
+/* ═══════════════════════════════════════════
+   FAQ
+═══════════════════════════════════════════ */
+.faq-section { padding: 4rem 5vw; background: var(--ardoise); }
+.faq-title {
+  font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+  color: var(--blanc); text-align: center; margin-bottom: 2.5rem;
+}
+.faq-title span { color: var(--vert); }
+.faq-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 900px; margin: 0 auto;
+}
+.faq-item {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); overflow: hidden;
+  transition: border-color .2s;
+}
+.faq-item:hover { border-color: rgba(0,168,120,.3); }
+.faq-q {
+  padding: 1rem 1.25rem; font-weight: 600; color: var(--blanc);
+  font-size: .9rem; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: .5rem;
+}
+.faq-arrow { color: var(--vert); font-size: 1.2rem; transition: transform .25s; flex-shrink: 0; }
+.faq-item.open .faq-arrow { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s ease, padding .35s;
+  color: var(--gris); font-size: .87rem; line-height: 1.65;
+  padding: 0 1.25rem;
+}
+.faq-item.open .faq-a { max-height: 200px; padding: 0 1.25rem 1rem; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  background: var(--noir); padding: 3rem 5vw 1.5rem;
+  border-top: 1px solid rgba(0,168,120,.2);
+}
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem; margin-bottom: 2.5rem;
+}
+.footer-brand .brand-name {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 800;
+  color: var(--blanc); margin-bottom: .75rem;
+}
+.footer-brand .brand-name span { color: var(--vert); }
+.footer-brand p { color: var(--gris); font-size: .88rem; line-height: 1.65; max-width: 300px; }
+.footer-col h4 {
+  font-family: var(--font-display); font-weight: 700; color: var(--blanc);
+  font-size: .95rem; margin-bottom: 1rem;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+.footer-col ul a {
+  color: var(--gris); text-decoration: none; font-size: .88rem;
+  transition: color .2s;
+}
+.footer-col ul a:hover { color: var(--vert); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.08); padding-top: 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy { color: var(--gris); font-size: .82rem; }
+.footer-email {
+  color: var(--vert); text-decoration: none; font-size: .88rem; font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════
+   SIMULATEUR MULTI-CRÉNEAUX
+═══════════════════════════════════════════ */
+.creneau-card {
+  background: var(--blanc); border: 1.5px solid var(--gris2);
+  border-radius: var(--radius-lg); padding: 1.5rem;
+  margin-bottom: 1rem; position: relative;
+  transition: border-color .25s, box-shadow .25s;
+}
+.creneau-card:hover { border-color: var(--vert); box-shadow: var(--shadow); }
+.creneau-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.creneau-num { display: flex; align-items: center; gap: .6rem; }
+.creneau-badge {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--vert); color: var(--ardoise);
+  font-family: var(--font-display); font-size: .85rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.creneau-title-input {
+  border: none; outline: none; background: transparent;
+  font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+  color: var(--ardoise); width: 200px;
+}
+.creneau-title-input::placeholder { color: var(--gris); }
+.creneau-delete {
+  background: none; border: 1px solid var(--gris2); color: var(--gris);
+  width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+  font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.creneau-delete:hover { background: #fee; border-color: #fbb; color: #c44; }
+.creneau-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.creneau-field label {
+  display: block; font-size: .78rem; font-weight: 700; color: var(--vert);
+  text-transform: uppercase; letter-spacing: .05em; margin-bottom: .4rem;
+}
+.creneau-select, .creneau-input-num {
+  width: 100%; padding: .6rem .875rem;
+  border: 1.5px solid var(--gris2); border-radius: 8px;
+  background: var(--creme); color: var(--ardoise);
+  font-family: var(--font-body); font-size: .9rem;
+  outline: none; transition: border-color .2s;
+}
+.creneau-select:focus, .creneau-input-num:focus { border-color: var(--vert); }
+.creneau-cost {
+  margin-top: 1rem; padding: .75rem 1rem;
+  background: rgba(0,168,120,.06); border: 1px solid rgba(0,168,120,.2);
+  border-radius: 8px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .88rem;
+}
+.creneau-cost-label { color: var(--ardoise2); }
+.creneau-cost-val { font-family: var(--font-display); font-weight: 800; color: var(--vert); font-size: 1rem; }
+.result-creneau-row {
+  padding: .6rem 0; border-bottom: 1px solid rgba(255,255,255,.08);
+  font-size: .85rem;
+}
+.result-creneau-row:last-child { border-bottom: none; }
+.rcr-name { color: var(--blanc); font-weight: 600; margin-bottom: .2rem; }
+.rcr-detail { color: var(--gris); font-size: .78rem; }
+.rcr-total { color: var(--vert); font-weight: 700; float: right; }
+.empty-state {
+  text-align: center; padding: 3rem 1rem;
+  border: 2px dashed var(--gris2); border-radius: var(--radius-lg);
+  color: var(--gris);
+}
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: .5; }
+.empty-state p { font-size: .9rem; line-height: 1.6; }
+
+/* ═══════════════════════════════════════════
+   MOBILE NAV
+═══════════════════════════════════════════ */
+.mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 99;
+  background: var(--ardoise); padding: calc(var(--nav-h) + 2rem) 5vw 2rem;
+  flex-direction: column; gap: 1.5rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 700;
+  color: var(--blanc); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.1);
+  padding-bottom: 1rem;
+}
+.mobile-menu a:hover { color: var(--vert); }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 3rem 5vw; }
+  .hero-visual { display: none; }
+  .sport-detail.active { grid-template-columns: 1fr; }
+  .sport-video-wrap { position: static; }
+  .team-grid { grid-template-columns: 1fr; }
+  .formules-grid { grid-template-columns: 1fr; }
+  .garanties-grid { grid-template-columns: 1fr 1fr; }
+  .devis-layout { grid-template-columns: 1fr; }
+  .devis-result { position: static; }
+  .contact-layout { grid-template-columns: 1fr; }
+  .contact-right { padding: 3rem 5vw; }
+  .faq-grid { grid-template-columns: 1fr; }
+  .team-values { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
+@media (max-width: 600px) {
+  .hero-stats { grid-template-columns: repeat(3,1fr); }
+  .garanties-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .creneau-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════ -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo" onclick="showPage('accueil');return false;">Neo<span>Ball</span></a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('accueil');return false;">Accueil</a></li>
+    <li><a href="#" onclick="showPage('sports');return false;">Sports</a></li>
+    <li><a href="#" onclick="showPage('equipe');return false;">Notre équipe</a></li>
+    <li><a href="#" onclick="showPage('formules');return false;">Formules</a></li>
+    <li><a href="#" onclick="showPage('devis');return false;">Simulateur</a></li>
+    <li><a href="#" onclick="showPage('contact');return false;" class="nav-cta">Nous contacter</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#" onclick="showPage('accueil');toggleMenu();return false;">Accueil</a>
+  <a href="#" onclick="showPage('sports');toggleMenu();return false;">Sports</a>
+  <a href="#" onclick="showPage('equipe');toggleMenu();return false;">Notre équipe</a>
+  <a href="#" onclick="showPage('formules');toggleMenu();return false;">Formules</a>
+  <a href="#" onclick="showPage('devis');toggleMenu();return false;">Simulateur de devis</a>
+  <a href="#" onclick="showPage('contact');toggleMenu();return false;">Nous contacter</a>
+</div>
+
+<div class="page-wrap">
+
+<!-- ═══════════════════════════════════════════
+     PAGE : ACCUEIL
+═══════════════════════════════════════════ -->
+<section id="page-accueil" class="active">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">Collectif sportif · Villeparisis (77)</div>
+      <h1>Des sports <em>innovants</em><br>pour vos habitants.</h1>
+      <p>NeoBall est un collectif de 3 éducateurs sportifs diplômés d'État. Nous apportons tout — matériel, pédagogie, communication. Aucune gestion pour la commune.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-primary" onclick="showPage('contact');return false;">Demander une démo gratuite →</a>
+        <a href="#" class="btn btn-outline" onclick="showPage('sports');return false;">Voir nos sports</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-num">3</span>
+          <div class="stat-label">Éducateurs diplômés d'État</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">5+</span>
+          <div class="stat-label">Sports innovants proposés</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">36</span>
+          <div class="stat-label">Participants max / séance</div>
+        </div>
+      </div>
+      <div class="sports-ticker">
+        <div class="ticker-label">Sports proposés</div>
+        <div class="ticker-track" id="ticker">
+          <span class="ticker-item">🏐 Spikeball</span>
+          <span class="ticker-item">🏈 Flag Football</span>
+          <span class="ticker-item">⚾ Strikeball</span>
+          <span class="ticker-item">🎯 Tchoukball</span>
+          <span class="ticker-item">💥 Dodgeball</span>
+          <span class="ticker-item">🔵 Kin-ball</span>
+          <span class="ticker-item">🏐 Spikeball</span>
+          <span class="ticker-item">🏈 Flag Football</span>
+          <span class="ticker-item">⚾ Strikeball</span>
+          <span class="ticker-item">🎯 Tchoukball</span>
+          <span class="ticker-item">💥 Dodgeball</span>
+          <span class="ticker-item">🔵 Kin-ball</span>
+        </div>
+      </div>
+      <div class="hero-guarantees">
+        <div class="guarantee">
+          <div class="guarantee-icon">🎒</div>
+          Matériel 100% fourni par NeoBall — rien à prévoir côté commune
+        </div>
+        <div class="guarantee">
+          <div class="guarantee-icon">🎓</div>
+          Licence + Master STAPS · PSC1 · Assurance RC Pro individuelle
+        </div>
+        <div class="guarantee">
+          <div class="guarantee-icon">📋</div>
+          Aucun emploi, aucune charge sociale — facturation directe
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE : SPORTS
+═══════════════════════════════════════════ -->
+<section id="page-sports">
+  <div class="sports-hero">
+    <h2>Nos <span>Sports Innovants</span></h2>
+    <p>Des disciplines encore rares en milieu municipal. Accessibles à tous, inclusives, sans expérience requise. Tout le matériel est fourni.</p>
+  </div>
+  <div class="sports-tabs">
+    <button class="sport-tab active" onclick="showSport('spikeball', this)">Spikeball</button>
+    <button class="sport-tab" onclick="showSport('strikeball', this)">Strikeball</button>
+    <button class="sport-tab" onclick="showSport('flagfootball', this)">Flag Football</button>
+    <button class="sport-tab" onclick="showSport('tchoukball', this)">Tchoukball</button>
+    <button class="sport-tab" onclick="showSport('dodgeball', this)">Dodgeball</button>
+  </div>
+  <div class="sports-content">
+
+    <!-- SPIKEBALL -->
+    <div id="sport-spikeball" class="sport-detail active">
+      <div class="sport-info">
+        <h3>Spikeball</h3>
+        <span class="sport-origin">🇺🇸 États-Unis · Dès 8 ans</span>
+        <p>Sport 2 contre 2 autour d'un filet circulaire tendu au sol. Les équipes se renvoient la balle en la frappant sur le filet. Ultra-dynamique, le Spikeball développe les réflexes, la coordination et l'esprit d'équipe dans un format compact idéal en intérieur comme en extérieur.</p>
+        <div class="sport-meta">
+          <div class="meta-item"><div class="meta-label">Format</div><div class="meta-value">2 vs 2</div></div>
+          <div class="meta-item"><div class="meta-label">Public</div><div class="meta-value">Dès 8 ans · Mixte</div></div>
+          <div class="meta-item"><div class="meta-label">Matériel</div><div class="meta-value">Filet + balle</div></div>
+          <div class="meta-item"><div class="meta-label">Espace</div><div class="meta-value">Intérieur / Extérieur</div></div>
+        </div>
+        <div class="sport-rules">
+          <h4>Règles simplifiées</h4>
+          <ul class="rules-list">
+            <li>Une équipe sert en frappant la balle sur le filet vers l'équipe adverse</li>
+            <li>L'équipe réceptrice a 3 touches pour renvoyer la balle sur le filet</li>
+            <li>La balle ne doit pas toucher le sol ni le rebord du filet</li>
+            <li>Pas de terrain délimité — on joue à 360° autour du filet</li>
+            <li>Partie en 21 points, avec 2 points d'écart pour gagner</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sport-video-wrap">
+        <div class="video-container" onclick="loadVideo(this, '')">
+          <div class="video-placeholder">
+            <div class="play-btn">▶</div>
+            <div class="video-title">Spikeball — Vidéo de présentation</div>
+            <div class="video-sub">Cliquez pour lancer la vidéo</div>
+          </div>
+        </div>
+        <div class="video-note">
+          <strong>En séance NeoBall :</strong> Nous démarrons par une initiation aux gestes de base, puis des matchs en rotation. Idéal pour créer de la dynamique et de la compétition amicale dès la première séance.
+        </div>
+      </div>
+    </div>
+
+    <!-- STRIKEBALL -->
+    <div id="sport-strikeball" class="sport-detail">
+      <div class="sport-info">
+        <h3>Strikeball</h3>
+        <span class="sport-origin">🏏 Collectif · Dès 12 ans</span>
+        <p>Jeu de balle alliant frappe, déplacement tactique et stratégie collective. Un joueur frappe la balle avec une batte, les autres équipes marquent en récupérant la balle ou en éliminant le frappeur. Facile à prendre en main, le Strikeball est idéal pour une première découverte sportive.</p>
+        <div class="sport-meta">
+          <div class="meta-item"><div class="meta-label">Format</div><div class="meta-value">2 équipes</div></div>
+          <div class="meta-item"><div class="meta-label">Public</div><div class="meta-value">Ados · Adultes</div></div>
+          <div class="meta-item"><div class="meta-label">Matériel</div><div class="meta-value">Batte + balle</div></div>
+          <div class="meta-item"><div class="meta-label">Espace</div><div class="meta-value">Gymnase / Extérieur</div></div>
+        </div>
+        <div class="sport-rules">
+          <h4>Règles simplifiées</h4>
+          <ul class="rules-list">
+            <li>Un joueur frappe la balle lancée par son propre équipier</li>
+            <li>Après la frappe, le frappeur court vers des bases délimitées</li>
+            <li>L'équipe adverse récupère la balle pour éliminer le coureur</li>
+            <li>Chaque base atteinte en sécurité rapporte des points</li>
+            <li>Rotation des rôles après chaque tour de frappe</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sport-video-wrap">
+        <div class="video-container" onclick="loadVideo(this, '')">
+          <div class="video-placeholder">
+            <div class="play-btn">▶</div>
+            <div class="video-title">Strikeball — Vidéo de présentation</div>
+            <div class="video-sub">Cliquez pour lancer la vidéo</div>
+          </div>
+        </div>
+        <div class="video-note">
+          <strong>En séance NeoBall :</strong> Discipline très adaptable selon le niveau. Parfaite pour mélanger des publics différents dans une même séance grâce à ses règles simples et intuitives.
+        </div>
+      </div>
+    </div>
+
+    <!-- FLAG FOOTBALL -->
+    <div id="sport-flagfootball" class="sport-detail">
+      <div class="sport-info">
+        <h3>Flag Football</h3>
+        <span class="sport-origin">🏈 Football sans contact · JO 2028 · Dès 8 ans</span>
+        <p>Version sans contact physique du football américain. Chaque joueur porte deux drapeaux à sa ceinture. Pour "tacler" l'adversaire, il suffit de lui arracher un drapeau. Sport en plein essor en France, il sera discipline olympique aux Jeux de Los Angeles 2028.</p>
+        <div class="sport-meta">
+          <div class="meta-item"><div class="meta-label">Format</div><div class="meta-value">5 vs 5</div></div>
+          <div class="meta-item"><div class="meta-label">Public</div><div class="meta-value">Dès 8 ans · Mixte</div></div>
+          <div class="meta-item"><div class="meta-label">Matériel</div><div class="meta-value">Flags + ballon ovale</div></div>
+          <div class="meta-item"><div class="meta-label">Espace</div><div class="meta-value">Terrain herbe / synthétique</div></div>
+        </div>
+        <div class="sport-rules">
+          <h4>Règles simplifiées</h4>
+          <ul class="rules-list">
+            <li>Chaque équipe tente de marquer un touchdown dans la zone adverse</li>
+            <li>Le porteur de balle est arrêté quand un adversaire lui arrache un flag</li>
+            <li>Aucun contact physique autorisé — sport 100% sans danger</li>
+            <li>4 tentatives pour progresser de 10 yards, sinon changement de possession</li>
+            <li>Adaptable en version simplifiée pour les plus jeunes</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sport-video-wrap">
+        <div class="video-container" onclick="loadVideo(this, 'https://www.youtube.com/embed/8m0B1TXmSvU')">
+          <div class="video-placeholder">
+            <div class="play-btn">▶</div>
+            <div class="video-title">Flag Football — Vidéo de présentation</div>
+            <div class="video-sub">Cliquez pour lancer la vidéo</div>
+          </div>
+        </div>
+        <div class="video-note">
+          <strong>En séance NeoBall :</strong> Nous proposons une initiation en 3 étapes : apprentissage des passes, travail défensif, puis matchs complets. Discipline très engageante qui crée une vraie cohésion d'équipe.
+        </div>
+      </div>
+    </div>
+
+    <!-- TCHOUKBALL -->
+    <div id="sport-tchoukball" class="sport-detail">
+      <div class="sport-info">
+        <h3>Tchoukball</h3>
+        <span class="sport-origin">🇨🇭 Suisse · 1970 · Tous publics</span>
+        <p>Inventé en 1970 par le biologiste suisse Hermann Brandt pour réduire les blessures sportives, le Tchoukball est un sport collectif non-violent. Les joueurs tirent sur un cadre élastique incliné ; la balle rebondit et doit atterrir dans une zone délimitée sans être rattrapée.</p>
+        <div class="sport-meta">
+          <div class="meta-item"><div class="meta-label">Format</div><div class="meta-value">2 équipes · 7 joueurs</div></div>
+          <div class="meta-item"><div class="meta-label">Public</div><div class="meta-value">Enfants · Ados · Adultes</div></div>
+          <div class="meta-item"><div class="meta-label">Matériel</div><div class="meta-value">Cadres élastiques + balle</div></div>
+          <div class="meta-item"><div class="meta-label">Valeur phare</div><div class="meta-value">Fair-play · Inclusion</div></div>
+        </div>
+        <div class="sport-rules">
+          <h4>Règles simplifiées</h4>
+          <ul class="rules-list">
+            <li>Les deux équipes partagent les deux cadres — chacune peut tirer sur n'importe quel cadre</li>
+            <li>Un point est marqué si la balle rebondit hors de la zone sans être rattrapée</li>
+            <li>Aucun contact défensif n'est autorisé — pas de blocage ni de tacle</li>
+            <li>Maximum 3 passes entre équipiers avant de tirer</li>
+            <li>Le porteur de balle ne peut pas se déplacer avec la balle</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sport-video-wrap">
+        <div class="video-container" onclick="loadVideo(this, 'https://www.youtube.com/embed/6YQDtQhbHBY')">
+          <div class="video-placeholder">
+            <div class="play-btn">▶</div>
+            <div class="video-title">Tchoukball — Vidéo de présentation</div>
+            <div class="video-sub">Cliquez pour lancer la vidéo</div>
+          </div>
+        </div>
+        <div class="video-note">
+          <strong>En séance NeoBall :</strong> Sport idéal pour mélanger les niveaux et les âges. Sa philosophie non-violente en fait un outil pédagogique excellent pour travailler l'esprit sportif et le fair-play.
+        </div>
+      </div>
+    </div>
+
+    <!-- DODGEBALL -->
+    <div id="sport-dodgeball" class="sport-detail">
+      <div class="sport-info">
+        <h3>Dodgeball</h3>
+        <span class="sport-origin">🌍 International · Dès 8 ans</span>
+        <p>Sport d'esquive en équipes avec des balles en mousse. Dynamique, stratégique et accessible à tous, le Dodgeball crée immédiatement de l'enthousiasme et de la cohésion dans le groupe. Idéal pour les séances festives et les événements.</p>
+        <div class="sport-meta">
+          <div class="meta-item"><div class="meta-label">Format</div><div class="meta-value">2 équipes · 6 joueurs</div></div>
+          <div class="meta-item"><div class="meta-label">Public</div><div class="meta-value">Dès 8 ans · Mixte</div></div>
+          <div class="meta-item"><div class="meta-label">Matériel</div><div class="meta-value">Balles mousse</div></div>
+          <div class="meta-item"><div class="meta-label">Espace</div><div class="meta-value">Gymnase</div></div>
+        </div>
+        <div class="sport-rules">
+          <h4>Règles simplifiées</h4>
+          <ul class="rules-list">
+            <li>Les deux équipes se font face, séparées par une ligne centrale</li>
+            <li>But : toucher les adversaires avec les balles pour les éliminer</li>
+            <li>Un joueur touché est éliminé mais peut être sauvé si un équipier attrape une balle</li>
+            <li>Attraper une balle lancée adverse élimine le lanceur</li>
+            <li>L'équipe qui élimine tous les adversaires gagne la manche</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sport-video-wrap">
+        <div class="video-container" onclick="loadVideo(this, '')">
+          <div class="video-placeholder">
+            <div class="play-btn">▶</div>
+            <div class="video-title">Dodgeball — Vidéo de présentation</div>
+            <div class="video-sub">Cliquez pour lancer la vidéo</div>
+          </div>
+        </div>
+        <div class="video-note">
+          <strong>En séance NeoBall :</strong> Parfait pour démarrer ou terminer une séance sur une note festive. Les participants adorent l'intensité et la rapidité des manches.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sports-content -->
+
+  <div class="sports-avenir">
+    <div class="avenir-title">En développement — bientôt disponibles</div>
+    <div class="avenir-sub">NeoBall continue d'élargir son catalogue. Ces disciplines arrivent prochainement.</div>
+    <div class="avenir-grid">
+      <div class="avenir-card">
+        <div class="avenir-card-name">💥 Bumball</div>
+        <div class="avenir-card-desc">Jeu de contact sécurisé avec vestes de protection</div>
+      </div>
+      <div class="avenir-card">
+        <div class="avenir-card-name">🔵 Kin-ball</div>
+        <div class="avenir-card-desc">3 équipes simultanées avec un ballon géant de 1,22m</div>
+      </div>
+      <div class="avenir-card">
+        <div class="avenir-card-name">🎯 Paintball intérieur</div>
+        <div class="avenir-card-desc">Version indoor sécurisée, stratégie et adrénaline</div>
+      </div>
+      <div class="avenir-card">
+        <div class="avenir-card-name">❤️ Cardioball</div>
+        <div class="avenir-card-desc">Sport inspiré du handball combiné à des exercices cardio</div>
+      </div>
+      <div class="avenir-card">
+        <div class="avenir-card-name">🏆 Poullball</div>
+        <div class="avenir-card-desc">Discipline émergente alliant adresse et déplacement collectif</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE : ÉQUIPE
+═══════════════════════════════════════════ -->
+<section id="page-equipe">
+  <div class="team-hero">
+    <h2>Notre <span>Équipe</span></h2>
+    <p>3 éducateurs sportifs diplômés d'État, à parts égales. Portés par la même passion des sports innovants et l'envie de les rendre accessibles à tous.</p>
+  </div>
+  <div class="team-grid">
+    <div class="member-card">
+      <div class="member-top">
+        <div class="member-avatar">KL</div>
+        <div class="member-name">Kelian Le Guen</div>
+        <span class="member-role">Éducateur Sportif</span>
+      </div>
+      <div class="member-body">
+        <ul class="diplomes-list">
+          <li>Licence STAPS — Éducation Motricité (Bac+3)</li>
+          <li>Master STAPS MEEF (Bac+5)</li>
+        </ul>
+        <p class="member-desc">Spécialiste des sports collectifs et disciplines innovantes. Co-fondateur du collectif NeoBall, il coordonne les interventions et les relations avec les communes partenaires.</p>
+        <div class="certifs">
+          <span class="certif-badge">PSC1</span>
+          <span class="certif-badge">RC Pro</span>
+          <span class="certif-badge">DRAJES</span>
+        </div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-top">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#00C98E,#2E4555)">LL</div>
+        <div class="member-name">Lucas Leone</div>
+        <span class="member-role">Enseignant d'EPS</span>
+      </div>
+      <div class="member-body">
+        <ul class="diplomes-list">
+          <li>Licence STAPS — Éducation Motricité (Bac+3)</li>
+          <li>Master STAPS MEEF (Bac+5)</li>
+        </ul>
+        <p class="member-desc">Enseignant d'EPS, expert en pédagogie sportive et en transmission des pratiques physiques à tous les publics. Il apporte une rigueur pédagogique à chaque séance.</p>
+        <div class="certifs">
+          <span class="certif-badge">PSC1</span>
+          <span class="certif-badge">RC Pro</span>
+          <span class="certif-badge">DRAJES</span>
+        </div>
+      </div>
+    </div>
+    <div class="member-card">
+      <div class="member-top">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#3D5F74,#00A878)">LF</div>
+        <div class="member-name">Luis Ferreira</div>
+        <span class="member-role">Éducateur Sportif</span>
+      </div>
+      <div class="member-body">
+        <ul class="diplomes-list">
+          <li>Licence STAPS — Éducation Motricité (Bac+3)</li>
+          <li>Master STAPS MEEF (Bac+5)</li>
+        </ul>
+        <p class="member-desc">Éducateur sportif diplômé, spécialisé dans l'animation et l'encadrement de publics variés. Son énergie communicative rend chaque séance vivante et mémorable.</p>
+        <div class="certifs">
+          <span class="certif-badge">PSC1</span>
+          <span class="certif-badge">RC Pro</span>
+          <span class="certif-badge">DRAJES</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="team-values">
+    <div class="value-card">
+      <div class="value-icon">⚖️</div>
+      <div class="value-title">Égalité totale</div>
+      <div class="value-text">Les 3 membres interviennent à parts égales, sans hiérarchie. Chacun est responsable de ses interventions et facture directement la commune via sa micro-entreprise.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🎯</div>
+      <div class="value-title">Pédagogie d'abord</div>
+      <div class="value-text">Chaque séance suit une progression rigoureuse : échauffement, initiation, pratique, retour au calme. Le niveau du groupe est toujours respecté.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🤝</div>
+      <div class="value-title">Partenariat durable</div>
+      <div class="value-text">Nous ne cherchons pas des clients mais des partenaires. Bilan trimestriel, convention sur mesure, communication partagée — nous construisons ensemble.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE : FORMULES
+═══════════════════════════════════════════ -->
+<section id="page-formules">
+  <div class="formules-hero">
+    <h2>Nos <span>Formules</span></h2>
+    <p>Des offres adaptées à chaque commune. De la découverte ponctuelle à un programme annuel complet — nous nous adaptons à votre budget et vos équipements.</p>
+  </div>
+  <div class="formules-grid">
+    <div class="formule-card">
+      <div class="formule-header">
+        <div class="formule-titre">Découverte</div>
+        <div class="formule-sous">1 créneau par semaine</div>
+      </div>
+      <div class="formule-body">
+        <ul class="formule-items">
+          <li><span class="check">✓</span> 1 sport par trimestre, en rotation</li>
+          <li><span class="check">✓</span> Mercredi après-midi ou soirée</li>
+          <li><span class="check">✓</span> 1 à 3 éducateurs selon la demande</li>
+          <li><span class="check">✓</span> Jusqu'à 36 participants par séance</li>
+          <li><span class="check">✓</span> Matériel 100% fourni par NeoBall</li>
+          <li><span class="check">✓</span> Bilan trimestriel inclus</li>
+        </ul>
+        <div class="formule-note">Idéal pour tester NeoBall avant un engagement annuel. Aucune obligation de renouvellement.</div>
+        <div class="formule-tarif">35 € <span>/ heure / éducateur</span></div>
+        <a href="#" class="btn btn-outline" onclick="showPage('devis');return false;" style="display:flex;justify-content:center;color:var(--ardoise);border-color:var(--ardoise2)">Calculer mon budget →</a>
+      </div>
+    </div>
+    <div class="formule-card featured">
+      <div class="featured-badge">⭐ Recommandée</div>
+      <div class="formule-header green">
+        <div class="formule-titre">Complète</div>
+        <div class="formule-sous">2 à 3 créneaux par semaine</div>
+      </div>
+      <div class="formule-body">
+        <ul class="formule-items">
+          <li><span class="check">✓</span> Multi-sports sur toute l'année</li>
+          <li><span class="check">✓</span> Mercredis après-midi + soirées</li>
+          <li><span class="check">✓</span> Vacances scolaires incluses</li>
+          <li><span class="check">✓</span> Jusqu'à 36 participants / séance</li>
+          <li><span class="check">✓</span> Supports de communication fournis</li>
+          <li><span class="check">✓</span> Bilan mensuel + rapport annuel</li>
+        </ul>
+        <div class="formule-note">La formule idéale pour un programme sportif communal cohérent sur l'année scolaire.</div>
+        <div class="formule-tarif">35 € <span>/ heure / éducateur</span></div>
+        <a href="#" class="btn btn-primary" onclick="showPage('devis');return false;" style="display:flex;justify-content:center;">Calculer mon budget →</a>
+      </div>
+    </div>
+    <div class="formule-card">
+      <div class="formule-header">
+        <div class="formule-titre">Événement</div>
+        <div class="formule-sous">Ponctuel, sur devis</div>
+      </div>
+      <div class="formule-body">
+        <ul class="formule-items">
+          <li><span class="check">✓</span> Forum des associations</li>
+          <li><span class="check">✓</span> Fête de quartier / fête de la ville</li>
+          <li><span class="check">✓</span> Tournoi découverte</li>
+          <li><span class="check">✓</span> Format adapté à votre événement</li>
+          <li><span class="check">✓</span> Démonstrations et initiations</li>
+          <li><span class="check">✓</span> Tout matériel fourni sur place</li>
+        </ul>
+        <div class="formule-note">Pour les événements ponctuels. Tarification sur devis selon format, durée et nombre d'intervenants.</div>
+        <div class="formule-tarif">Sur devis</div>
+        <a href="#" class="btn btn-outline" onclick="showPage('contact');return false;" style="display:flex;justify-content:center;color:var(--ardoise);border-color:var(--ardoise2)">Nous contacter →</a>
+      </div>
+    </div>
+  </div>
+  <div class="garanties-section">
+    <div class="garanties-title">Ce que NeoBall <span>garantit toujours</span></div>
+    <div class="garanties-grid">
+      <div class="garantie-item">
+        <div class="garantie-icon">🎒</div>
+        <div><div class="garantie-title">Matériel complet fourni</div><div class="garantie-desc">Filets, ballons, équipements, dossards — rien à prévoir côté commune.</div></div>
+      </div>
+      <div class="garantie-item">
+        <div class="garantie-icon">📋</div>
+        <div><div class="garantie-title">Ratio légal respecté</div><div class="garantie-desc">1 éducateur pour 12 participants max. Jusqu'à 36 avec 3 éducateurs.</div></div>
+      </div>
+      <div class="garantie-item">
+        <div class="garantie-icon">🎓</div>
+        <div><div class="garantie-title">Diplômes & assurances</div><div class="garantie-desc">Licence + Master STAPS, PSC1, RC Pro individuelle — tout fourni avant signature.</div></div>
+      </div>
+      <div class="garantie-item">
+        <div class="garantie-icon">🔄</div>
+        <div><div class="garantie-title">Continuité assurée</div><div class="garantie-desc">En cas d'absence d'un éducateur, remplacement interne ou report sous 48h.</div></div>
+      </div>
+      <div class="garantie-item">
+        <div class="garantie-icon">📊</div>
+        <div><div class="garantie-title">Bilan régulier</div><div class="garantie-desc">Rapport trimestriel transmis à la commune : fréquentation, retours, évolutions.</div></div>
+      </div>
+      <div class="garantie-item">
+        <div class="garantie-icon">⚡</div>
+        <div><div class="garantie-title">Zéro gestion RH</div><div class="garantie-desc">Aucun emploi, aucune charge sociale. Facturation directe par micro-entreprise.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE : SIMULATEUR
+═══════════════════════════════════════════ -->
+<section id="page-devis">
+  <div class="devis-hero">
+    <h2>Simulateur de <span>Devis</span></h2>
+    <p>Composez votre programme créneau par créneau — chacun avec son jour, sa durée et son nombre d'éducateurs. Le total se calcule en temps réel.</p>
+  </div>
+  <div class="devis-layout">
+    <div class="devis-form-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <h3 style="margin:0">Vos créneaux</h3>
+        <button class="btn btn-primary" onclick="addCreneau()" style="padding:10px 20px;font-size:.88rem;">
+          + Ajouter un créneau
+        </button>
+      </div>
+      <div id="creneaux-list"></div>
+      <div class="form-group" style="margin-top:2rem;padding-top:2rem;border-top:1px solid var(--gris2)">
+        <label class="form-label">Nombre de semaines par an <span id="semaines-val" style="color:var(--vert);font-weight:700">36 semaines</span></label>
+        <p style="font-size:.82rem;color:var(--gris);margin-bottom:.75rem;">Adaptez selon votre calendrier : année scolaire (~36 sem.), calendaire (~48 sem.) ou programme spécifique.</p>
+        <div class="slider-wrap">
+          <input type="range" class="range-slider" id="semaines" min="4" max="52" value="36" oninput="updateSlider(this);renderResult()">
+        </div>
+      </div>
+    </div>
+    <div class="devis-result">
+      <div class="result-title">📊 Récapitulatif</div>
+      <div id="result-creneaux-detail" style="margin-bottom:1rem;"></div>
+      <div class="result-sep"></div>
+      <div class="result-rows" id="result-global" style="margin-top:1rem;"></div>
+      <div class="result-total">
+        <div class="result-total-label">Budget annuel total estimé</div>
+        <div class="result-total-price" id="r-total">—</div>
+        <div class="result-total-sub">H.T. — hors mise à disposition des locaux</div>
+      </div>
+      <a href="#" class="btn btn-primary" style="display:flex;justify-content:center;width:100%;margin-bottom:.75rem;" onclick="exportDevis();return false;">
+        📧 Recevoir ce devis par email
+      </a>
+      <div class="result-note">
+        Des subventions CNDS, FDVA ou dotations régionales peuvent cofinancer tout ou partie. Nous vous accompagnons dans la recherche de financements complémentaires.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE : CONTACT
+═══════════════════════════════════════════ -->
+<section id="page-contact">
+  <div class="contact-layout">
+    <div class="contact-left">
+      <h2>Parlons de<br>votre <span>commune</span></h2>
+      <p>Que vous souhaitiez une démonstration, poser une question ou démarrer un partenariat — nous répondons sous 48h et nous nous déplaçons volontiers en mairie.</p>
+      <div class="contact-infos">
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📧</div>
+          <div>
+            <div class="contact-info-label">Email</div>
+            <div class="contact-info-val">neoball.collectif@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">📍</div>
+          <div>
+            <div class="contact-info-label">Basés à</div>
+            <div class="contact-info-val">Villeparisis (77) — Île-de-France</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">⏱</div>
+          <div>
+            <div class="contact-info-label">Délai de réponse</div>
+            <div class="contact-info-val">Sous 48 heures</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-banner">
+        <h4>🎯 Démonstration gratuite</h4>
+        <p>Nous organisons une séance de démonstration dans votre commune, sans engagement. Vos habitants essaient, vous voyez NeoBall en action avant toute décision.</p>
+      </div>
+    </div>
+    <div class="contact-right">
+      <h3>Envoyez-nous un message</h3>
+      <div id="contact-form-wrap">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Votre nom *</label>
+            <input type="text" id="f-nom" placeholder="Jean Dupont">
+          </div>
+          <div class="form-field">
+            <label>Votre fonction *</label>
+            <input type="text" id="f-fonction" placeholder="Adjoint aux sports">
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Commune *</label>
+          <input type="text" id="f-commune" placeholder="Nom de votre commune">
+        </div>
+        <div class="form-field">
+          <label>Email *</label>
+          <input type="email" id="f-email" placeholder="vous@commune.fr">
+        </div>
+        <div class="form-field">
+          <label>Objet de votre demande</label>
+          <select id="f-objet">
+            <option value="">Sélectionnez...</option>
+            <option>Demande de démonstration gratuite</option>
+            <option>Renseignements sur les formules</option>
+            <option>Demande de devis personnalisé</option>
+            <option>Signature d'une convention</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Votre message</label>
+          <textarea id="f-message" placeholder="Décrivez votre projet, vos équipements disponibles, le public visé..."></textarea>
+        </div>
+        <button class="form-submit" onclick="submitForm()">Envoyer le message →</button>
+      </div>
+      <div class="form-success" id="form-success">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Message envoyé !</div>
+        <p style="color:var(--ardoise2);line-height:1.7">Merci pour votre message. Kelian, Lucas ou Luis vous répondra sous 48 heures. À très bientôt !</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <div class="faq-title">Questions <span>fréquentes</span></div>
+    <div class="faq-grid" id="faq">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Qui est responsable en cas d'accident ? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Chaque éducateur NeoBall est couvert par sa propre assurance Responsabilité Civile Professionnelle. La commune n'engage pas sa responsabilité pour les activités pédagogiques encadrées par le collectif.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Que se passe-t-il si un éducateur est absent ? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Le collectif assure la continuité du service : remplacement par l'un des deux autres membres ou report de séance proposé sous 48 heures. La commune est informée dès que possible.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Quels équipements la commune doit-elle fournir ? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Uniquement un espace sportif adapté (gymnase, salle polyvalente ou espace extérieur). Tout le matériel sportif est fourni par NeoBall. La commune doit simplement s'assurer que les locaux sont conformes et couverts par son assurance multirisque.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Comment fonctionne la facturation ? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Chaque éducateur facture directement la commune via sa micro-entreprise individuelle. Aucune charge sociale pour la commune. Les factures sont émises mensuellement selon les modalités définies dans la convention.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Faut-il signer une convention ? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Oui. NeoBall fournit un modèle de convention adapté au droit public local, disponible en deux versions : prestation simple ou mise à disposition + prestation. Ce document protège les deux parties et clarifie les obligations de chacun.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Peut-on adapter les sports aux personnes handicapées ? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Oui. La majorité de nos disciplines sont adaptables en version PMR ou handisport. Nous travaillons en amont avec la commune pour identifier les publics et adapter les règles et l'espace. L'inclusion est une valeur centrale de NeoBall.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page-wrap -->
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="brand-name">Neo<span>Ball</span></div>
+      <p>Collectif de 3 éducateurs sportifs diplômés d'État basé en Seine-et-Marne. Nous apportons des sports innovants dans vos communes, clé en main.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#" onclick="showPage('accueil');return false;">Accueil</a></li>
+        <li><a href="#" onclick="showPage('sports');return false;">Nos sports</a></li>
+        <li><a href="#" onclick="showPage('equipe');return false;">Notre équipe</a></li>
+        <li><a href="#" onclick="showPage('formules');return false;">Formules</a></li>
+        <li><a href="#" onclick="showPage('devis');return false;">Simulateur</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:neoball.collectif@gmail.com">neoball.collectif@gmail.com</a></li>
+        <li><a href="#">Villeparisis (77)</a></li>
+        <li><a href="#" onclick="showPage('contact');return false;">Formulaire de contact</a></li>
+        <li><a href="#" onclick="showPage('contact');return false;">Demande de démo</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 NeoBall — Collectif de Micro-entreprises — Éducateurs Diplômés d'État</span>
+    <a href="mailto:neoball.collectif@gmail.com" class="footer-email">neoball.collectif@gmail.com</a>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// NAVIGATION ENTRE PAGES
+// ═══════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('page-' + id);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.remove('nav-active');
+    const oc = a.getAttribute('onclick') || '';
+    if (oc.includes("'" + id + "'")) a.classList.add('nav-active');
+  });
+}
+
+// ═══════════════════════════════════════════
+// HAMBURGER MENU
+// ═══════════════════════════════════════════
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════
+// SPORTS TABS
+// ═══════════════════════════════════════════
+function showSport(id, btn) {
+  document.querySelectorAll('.sport-detail').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sport-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════
+// VIDÉO PLAYER
+// ═══════════════════════════════════════════
+function loadVideo(container, url) {
+  if (!url) {
+    const sportTitle = container.querySelector('.video-title').textContent.split('—')[0].trim();
+    window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(sportTitle + ' initiation'), '_blank');
+    return;
+  }
+  const iframe = document.createElement('iframe');
+  iframe.src = url + '?autoplay=1';
+  iframe.className = 'video-frame';
+  iframe.allowFullscreen = true;
+  iframe.allow = 'autoplay; encrypted-media';
+  container.innerHTML = '';
+  container.appendChild(iframe);
+}
+
+// ═══════════════════════════════════════════
+// SIMULATEUR MULTI-CRÉNEAUX
+// ═══════════════════════════════════════════
+const TARIF_H = 35;
+const JOURS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+const DUREES = [
+  {val:1,   label:'1h'},
+  {val:1.5, label:'1h30'},
+  {val:2,   label:'2h'},
+  {val:3,   label:'3h'},
+  {val:4,   label:'4h'},
+  {val:7,   label:'7h (journée)'},
+];
+const EDUCS = [
+  {val:1, label:'1 éducateur — 12 participants max'},
+  {val:2, label:'2 éducateurs — 24 participants max'},
+  {val:3, label:'3 éducateurs — 36 participants max'},
+];
+let creneauxData = [];
+let nextId = 1;
+
+function addCreneau(defaults = {}) {
+  const id = nextId++;
+  creneauxData.push({
+    id,
+    nom:  defaults.nom  || 'Créneau ' + id,
+    jour: defaults.jour || 'Mercredi',
+    duree: defaults.duree || 2,
+    educ:  defaults.educ  || 3,
+  });
+  renderCreneaux();
+  renderResult();
+}
+
+function removeCreneau(id) {
+  creneauxData = creneauxData.filter(c => c.id !== id);
+  renderCreneaux();
+  renderResult();
+}
+
+function updateCreneau(id, field, value) {
+  const c = creneauxData.find(c => c.id === id);
+  if (c) {
+    c[field] = (field === 'duree' || field === 'educ') ? parseFloat(value) : value;
+    const costEl = document.getElementById('cost-' + id);
+    if (costEl) costEl.textContent = fmtEur(coutCreneau(c)) + ' / séance';
+    renderResult();
+  }
+}
+
+function coutCreneau(c) {
+  return TARIF_H * c.educ * c.duree;
+}
+
+function fmtEur(n) {
+  return n.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:2}) + ' €';
+}
+
+function renderCreneaux() {
+  const list = document.getElementById('creneaux-list');
+  if (!list) return;
+  if (creneauxData.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">📋</div>
+      <p>Aucun créneau configuré.<br>Cliquez sur <strong>"+ Ajouter un créneau"</strong> pour commencer.</p>
+    </div>`;
+    return;
+  }
+  list.innerHTML = creneauxData.map((c, idx) => {
+    const joursOpts  = JOURS.map(j   => `<option value="${j}"   ${c.jour===j          ?'selected':''}>${j}</option>`).join('');
+    const dureesOpts = DUREES.map(d  => `<option value="${d.val}" ${c.duree===d.val    ?'selected':''}>${d.label}</option>`).join('');
+    const educsOpts  = EDUCS.map(e   => `<option value="${e.val}" ${c.educ===e.val     ?'selected':''}>${e.label}</option>`).join('');
+    return `<div class="creneau-card" id="card-${c.id}">
+      <div class="creneau-header">
+        <div class="creneau-num">
+          <div class="creneau-badge">${idx+1}</div>
+          <input class="creneau-title-input" value="${c.nom}" oninput="updateCreneau(${c.id},'nom',this.value)" placeholder="Nom du créneau">
+        </div>
+        <button class="creneau-delete" onclick="removeCreneau(${c.id})" title="Supprimer">✕</button>
+      </div>
+      <div class="creneau-grid">
+        <div class="creneau-field">
+          <label>Jour</label>
+          <select class="creneau-select" onchange="updateCreneau(${c.id},'jour',this.value)">${joursOpts}</select>
+        </div>
+        <div class="creneau-field">
+          <label>Durée</label>
+          <select class="creneau-select" onchange="updateCreneau(${c.id},'duree',this.value)">${dureesOpts}</select>
+        </div>
+        <div class="creneau-field" style="grid-column:1/-1">
+          <label>Équipe d'encadrement</label>
+          <select class="creneau-select" onchange="updateCreneau(${c.id},'educ',this.value)">${educsOpts}</select>
+        </div>
+      </div>
+      <div class="creneau-cost">
+        <span class="creneau-cost-label">Coût de ce créneau</span>
+        <span class="creneau-cost-val" id="cost-${c.id}">${fmtEur(coutCreneau(c))} / séance</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderResult() {
+  const semaines = parseInt(document.getElementById('semaines')?.value || 36);
+  const detail   = document.getElementById('result-creneaux-detail');
+  const global   = document.getElementById('result-global');
+  const totalEl  = document.getElementById('r-total');
+  if (!detail || !global || !totalEl) return;
+
+  if (creneauxData.length === 0) {
+    detail.innerHTML = '<p style="color:var(--gris);font-size:.85rem;text-align:center;padding:1rem 0">Ajoutez des créneaux pour voir le calcul.</p>';
+    global.innerHTML = '';
+    totalEl.textContent = '—';
+    return;
+  }
+
+  let totalAnnuel = 0;
+  detail.innerHTML = creneauxData.map(c => {
+    const coutSeance = coutCreneau(c);
+    const coutAn = coutSeance * semaines;
+    totalAnnuel += coutAn;
+    return `<div class="result-creneau-row">
+      <div class="rcr-name">${c.nom} <span class="rcr-total">${fmtEur(coutAn)} / an</span></div>
+      <div class="rcr-detail">${c.jour} · ${c.duree}h · ${c.educ} éduc${c.educ>1?'s':''} · ${fmtEur(coutSeance)}/séance × ${semaines} sem.</div>
+    </div>`;
+  }).join('');
+
+  const nbCreneaux = creneauxData.length;
+  const totalSeances = nbCreneaux * semaines;
+  global.innerHTML = `
+    <div class="result-row">
+      <span class="result-row-label">Créneaux configurés</span>
+      <span class="result-row-val">${nbCreneaux} créneau${nbCreneaux>1?'x':''} / semaine</span>
+    </div>
+    <div class="result-row">
+      <span class="result-row-label">Semaines / an</span>
+      <span class="result-row-val">${semaines} semaines</span>
+    </div>
+    <div class="result-row">
+      <span class="result-row-label">Total séances / an</span>
+      <span class="result-row-val">${totalSeances} séances</span>
+    </div>`;
+  totalEl.textContent = fmtEur(totalAnnuel);
+}
+
+function updateSlider(el) {
+  const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
+  el.style.setProperty('--val', pct + '%');
+  document.getElementById('semaines-val').textContent = el.value + ' semaines';
+}
+
+function exportDevis() {
+  const semaines = parseInt(document.getElementById('semaines')?.value || 36);
+  if (creneauxData.length === 0) {
+    alert('Ajoutez au moins un créneau avant de demander un devis.');
+    return;
+  }
+  let lines = ['Demande de devis NeoBall', ''];
+  creneauxData.forEach(c => {
+    lines.push('• ' + c.nom + ' : ' + c.jour + ', ' + c.duree + 'h, ' + c.educ + ' éduc' + (c.educ>1?'s':''));
+  });
+  lines.push('');
+  lines.push('Semaines / an : ' + semaines);
+  const total = creneauxData.reduce((sum, c) => sum + coutCreneau(c) * semaines, 0);
+  lines.push('Budget annuel estimé : ' + fmtEur(total));
+  const body = encodeURIComponent(lines.join('\n'));
+  window.location.href = 'mailto:neoball.collectif@gmail.com?subject=Demande%20de%20devis%20NeoBall&body=' + body;
+}
+
+// Init : 2 créneaux exemples au chargement
+window.addEventListener('DOMContentLoaded', () => {
+  const sl = document.getElementById('semaines');
+  if (sl) updateSlider(sl);
+  addCreneau({ nom: 'Mercredi après-midi', jour: 'Mercredi', duree: 4, educ: 3 });
+  addCreneau({ nom: 'Soirée semaine',      jour: 'Vendredi', duree: 2, educ: 3 });
+});
+
+// ═══════════════════════════════════════════
+// FAQ
+// ═══════════════════════════════════════════
+function toggleFaq(item) {
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ═══════════════════════════════════════════
+// FORMULAIRE CONTACT
+// ═══════════════════════════════════════════
+function submitForm() {
+  const nom    = document.getElementById('f-nom')?.value.trim();
+  const email  = document.getElementById('f-email')?.value.trim();
+  const commune = document.getElementById('f-commune')?.value.trim();
+  if (!nom || !email || !commune) {
+    alert('Merci de remplir les champs obligatoires (nom, email, commune).');
+    return;
+  }
+  // TODO : connecter à un backend (Formspree, EmailJS, etc.)
+  document.getElementById('contact-form-wrap').style.display = 'none';
+  document.getElementById('form-success').classList.add('show');
+}
+</script>
+</body>
+</html>
