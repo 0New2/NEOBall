@@ -6,15 +6,14 @@
 <title>NeoBall — Collectif d'Éducateurs Sportifs</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --g:#00A878; --g2:#00C98E;
-  --noir:#080C0E; --n2:#0D1517; --n3:#111A1D;
-  --blanc:#ffffff; --gris:rgba(255,255,255,.45);
-  --fs:'Outfit',sans-serif; --fb:'DM Sans',sans-serif;
+:root{
+  --g:#00A878;--g2:#00C98E;
+  --noir:#080C0E;--n2:#0D1517;--n3:#111A1D;
+  --blanc:#fff;--gris:rgba(255,255,255,.45);
+  --fs:'Outfit',sans-serif;--fb:'DM Sans',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -34,6 +33,7 @@ nav.s .nr a{opacity:1;transform:none}
 .nr a:hover{color:var(--blanc)}
 .nc{background:var(--g);color:var(--noir)!important;padding:7px 18px!important;border-radius:50px;font-weight:700!important}
 .nc:hover{background:var(--g2)!important}
+.nr-resa{color:var(--g)!important;font-weight:700!important}
 @media(max-width:900px){.nr{display:none}}
 .rv{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.25,.46,.45,.94),transform .9s cubic-bezier(.25,.46,.45,.94)}
 .rvl{opacity:0;transform:translateX(-40px);transition:opacity .9s,transform .9s}
@@ -44,14 +44,17 @@ nav.s .nr a{opacity:1;transform:none}
 
 /* HERO */
 #hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;background:var(--noir)}
-.hbg{position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 60%,rgba(0,168,120,.11),transparent 70%),radial-gradient(ellipse 35% 25% at 15% 15%,rgba(0,168,120,.05),transparent 60%)}
-.hgrain{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+.hbg{position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 60%,rgba(0,168,120,.11),transparent 70%),radial-gradient(ellipse 35% 25% at 15% 15%,rgba(0,168,120,.05),transparent 60%);pointer-events:none}
+.hgrain{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;pointer-events:none}
 .hey{font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-bottom:1.75rem;animation:fu .9s .2s both}
 .ht{font-family:var(--fs);font-size:clamp(3.5rem,9vw,8rem);font-weight:900;line-height:1;letter-spacing:.02em;text-align:center;animation:fu 1s .35s both}
 .ht em{font-style:normal;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.3)}
 .hs{margin-top:2rem;font-size:clamp(.95rem,2vw,1.15rem);font-weight:300;color:var(--gris);text-align:center;max-width:440px;line-height:1.7;animation:fu 1s .5s both}
-.hcta{margin-top:2.5rem;display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fb);font-size:.92rem;font-weight:700;text-decoration:none;animation:fu 1s .65s both;transition:background .25s,transform .25s,box-shadow .25s}
-.hcta:hover{background:var(--g2);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,168,120,.35)}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2.5rem;animation:fu 1s .65s both}
+.btn-g{padding:14px 32px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fb);font-size:.92rem;font-weight:700;text-decoration:none;transition:all .25s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem}
+.btn-g:hover{background:var(--g2);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,168,120,.35)}
+.btn-gh{padding:14px 32px;border-radius:50px;border:1.5px solid rgba(255,255,255,.2);color:var(--blanc);font-family:var(--fb);font-size:.92rem;font-weight:400;text-decoration:none;transition:all .25s;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem}
+.btn-gh:hover{border-color:var(--g);color:var(--g);transform:translateY(-2px)}
 .hscroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:fu 1s .9s both}
 .hsl{width:1px;height:44px;background:linear-gradient(to bottom,var(--g),transparent);animation:sp 2s infinite}
 .hst{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gris)}
@@ -86,7 +89,7 @@ nav.s .nr a{opacity:1;transform:none}
 .sp-emoji{font-size:clamp(7rem,15vw,11rem);animation:fl 4s ease-in-out infinite}
 @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 .sp-wordmark{font-family:var(--fs);font-size:clamp(1.2rem,2.8vw,2.5rem);font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.06)}
-.sp-glow{position:absolute;inset:0;opacity:.14;transition:opacity .7s}
+.sp-glow{position:absolute;inset:0;opacity:.14;transition:opacity .7s;pointer-events:none}
 .sp-vis.on .sp-glow{opacity:.2}
 .sp-spacer{height:400vh}
 @media(max-width:900px){.sp-sticky{grid-template-columns:1fr}.sp-right{display:none}}
@@ -131,72 +134,8 @@ nav.s .nr a{opacity:1;transform:none}
 .se-txt{font-size:.83rem;color:var(--gris);line-height:1.6}
 @media(max-width:900px){.se-wrap{grid-template-columns:1fr;gap:3rem}}
 
-/* ════════════════════════════════════════
-   SIMULATEUR DE DEVIS
-════════════════════════════════════════ */
-#simulateur{padding:8rem 5vw;background:var(--n3);position:relative;overflow:hidden}
-#simulateur::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(0,168,120,.06),transparent 65%);pointer-events:none}
-.sim-layout{display:grid;grid-template-columns:1fr 380px;gap:3rem;margin-top:4rem;align-items:start}
-
-/* Steps */
-.sim-steps{display:flex;flex-direction:column;gap:2.5rem;position:relative;z-index:1}
-.sim-step{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;transition:border-color .3s}
-.sim-step:focus-within{border-color:rgba(0,168,120,.3)}
-.sim-step-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
-.sim-step-num{width:32px;height:32px;border-radius:50%;background:var(--g);color:var(--noir);font-family:var(--fs);font-size:.85rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sim-step-title{font-family:var(--fs);font-size:1rem;font-weight:700;letter-spacing:.02em}
-.sim-step-sub{font-size:.78rem;color:var(--gris);margin-top:.15rem}
-
-/* Selector pills */
-.sim-options{display:flex;flex-wrap:wrap;gap:.6rem}
-.sim-opt{padding:.55rem 1.1rem;border-radius:50px;border:1.5px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.5);font-family:var(--fb);font-size:.82rem;font-weight:500;cursor:pointer;transition:all .2s}
-.sim-opt:hover{border-color:rgba(0,168,120,.4);color:var(--blanc)}
-.sim-opt.sel{border-color:var(--g);background:rgba(0,168,120,.12);color:var(--blanc);font-weight:600}
-.sim-opt-icon{margin-right:.4rem;font-size:.9rem}
-
-/* Slider */
-.sim-slider-wrap{display:flex;flex-direction:column;gap:.75rem}
-.sim-slider-row{display:flex;justify-content:space-between;align-items:center}
-.sim-slider-label{font-size:.82rem;color:var(--gris)}
-.sim-slider-val{font-family:var(--fs);font-size:1.1rem;font-weight:800;color:var(--g)}
-input[type=range].srange{width:100%;height:5px;-webkit-appearance:none;background:linear-gradient(to right,var(--g) 0%,var(--g) var(--pct,50%),rgba(255,255,255,.12) var(--pct,50%));border-radius:3px;outline:none;cursor:pointer}
-input[type=range].srange::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--g);border:3px solid var(--n3);box-shadow:0 0 8px rgba(0,168,120,.5);cursor:pointer}
-
-/* Récapitulatif sticky */
-.sim-recap{position:sticky;top:80px;background:var(--noir);border:1px solid rgba(0,168,120,.2);border-radius:16px;overflow:hidden}
-.sim-recap-head{background:rgba(0,168,120,.08);border-bottom:1px solid rgba(0,168,120,.15);padding:1.25rem 1.5rem}
-.sim-recap-title{font-family:var(--fs);font-size:.95rem;font-weight:700;letter-spacing:.02em;color:var(--blanc)}
-.sim-recap-body{padding:1.25rem 1.5rem}
-.sim-line{display:flex;justify-content:space-between;align-items:baseline;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem}
-.sim-line:last-of-type{border:none}
-.sim-line-lbl{color:var(--gris)}
-.sim-line-val{font-weight:600;color:var(--blanc)}
-.sim-divider{height:1px;background:rgba(0,168,120,.2);margin:.75rem 0}
-.sim-total-block{background:rgba(0,168,120,.08);border-radius:10px;padding:1.1rem;text-align:center;margin-bottom:1.25rem}
-.sim-total-label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.35rem}
-.sim-total-price{font-family:var(--fs);font-size:2.4rem;font-weight:900;color:var(--g);line-height:1}
-.sim-total-sub{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:.3rem}
-
-/* Formulaire envoi */
-.sim-form{border-top:1px solid rgba(255,255,255,.07);padding:1.25rem 1.5rem}
-.sim-form-title{font-family:var(--fs);font-size:.85rem;font-weight:700;letter-spacing:.02em;margin-bottom:1rem;color:var(--blanc)}
-.sim-field{margin-bottom:.75rem}
-.sim-input{width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:var(--blanc);font-family:var(--fb);font-size:.82rem;outline:none;transition:border-color .2s}
-.sim-input::placeholder{color:rgba(255,255,255,.25)}
-.sim-input:focus{border-color:var(--g)}
-.sim-send{width:100%;padding:13px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fs);font-size:.9rem;font-weight:800;border:none;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.25rem}
-.sim-send:hover{background:var(--g2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,168,120,.35)}
-.sim-send:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.sim-counter-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(0,168,120,.4);background:rgba(0,168,120,.08);color:var(--g);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
-.sim-counter-btn:hover{background:rgba(0,168,120,.2);border-color:var(--g)}
-.sim-msg{text-align:center;padding:1rem;font-size:.8rem;line-height:1.6;border-radius:8px;margin-top:.75rem;display:none}
-.sim-msg.ok{background:rgba(0,168,120,.12);color:var(--g);border:1px solid rgba(0,168,120,.25)}
-.sim-msg.err{background:rgba(220,60,60,.1);color:#ff6b6b;border:1px solid rgba(220,60,60,.2)}
-
-@media(max-width:900px){.sim-layout{grid-template-columns:1fr}.sim-recap{position:static}}
-
 /* ÉQUIPE */
-#equipe{padding:8rem 5vw;background:var(--n2);position:relative;overflow:hidden}
+#equipe{padding:8rem 5vw;background:var(--n3);position:relative;overflow:hidden}
 #equipe::before{content:'';position:absolute;top:-20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,168,120,.05),transparent 60%);pointer-events:none}
 .eq-intro{max-width:560px;margin-bottom:5rem}
 .eq-body{font-size:.92rem;color:var(--gris);line-height:1.8;margin-top:1.25rem}
@@ -222,7 +161,7 @@ input[type=range].srange::-webkit-slider-thumb{-webkit-appearance:none;width:20p
 @media(max-width:900px){.ga-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.ga-grid{grid-template-columns:1fr}}
 
-/* COMMUNES MAP */
+/* COMMUNES */
 #communes{padding:8rem 5vw;background:var(--n2);position:relative;overflow:hidden}
 #communes::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 50%,rgba(0,168,120,.05),transparent 65%);pointer-events:none}
 .cm-layout{display:grid;grid-template-columns:1fr 340px;margin-top:4rem;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;height:560px}
@@ -285,23 +224,127 @@ input[type=range].srange::-webkit-slider-thumb{-webkit-appearance:none;width:20p
 
 /* CONTACT */
 #contact{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 5vw;text-align:center;position:relative;overflow:hidden;background:var(--n2)}
-.co-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(0,168,120,.09),transparent 65%)}
+.co-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(0,168,120,.09),transparent 65%);pointer-events:none}
 .co-ttl{font-family:var(--fs);font-size:clamp(2.8rem,7vw,7rem);font-weight:900;letter-spacing:.02em;line-height:1.05;position:relative;z-index:2}
 .co-ttl em{font-style:normal;color:var(--g)}
 .co-sub{margin-top:1.75rem;font-size:1rem;font-weight:300;color:var(--gris);max-width:400px;line-height:1.7;position:relative;z-index:2}
 .co-btns{margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
-.btn-g{padding:15px 34px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fb);font-size:.95rem;font-weight:700;text-decoration:none;transition:all .25s}
-.btn-g:hover{background:var(--g2);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,168,120,.3)}
-.btn-gh{padding:15px 34px;border-radius:50px;border:1px solid rgba(255,255,255,.18);color:var(--blanc);font-family:var(--fb);font-size:.95rem;font-weight:400;text-decoration:none;transition:all .25s}
-.btn-gh:hover{border-color:var(--g);color:var(--g);transform:translateY(-2px)}
 .co-info{margin-top:2.5rem;font-size:.78rem;color:rgba(255,255,255,.2);letter-spacing:.05em;position:relative;z-index:2}
 .co-info a{color:var(--g);text-decoration:none}
 footer{padding:1.5rem 5vw;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:rgba(255,255,255,.18)}
 footer span{color:var(--g)}
+
+/* ════════════════════════════════
+   MODAL RÉSERVATION
+════════════════════════════════ */
+#resa-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .3s}
+#resa-overlay.open{opacity:1;pointer-events:all}
+#resa-box{background:var(--n2);border:1px solid rgba(0,168,120,.25);border-radius:20px;width:100%;max-width:740px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;transform:translateY(24px);transition:transform .35s cubic-bezier(.25,.46,.45,.94)}
+#resa-overlay.open #resa-box{transform:none}
+/* Header */
+.rh{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.rh-steps{display:flex;align-items:center;gap:.5rem}
+.rh-step{font-family:var(--fs);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.2);transition:color .3s;padding:4px 10px;border-radius:50px;border:1px solid transparent}
+.rh-step.active{color:var(--g);border-color:rgba(0,168,120,.3);background:rgba(0,168,120,.08)}
+.rh-step.done{color:rgba(0,168,120,.5)}
+.rh-line{width:16px;height:1px;background:rgba(255,255,255,.1)}
+.rh-close{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:none;color:rgba(255,255,255,.4);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.rh-close:hover{border-color:rgba(255,255,255,.3);color:var(--blanc)}
+/* Body */
+.rb{flex:1;overflow-y:auto;padding:1.5rem}
+.rb::-webkit-scrollbar{width:3px}
+.rb::-webkit-scrollbar-thumb{background:rgba(0,168,120,.3);border-radius:2px}
+.rs{display:none}
+.rs.active{display:block}
+.rs-title{font-family:var(--fs);font-size:1.1rem;font-weight:800;letter-spacing:.01em;margin-bottom:.3rem}
+.rs-sub{font-size:.82rem;color:var(--gris);margin-bottom:1.5rem;line-height:1.55}
+/* Calendrier */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-nb{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--blanc);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cal-nb:hover{background:rgba(0,168,120,.12);border-color:rgba(0,168,120,.35)}
+.cal-ml{font-family:var(--fs);font-size:1rem;font-weight:700;letter-spacing:.02em}
+.cal-wdays{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px}
+.cal-wd{text-align:center;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:.4rem 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cd{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.82rem;font-weight:500;color:rgba(255,255,255,.15);background:transparent;position:relative;border:1px solid transparent;transition:all .18s;user-select:none}
+.cd.other{opacity:.15}
+.cd.today{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.5)}
+.cd.past{opacity:.15}
+.cd.avail{color:var(--blanc);cursor:pointer;background:rgba(0,168,120,.1);border-color:rgba(0,168,120,.25)}
+.cd.avail:hover{background:rgba(0,168,120,.22);border-color:var(--g);transform:scale(1.06)}
+.cd.sel{background:var(--g)!important;border-color:var(--g)!important;color:var(--noir)!important;font-weight:800;transform:scale(1.06)}
+
+/* Custom Time Panel (MODIFIÉ POUR LES SELECT) */
+.custom-time-panel {margin-top: 1.5rem; background: rgba(0,168,120,.06); border: 1px solid rgba(0,168,120,.2); border-radius: 12px; padding: 1.25rem; display: none;}
+.custom-time-panel.active {display: block;}
+.time-inputs {display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;}
+.time-lbl {font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gris); margin-bottom: 0.3rem; display: block;}
+select.conf-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%2300A878" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    cursor: pointer;
+}
+select.conf-input option {
+    background: var(--n2);
+    color: var(--blanc);
+}
+
+/* Step 2 */
+.conf-slot-recap{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;padding:.75rem 1rem;background:rgba(0,168,120,.08);border:1px solid rgba(0,168,120,.2);border-radius:10px;margin-bottom:1.5rem;font-size:.82rem}
+.conf-slot-recap strong{color:var(--blanc)}
+.conf-slot-recap span{color:var(--g)}
+.conf-lbl{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:.6rem;font-weight:700}
+.conf-sports{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+.conf-sport{padding:.45rem .9rem;border-radius:50px;border:1.5px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.45);font-family:var(--fb);font-size:.78rem;cursor:pointer;transition:all .2s}
+.conf-sport:hover{border-color:rgba(0,168,120,.4);color:var(--blanc)}
+.conf-sport.on{border-color:var(--g);background:rgba(0,168,120,.12);color:var(--blanc);font-weight:600}
+.conf-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.conf-block{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem 1.25rem}
+.conf-counter{display:flex;align-items:center;gap:.75rem;margin-top:.25rem}
+.ccb{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(0,168,120,.4);background:rgba(0,168,120,.08);color:var(--g);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;line-height:1}
+.ccb:hover{background:rgba(0,168,120,.22);border-color:var(--g)}
+.conf-val{font-family:var(--fs);font-size:1.6rem;font-weight:900;color:var(--blanc);min-width:1.5rem;text-align:center}
+.conf-hint{font-size:.72rem;margin-top:.4rem}
+.conf-hint.ok{color:var(--g)}
+.conf-hint.warn{color:#FFB347}
+.conf-input{width:100%;padding:.6rem .85rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:var(--blanc);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s;margin-top:.25rem}
+.conf-input:focus{border-color:var(--g)}
+/* Step 3 */
+.recap-block{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.recap-row{display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem}
+.recap-row:last-child{border:none}
+.recap-lbl{color:var(--gris)}
+.recap-val{font-weight:600;text-align:right;max-width:60%}
+.prix-block{background:rgba(0,168,120,.08);border:1px solid rgba(0,168,120,.2);border-radius:10px;padding:1rem;text-align:center;margin-bottom:1.25rem}
+.prix-lbl{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.3rem}
+.prix-val{font-family:var(--fs);font-size:2rem;font-weight:900;color:var(--g)}
+.prix-sub{font-size:.68rem;color:rgba(255,255,255,.25);margin-top:.2rem;line-height:1.4}
+.prix-sub strong{color:rgba(255,255,255,.8);font-weight:600;display:block;margin-top:0.5rem;padding-top:0.5rem;border-top:1px dashed rgba(0,168,120,.3)}
+.ri{width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:var(--blanc);font-family:var(--fb);font-size:.82rem;outline:none;transition:border-color .2s;margin-bottom:.75rem}
+.ri::placeholder{color:rgba(255,255,255,.22)}
+.ri:focus{border-color:var(--g)}
+.ri-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.resa-alert{text-align:center;padding:.75rem;font-size:.8rem;border-radius:8px;margin-bottom:.75rem;display:none}
+.resa-alert.ok{background:rgba(0,168,120,.12);color:var(--g);border:1px solid rgba(0,168,120,.25)}
+.resa-alert.err{background:rgba(220,60,60,.1);color:#ff6b6b;border:1px solid rgba(220,60,60,.2)}
+/* Footer modal */
+.rf{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.rf-back{padding:10px 20px;border-radius:50px;border:1px solid rgba(255,255,255,.15);background:none;color:var(--gris);font-family:var(--fb);font-size:.82rem;cursor:pointer;transition:all .2s}
+.rf-back:hover{color:var(--blanc);border-color:rgba(255,255,255,.3)}
+.rf-next{padding:11px 28px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fs);font-size:.88rem;font-weight:800;border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.5rem}
+.rf-next:hover{background:var(--g2);transform:translateY(-1px)}
+.rf-next:disabled{opacity:.3;cursor:not-allowed;transform:none}
+/* FAB */
+.resa-fab{position:fixed;bottom:2rem;right:2rem;z-index:400;padding:14px 24px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fs);font-size:.88rem;font-weight:800;border:none;cursor:pointer;box-shadow:0 8px 32px rgba(0,168,120,.45);transition:all .3s;display:flex;align-items:center;gap:.5rem;letter-spacing:.02em}
+.resa-fab:hover{background:var(--g2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,168,120,.55)}
+@media(max-width:600px){.conf-grid{grid-template-columns:1fr}.ri-row{grid-template-columns:1fr}.time-inputs{grid-template-columns:1fr}.resa-fab{bottom:1rem;right:1rem}}
 </style>
 </head>
 <body>
-
 <div id="cur"></div>
 <div id="curR"></div>
 <div id="prog"></div>
@@ -311,24 +354,25 @@ footer span{color:var(--g)}
   <ul class="nr">
     <li><a href="#sp-sec">Sports</a></li>
     <li><a href="#creneaux">Créneaux</a></li>
-    <li><a href="#simulateur">Simulateur</a></li>
     <li><a href="#communes">Communes</a></li>
     <li><a href="#equipe">Équipe</a></li>
+    <li><a href="#" onclick="openResa();return false;" class="nr-resa">📅 Réserver</a></li>
     <li><a href="#contact" class="nc">Nous contacter</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div class="hbg"></div><div class="hgrain"></div>
   <p class="hey">Collectif Sportif · Villeparisis (77)</p>
   <h1 class="ht">Neo<em>Ball</em></h1>
   <p class="hs">3 éducateurs diplômés d'État. Des sports innovants pour vos habitants. Clé en main.</p>
-  <a href="#simulateur" class="hcta">Estimer mon budget →</a>
+  <div class="hero-btns">
+    <button class="btn-g" onclick="openResa()">📅 Demander un créneau</button>
+    <a href="#sp-sec" class="btn-gh">Voir nos sports</a>
+  </div>
   <div class="hscroll"><div class="hsl"></div><p class="hst">Défiler</p></div>
 </section>
 
-<!-- ACCROCHE -->
 <section id="accroche">
   <div>
     <p class="tag rv" style="margin-bottom:1.75rem">Notre mission</p>
@@ -337,15 +381,14 @@ footer span{color:var(--g)}
   </div>
 </section>
 
-<!-- SPORTS STICKY -->
 <div id="sp-sec">
-  <div class="sp-sticky">
+  <div class="sp-sticky" id="sp-sticky">
     <div class="sp-left">
       <p class="tag rv" style="margin-bottom:1.25rem">Nos disciplines</p>
       <div class="sp-entry on" data-i="0"><p class="sp-n">01</p><p class="sp-name">Spikeball</p><p class="sp-desc">Sport 2 contre 2 autour d'un filet circulaire tendu au sol. Ultra-dynamique, idéal en intérieur comme en extérieur. Développe les réflexes, la coordination et l'esprit d'équipe.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Filet + balle</span></div></div>
       <div class="sp-entry" data-i="1"><p class="sp-n">02</p><p class="sp-name">Flag Football</p><p class="sp-desc">Version sans contact du football américain. Stratégie, vitesse, esprit d'équipe. En plein essor — sport prévu aux Jeux Olympiques de Los Angeles 2028.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">JO 2028</span><span class="sp-pill">Flags + ballon</span></div></div>
-      <div class="sp-entry" data-i="2"><p class="sp-n">03</p><p class="sp-name">Tchoukball</p><p class="sp-desc">Sport collectif non-violent inventé en Suisse en 1970. Tirs sur cadre élastique incliné. Favorise le fair-play et l'inclusion.</p><div class="sp-meta"><span class="sp-pill">Tous publics</span><span class="sp-pill">Non-violent</span><span class="sp-pill">Cadres + balle</span></div></div>
-      <div class="sp-entry" data-i="3"><p class="sp-n">04</p><p class="sp-name">Strikeball</p><p class="sp-desc">Jeu de balle alliant frappe, déplacement tactique et stratégie collective. Facile à prendre en main, idéal pour une première découverte sportive.</p><div class="sp-meta"><span class="sp-pill">Ados & Adultes</span><span class="sp-pill">Batte + balle</span></div></div>
+      <div class="sp-entry" data-i="2"><p class="sp-n">03</p><p class="sp-name">Tchoukball</p><p class="sp-desc">Sport collectif non-violent inventé en Suisse en 1970. Tirs sur cadre élastique incliné. Favorise le fair-play et l'inclusion. Aucun contact défensif.</p><div class="sp-meta"><span class="sp-pill">Tous publics</span><span class="sp-pill">Non-violent</span><span class="sp-pill">Cadres + balle</span></div></div>
+      <div class="sp-entry" data-i="3"><p class="sp-n">04</p><p class="sp-name">Strikeball</p><p class="sp-desc">Jeu de balle alliant frappe, déplacement tactique et strategy collective. Facile à prendre en main, idéal pour une première découverte sportive.</p><div class="sp-meta"><span class="sp-pill">Ados & Adultes</span><span class="sp-pill">Batte + balle</span></div></div>
       <div class="sp-entry" data-i="4"><p class="sp-n">05</p><p class="sp-name">Dodgeball</p><p class="sp-desc">Sport d'esquive en équipes avec balles en mousse. Dynamique et stratégique, idéal pour les séances festives et les événements.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Balles mousse</span></div></div>
     </div>
     <div class="sp-right">
@@ -359,19 +402,17 @@ footer span{color:var(--g)}
   <div class="sp-spacer"></div>
 </div>
 
-<!-- CRÉNEAUX -->
 <section id="creneaux">
   <p class="tag rv">Quand on intervient</p>
   <h2 class="ttl rv" style="transition-delay:.1s;margin-top:.75rem">Des créneaux pour chaque public.</h2>
   <div class="cr-grid">
-    <div class="cr-card rv" style="transition-delay:.05s"><div class="cr-icon">🌤</div><p class="cr-time">Mercredi après-midi</p><p class="cr-hours">13h30 – 17h30</p><p class="cr-pub">Enfants & Ados · 6–17 ans</p><p class="cr-desc">Découverte et initiation aux sports innovants. Format ludique et pédagogique. Idéal en complément des centres de loisirs.</p></div>
-    <div class="cr-card rv" style="transition-delay:.1s"><div class="cr-icon">🌆</div><p class="cr-time">Soirées semaine</p><p class="cr-hours">18h30 – 20h30</p><p class="cr-pub">Ados & Adultes · 14 ans+</p><p class="cr-desc">Sessions sport-loisir, tournois entre équipes, découverte de nouvelles disciplines. Format convivial et accessible.</p></div>
-    <div class="cr-card rv" style="transition-delay:.15s"><div class="cr-icon">☀️</div><p class="cr-time">Vacances scolaires</p><p class="cr-hours">9h00 – 17h00</p><p class="cr-pub">Enfants & Ados · 6–17 ans</p><p class="cr-desc">Animations sportives multi-disciplines. Idéal pour les centres de loisirs et accueils ALSH.</p></div>
-    <div class="cr-card rv" style="transition-delay:.2s"><div class="cr-icon">🏆</div><p class="cr-time">Événements spéciaux</p><p class="cr-hours">Sur devis</p><p class="cr-pub">Tout public</p><p class="cr-desc">Démonstrations, tournois, fêtes de quartier, forums des associations. Un stand NeoBall qui attire et fédère.</p></div>
+    <div class="cr-card rv" style="transition-delay:.05s"><div class="cr-icon">🌤</div><p class="cr-time">Mercredi après-midi</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Enfants & Ados · 6–17 ans</p><p class="cr-desc">Découverte et initiation aux sports innovants. Format ludique et pédagogique. Idéal en complément des centres de loisirs.</p></div>
+    <div class="cr-card rv" style="transition-delay:.1s"><div class="cr-icon">🌆</div><p class="cr-time">Soirées semaine</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Ados & Adultes · 14 ans+</p><p class="cr-desc">Sessions sport-loisir, tournois entre équipes, découverte de nouvelles disciplines. Format convivial et accessible.</p></div>
+    <div class="cr-card rv" style="transition-delay:.15s"><div class="cr-icon">☀️</div><p class="cr-time">Vacances scolaires</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Enfants & Ados · 6–17 ans</p><p class="cr-desc">Animations sportives multi-disciplines. Idéal pour les centres de loisirs et accueils ALSH.</p></div>
+    <div class="cr-card rv" style="transition-delay:.2s"><div class="cr-icon">🏆</div><p class="cr-time">Événements spéciaux</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Tout public</p><p class="cr-desc">Démonstrations, tournois, fêtes de quartier, forums des associations. Un stand NeoBall qui attire et fédère.</p></div>
   </div>
 </section>
 
-<!-- STATS -->
 <section id="stats">
   <div class="st-inner">
     <p class="tag rv">NeoBall en chiffres</p>
@@ -384,7 +425,6 @@ footer span{color:var(--g)}
   </div>
 </section>
 
-<!-- SÉANCE TYPE -->
 <section id="seance">
   <p class="tag rv">Comment ça se passe</p>
   <h2 class="ttl rv" style="transition-delay:.1s;margin-top:.75rem">Exemple de séance type.</h2>
@@ -394,182 +434,15 @@ footer span{color:var(--g)}
       <br><p style="font-size:.82rem;color:rgba(255,255,255,.25);line-height:1.6">Durée : 2 heures · 12 à 36 participants<br>L'éducateur adapte en temps réel selon la dynamique du groupe.</p>
     </div>
     <div class="se-steps rvr">
-      <div class="se-step"><div class="se-dot">👋</div><div><p class="se-time">00:00 – 00:15</p><p class="se-label">Accueil & Présentation</p><p class="se-txt">Présentation du sport, règles simplifiées, consignes de sécurité. Mise en confiance et constitution des équipes.</p></div></div>
-      <div class="se-step"><div class="se-dot">🔥</div><div><p class="se-time">00:15 – 00:35</p><p class="se-label">Échauffement ludique</p><p class="se-txt">Jeux de déplacement et coordination. Montée en température progressive, activation des réflexes.</p></div></div>
-      <div class="se-step"><div class="se-dot">🎯</div><div><p class="se-time">00:35 – 01:20</p><p class="se-label">Pratique principale</p><p class="se-txt">Initiation progressive — exercices techniques puis matchs en équipes. Rotation des équipes.</p></div></div>
-      <div class="se-step"><div class="se-dot">🏆</div><div><p class="se-time">01:20 – 01:45</p><p class="se-label">Tournoi amical</p><p class="se-txt">Mini-tournoi ou défi collectif. Favorise l'esprit sportif et la communication entre participants.</p></div></div>
-      <div class="se-step"><div class="se-dot">💬</div><div><p class="se-time">01:45 – 02:00</p><p class="se-label">Retour au calme & Bilan</p><p class="se-txt">Étirements, debriefing collectif. Valorisation des progrès et annonce de la prochaine séance.</p></div></div>
+      <div class="se-step"><div class="se-dot">👋</div><div><p class="se-time">00:00 – 00:15</p><p class="se-label">Accueil & Présentation</p><p class="se-txt">Présentation du sport, règles simplifiées, consignes de sécurité. Constitution des équipes.</p></div></div>
+      <div class="se-step"><div class="se-dot">🔥</div><div><p class="se-time">00:15 – 00:35</p><p class="se-label">Échauffement ludique</p><p class="se-txt">Jeux de déplacement et coordination. Montée en température progressive.</p></div></div>
+      <div class="se-step"><div class="se-dot">🎯</div><div><p class="se-time">00:35 – 01:20</p><p class="se-label">Pratique principale</p><p class="se-txt">Initiation progressive — exercices techniques puis matchs en équipes.</p></div></div>
+      <div class="se-step"><div class="se-dot">🏆</div><div><p class="se-time">01:20 – 01:45</p><p class="se-label">Tournoi amical</p><p class="se-txt">Mini-tournoi ou défi collectif. Esprit sportif et communication.</p></div></div>
+      <div class="se-step"><div class="se-dot">💬</div><div><p class="se-time">01:45 – 02:00</p><p class="se-label">Retour au calme & Bilan</p><p class="se-txt">Étirements, debriefing collectif. Valorisation des progrès.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════
-     SIMULATEUR DE DEVIS
-════════════════════════════════════════ -->
-<section id="simulateur">
-  <p class="tag rv">Tarifs & devis</p>
-  <h2 class="ttl rv" style="transition-delay:.1s;margin-top:.75rem">Simulez votre<br>programme.</h2>
-  <p class="rv" style="transition-delay:.18s;margin-top:1rem;font-size:.92rem;color:var(--gris);max-width:500px;line-height:1.7">Configurez vos créneaux et obtenez une estimation instantanée. Validez et on vous recontacte sous 48h.</p>
-
-  <div class="sim-layout">
-    <!-- GAUCHE : configurateur -->
-    <div class="sim-steps rv" style="transition-delay:.2s">
-
-    <!-- ÉTAPE 1 : Type de créneau -->
-      <div class="sim-step">
-        <div class="sim-step-head">
-          <div class="sim-step-num">1</div>
-          <div><p class="sim-step-title">Type de créneau</p><p class="sim-step-sub">Quand souhaitez-vous nos interventions ?</p></div>
-        </div>
-        <div class="sim-options" id="opt-type">
-          <button class="sim-opt sel" data-val="Mercredi après-midi" onclick="selectOpt('type',this)"><span class="sim-opt-icon">🌤</span>Mercredi AM</button>
-          <button class="sim-opt" data-val="Soirée semaine" onclick="selectOpt('type',this)"><span class="sim-opt-icon">🌆</span>Soirée semaine</button>
-          <button class="sim-opt" data-val="Vacances scolaires" onclick="selectOpt('type',this)"><span class="sim-opt-icon">☀️</span>Vacances scolaires</button>
-          <button class="sim-opt" data-val="Événement ponctuel" onclick="selectOpt('type',this)"><span class="sim-opt-icon">🏆</span>Événement ponctuel</button>
-          <button class="sim-opt" data-val="Multi-créneaux" onclick="selectOpt('type',this)"><span class="sim-opt-icon">🔁</span>Multi-créneaux</button>
-        </div>
-      </div>
-
-      <!-- ÉTAPE 2 : Éducateurs + Participants — totalement libres -->
-      <div class="sim-step">
-        <div class="sim-step-head">
-          <div class="sim-step-num">2</div>
-          <div><p class="sim-step-title">Éducateurs & Participants</p><p class="sim-step-sub">Choisissez librement la combinaison qui vous convient</p></div>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem">
-          <!-- Éducateurs -->
-          <div>
-            <p style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.6rem">Éducateurs</p>
-            <div style="display:flex;align-items:center;gap:.75rem">
-              <button class="sim-counter-btn" onclick="changeEduc(-1)">−</button>
-              <span id="educ-display" style="font-family:var(--fs);font-size:2rem;font-weight:900;color:var(--blanc);min-width:2rem;text-align:center">3</span>
-              <button class="sim-counter-btn" onclick="changeEduc(1)">+</button>
-            </div>
-            <p style="font-size:.72rem;color:var(--gris);margin-top:.5rem">Tarif : 35 €/h × <span id="educ-tarif">3</span></p>
-          </div>
-          <!-- Participants attendus -->
-          <div>
-            <p style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.6rem">Participants attendus</p>
-            <input class="sim-input" id="participants-input" type="number" min="1" max="200" value="30" placeholder="Ex: 24" oninput="updateParticipants(this.value)" style="font-size:1.1rem;font-weight:600;text-align:center;padding:.5rem">
-            <p style="font-size:.72rem;color:var(--gris);margin-top:.5rem">Libre — la loi impose 1 éduc. / 12</p>
-          </div>
-        </div>
-
-        <!-- Indicateur légal -->
-        <div id="ratio-indicator" style="padding:.75rem 1rem;border-radius:8px;font-size:.8rem;line-height:1.5;transition:all .3s"></div>
-      </div>
-
-      <!-- ÉTAPE 3 : Durée par séance — libre -->
-      <div class="sim-step">
-        <div class="sim-step-head">
-          <div class="sim-step-num">3</div>
-          <div><p class="sim-step-title">Durée par séance</p><p class="sim-step-sub">Choisissez une durée standard ou saisissez la vôtre</p></div>
-        </div>
-        <div class="sim-options" id="opt-duree" style="margin-bottom:.9rem">
-          <button class="sim-opt" data-val="1"   onclick="setDuree(1,this)">1h</button>
-          <button class="sim-opt" data-val="1.5" onclick="setDuree(1.5,this)">1h30</button>
-          <button class="sim-opt sel" data-val="2" onclick="setDuree(2,this)">2h</button>
-          <button class="sim-opt" data-val="3"   onclick="setDuree(3,this)">3h</button>
-          <button class="sim-opt" data-val="4"   onclick="setDuree(4,this)">4h</button>
-          <button class="sim-opt" data-val="7"   onclick="setDuree(7,this)">Journée (7h)</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <span style="font-size:.78rem;color:var(--gris)">Ou saisissez :</span>
-          <input class="sim-input" id="duree-custom" type="number" min="0.5" max="12" step="0.5" placeholder="ex : 5" style="width:90px;text-align:center" oninput="setDureeCustom(this.value)">
-          <span style="font-size:.78rem;color:var(--gris)">heures</span>
-        </div>
-      </div>
-
-      <!-- ÉTAPE 4 : Fréquence -->
-      <div class="sim-step">
-        <div class="sim-step-head">
-          <div class="sim-step-num">4</div>
-          <div><p class="sim-step-title">Créneaux par semaine</p><p class="sim-step-sub">Combien de séances souhaitez-vous par semaine ?</p></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:.75rem">
-            <button class="sim-counter-btn" onclick="changeFreq(-1)">−</button>
-            <span id="freq-display" style="font-family:var(--fs);font-size:2rem;font-weight:900;color:var(--blanc);min-width:1.5rem;text-align:center">1</span>
-            <button class="sim-counter-btn" onclick="changeFreq(1)">+</button>
-          </div>
-          <span style="font-size:.85rem;color:var(--gris)">créneau<span id="freq-s"></span> par semaine</span>
-        </div>
-      </div>
-
-      <!-- ÉTAPE 5 : Semaines / an -->
-      <div class="sim-step">
-        <div class="sim-step-head">
-          <div class="sim-step-num">5</div>
-          <div><p class="sim-step-title">Durée du programme</p><p class="sim-step-sub">Nombre de semaines par an</p></div>
-        </div>
-        <div class="sim-options" style="margin-bottom:.9rem">
-          <button class="sim-opt" onclick="setSem(4,this)">Événement (4 sem.)</button>
-          <button class="sim-opt" onclick="setSem(12,this)">Trimestre (12 sem.)</button>
-          <button class="sim-opt sel" onclick="setSem(36,this)">Année scolaire (36 sem.)</button>
-          <button class="sim-opt" onclick="setSem(48,this)">48 semaines</button>
-          <button class="sim-opt" onclick="setSem(52,this)">Année complète (52 sem.)</button>
-        </div>
-        <div class="sim-slider-wrap">
-          <div class="sim-slider-row">
-            <span class="sim-slider-label">4 sem.</span>
-            <span class="sim-slider-val" id="sem-display">36 semaines</span>
-            <span class="sim-slider-label">52 sem.</span>
-          </div>
-          <input type="range" class="srange" id="sem-range" min="4" max="52" value="36" oninput="updateSlider(this)">
-        </div>
-      </div>
-
-    </div>
-
-    <!-- DROITE : récap + envoi -->
-    <div class="sim-recap rvr" style="transition-delay:.25s">
-      <div class="sim-recap-head">
-        <p class="sim-recap-title">📊 Votre estimation</p>
-      </div>
-      <div class="sim-recap-body">
-        <div class="sim-line"><span class="sim-line-lbl">Type de créneau</span><span class="sim-line-val" id="r-type">Mercredi AM</span></div>
-        <div class="sim-line"><span class="sim-line-lbl">Éducateurs</span><span class="sim-line-val" id="r-educ">3 éducs.</span></div>
-        <div class="sim-line"><span class="sim-line-lbl">Durée / séance</span><span class="sim-line-val" id="r-duree">2h</span></div>
-        <div class="sim-line"><span class="sim-line-lbl">Fréquence</span><span class="sim-line-val" id="r-freq">1 / semaine</span></div>
-        <div class="sim-line"><span class="sim-line-lbl">Semaines / an</span><span class="sim-line-val" id="r-sem">36 sem.</span></div>
-        <div class="sim-divider"></div>
-        <div class="sim-line"><span class="sim-line-lbl">Coût / séance</span><span class="sim-line-val" id="r-seance">210 €</span></div>
-        <div class="sim-line"><span class="sim-line-lbl">Séances / an</span><span class="sim-line-val" id="r-nb-seances">36</span></div>
-        <div class="sim-divider"></div>
-        <div class="sim-total-block">
-          <p class="sim-total-label">Budget annuel estimé</p>
-          <p class="sim-total-price" id="r-total">7 560 €</p>
-          <p class="sim-total-sub">H.T. · hors mise à disposition des locaux</p>
-        </div>
-        <p style="font-size:.72rem;color:rgba(255,255,255,.25);line-height:1.6;margin-bottom:1.25rem">Tarif : 35 €/h/éducateur. Des subventions CNDS ou FDVA peuvent réduire ce budget. Nous vous accompagnons dans la recherche de financements.</p>
-      </div>
-
-      <div class="sim-form">
-        <p class="sim-form-title">Recevoir ce devis par email</p>
-        <div class="sim-field">
-          <input class="sim-input" id="s-nom" type="text" placeholder="Votre nom *" required>
-        </div>
-        <div class="sim-field">
-          <input class="sim-input" id="s-commune" type="text" placeholder="Votre commune *" required>
-        </div>
-        <div class="sim-field">
-          <input class="sim-input" id="s-email" type="email" placeholder="Votre email *" required>
-        </div>
-        <div class="sim-field">
-          <input class="sim-input" id="s-tel" type="tel" placeholder="Téléphone (optionnel)">
-        </div>
-        <button class="sim-send" id="sim-btn" onclick="sendDevis()">
-          <span id="sim-btn-txt">Envoyer mon devis →</span>
-        </button>
-        <div class="sim-msg" id="sim-ok">✅ Devis envoyé ! Kelian, Lucas ou Luis vous répond sous 48h.</div>
-        <div class="sim-msg" id="sim-err">❌ Erreur d'envoi. Écrivez-nous directement à <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90fef5fff2f1fcfcbef3fffcfcf5f3e4f9f6d0f7fdf1f9fcbef3fffd">[email&#160;protected]</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ÉQUIPE -->
 <section id="equipe">
   <div class="eq-intro">
     <p class="tag rv">L'équipe</p>
@@ -583,7 +456,6 @@ footer span{color:var(--g)}
   </div>
 </section>
 
-<!-- GARANTIES -->
 <section id="garanties">
   <p class="tag rv">Ce que NeoBall garantit</p>
   <h2 class="ttl rv" style="transition-delay:.1s;margin-top:.75rem">Clé en main. Sans surprise.</h2>
@@ -597,7 +469,6 @@ footer span{color:var(--g)}
   </div>
 </section>
 
-<!-- COMMUNES MAP -->
 <section id="communes">
   <p class="tag rv">Notre territoire</p>
   <h2 class="ttl rv" style="transition-delay:.1s;margin-top:.75rem">Les communes<br>qui nous <em style="font-style:normal;color:var(--g)">suivent.</em></h2>
@@ -605,10 +476,7 @@ footer span{color:var(--g)}
   <div class="cm-layout rv" style="transition-delay:.25s">
     <div class="cm-map-wrap"><div id="neoball-map"></div></div>
     <div class="cm-sidebar">
-      <div class="cm-head">
-        <p class="cm-head-title">Communes partenaires</p>
-        <input class="cm-search" id="cm-search" type="text" placeholder="Rechercher une ville..." oninput="filterCommunes(this.value)">
-      </div>
+      <div class="cm-head"><p class="cm-head-title">Communes partenaires</p><input class="cm-search" id="cm-search" type="text" placeholder="Rechercher une ville..." oninput="filterCommunes(this.value)"></div>
       <div class="cm-list" id="cm-list"></div>
       <div class="cm-foot">
         <div class="cm-stat"><p class="cm-stat-n" id="cm-n-total">—</p><p class="cm-stat-l">Communes</p></div>
@@ -619,11 +487,10 @@ footer span{color:var(--g)}
   </div>
   <div class="cm-cta rv" style="transition-delay:.3s">
     <p>Votre commune n'est pas encore sur la carte ?</p>
-    <a href="#simulateur" class="btn-g">Estimer mon budget →</a>
+    <button class="btn-g" onclick="openResa()">📅 Réserver une démonstration</button>
   </div>
 </section>
 
-<!-- ÉTAPES -->
 <section id="etapes">
   <p class="tag rv">Comment démarrer</p>
   <h2 class="ttl rv" style="transition-delay:.1s;margin-top:.75rem">3 étapes.<br>Dès la semaine suivante.</h2>
@@ -634,17 +501,16 @@ footer span{color:var(--g)}
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
   <div class="co-glow"></div>
   <div>
     <h2 class="co-ttl rv">Votre<br>commune<br><em>mérite ça.</em></h2>
     <p class="co-sub rv" style="transition-delay:.15s">Démo gratuite sur place. On se déplace, on installe, on anime. Sans engagement.</p>
     <div class="co-btns rv" style="transition-delay:.28s">
-      <a href="#simulateur" class="btn-g">Simuler mon budget →</a>
-      <a href="/cdn-cgi/l/email-protection#325c575d50535e5e1c515d5e5e5751465b5472555f535b5e1c515d5f" class="btn-gh"><span class="__cf_email__" data-cfemail="046a616b666568682a676b68686167706d62446369656d682a676b69">[email&#160;protected]</span></a>
+      <button class="btn-g" onclick="openResa()">📅 Réserver une démo →</button>
+      <a href="mailto:neoball.collectif@gmail.com" class="btn-gh">neoball.collectif@gmail.com</a>
     </div>
-    <p class="co-info rv" style="transition-delay:.4s">Kelian Le Guen · Lucas Leone · Luis Ferreira<br>Villeparisis (77) · Île-de-France · <a href="/cdn-cgi/l/email-protection#ea848f85888b8686c4898586868f899e838caa8d878b8386c4898587"><span class="__cf_email__" data-cfemail="9df3f8f2fffcf1f1b3fef2f1f1f8fee9f4fbddfaf0fcf4f1b3fef2f0">[email&#160;protected]</span></a></p>
+    <p class="co-info rv" style="transition-delay:.4s">Kelian Le Guen · Lucas Leone · Luis Ferreira<br>Villeparisis (77) · Île-de-France · <a href="mailto:neoball.collectif@gmail.com">neoball.collectif@gmail.com</a></p>
   </div>
 </section>
 
@@ -653,266 +519,526 @@ footer span{color:var(--g)}
   <span>Villeparisis (77) · Île-de-France</span>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ── CURSOR ── */
-const cur = document.getElementById('cur'), curR = document.getElementById('curR');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
-(function loop(){ cur.style.left=mx+'px'; cur.style.top=my+'px'; rx+=(mx-rx)*.12; ry+=(my-ry)*.12; curR.style.left=rx+'px'; curR.style.top=ry+'px'; requestAnimationFrame(loop); })();
+<button class="resa-fab" onclick="openResa()">📅 Demander un créneau</button>
 
-/* ── PROGRESS ── */
-window.addEventListener('scroll', () => {
-  document.getElementById('prog').style.transform = 'scaleX('+(window.scrollY/(document.body.scrollHeight-window.innerHeight))+')';
-}, {passive:true});
+<div id="resa-overlay" onclick="if(event.target===this)closeResa()">
+  <div id="resa-box">
+    <div class="rh">
+      <div class="rh-steps">
+        <span class="rh-step active" id="rhs1">1 · Créneaux</span>
+        <span class="rh-line"></span>
+        <span class="rh-step" id="rhs2">2 · Configuration</span>
+        <span class="rh-line"></span>
+        <span class="rh-step" id="rhs3">3 · Validation</span>
+      </div>
+      <button class="rh-close" onclick="closeResa()">✕</button>
+    </div>
 
-/* ── NAV ── */
-window.addEventListener('scroll', () => {
-  document.getElementById('nav').classList.toggle('s', window.scrollY>60);
-}, {passive:true});
+    <div class="rb">
+      <div id="rs1" class="rs active">
+        <p class="rs-title">Choisissez vos dates</p>
+        <p class="rs-sub">Sélectionnez un ou plusieurs jours, puis personnalisez vos horaires.</p>
+        <div class="cal-nav">
+          <button class="cal-nb" id="cal-prev" onclick="calMove(-1)">←</button>
+          <span class="cal-ml" id="cal-label">—</span>
+          <button class="cal-nb" id="cal-next" onclick="calMove(1)">→</button>
+        </div>
+        <div class="cal-wdays">
+          <span class="cal-wd">Lun</span><span class="cal-wd">Mar</span><span class="cal-wd">Mer</span>
+          <span class="cal-wd">Jeu</span><span class="cal-wd">Ven</span><span class="cal-wd">Sam</span><span class="cal-wd">Dim</span>
+        </div>
+        <div id="cal-grid" class="cal-grid"></div>
+        
+        <div id="custom-time-panel" class="custom-time-panel">
+            <p class="slot-panel-title" id="custom-time-title">—</p>
+            <div class="time-inputs">
+                <div>
+                    <label class="time-lbl">Heure de début</label>
+                    <select id="time-start" class="conf-input" onchange="validateTimes()"></select>
+                </div>
+                <div>
+                    <label class="time-lbl">Heure de fin</label>
+                    <select id="time-end" class="conf-input" onchange="validateTimes()"></select>
+                </div>
+            </div>
+        </div>
+      </div>
 
-/* ── REVEAL ── */
-const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('on'); }), {threshold:.12});
-document.querySelectorAll('.rv,.rvl,.rvr').forEach(el => io.observe(el));
+      <div id="rs2" class="rs">
+        <p class="rs-title">Configurez votre séance</p>
+        <div class="conf-slot-recap" id="conf-recap">
+          📅 <strong id="cr-date">—</strong> &nbsp;·&nbsp; <span id="cr-hours">—</span>
+        </div>
+        <p class="conf-lbl">Sport(s) souhaité(s) <span style="color:rgba(255,255,255,.25);font-weight:400;font-size:.9em">(plusieurs possibles)</span></p>
+        <div class="conf-sports" id="conf-sports">
+          <button class="conf-sport on" onclick="this.classList.toggle('on')">🏐 Spikeball</button>
+          <button class="conf-sport" onclick="this.classList.toggle('on')">🏈 Flag Football</button>
+          <button class="conf-sport" onclick="this.classList.toggle('on')">🎯 Tchoukball</button>
+          <button class="conf-sport" onclick="this.classList.toggle('on')">⚾ Strikeball</button>
+          <button class="conf-sport" onclick="this.classList.toggle('on')">💥 Dodgeball</button>
+        </div>
+        <div class="conf-grid">
+          <div class="conf-block">
+            <p class="conf-lbl">Éducateurs</p>
+            <div class="conf-counter">
+              <button class="ccb" onclick="changeEduc(-1)">−</button>
+              <span class="conf-val" id="educ-val">3</span>
+              <button class="ccb" onclick="changeEduc(1)">+</button>
+            </div>
+            <p class="conf-hint ok" id="ratio-hint">Max légal : 36 participants</p>
+          </div>
+          <div class="conf-block">
+            <p class="conf-lbl">Participants attendus</p>
+            <input class="conf-input" id="parts-input" type="number" min="1" max="300" value="20" oninput="updateRatio()">
+            <p style="font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.3rem">Saisie libre — ratio légal vérifié</p>
+          </div>
+        </div>
+        <div class="conf-block" style="margin-top:0">
+          <p class="conf-lbl">Message / précisions <span style="font-weight:400;color:rgba(255,255,255,.25)">optionnel</span></p>
+          <textarea class="conf-input" id="conf-msg" rows="2" placeholder="Public spécifique, équipements disponibles, questions..." style="resize:none;margin-top:.25rem"></textarea>
+        </div>
+      </div>
 
-/* ── STATS COUNTER ── */
-function countUp(el, target, dur) {
-  const s = performance.now();
-  (function step(now){ const p=Math.min((now-s)/dur,1); el.textContent=Math.floor((1-Math.pow(1-p,3))*target); if(p<1) requestAnimationFrame(step); else el.textContent=target; })(s);
-}
-let counted=false;
-new IntersectionObserver(es => {
-  if(es[0].isIntersecting && !counted){ counted=true; countUp(document.getElementById('c1'),3,1000); countUp(document.getElementById('c2'),5,1200); countUp(document.getElementById('c3'),36,1600); }
-},{threshold:.4}).observe(document.getElementById('stats'));
+      <div id="rs3" class="rs">
+        <p class="rs-title">Récapitulatif & Coordonnées</p>
+        <p class="rs-sub">Vérifiez votre demande et laissez vos coordonnées. NeoBall vous confirme sous 48h.</p>
+        <div class="recap-block">
+          <div class="recap-row"><span class="recap-lbl">Dates</span><span class="recap-val" id="rr-date">—</span></div>
+          <div class="recap-row"><span class="recap-lbl">Horaires</span><span class="recap-val" id="rr-hours">—</span></div>
+          <div class="recap-row"><span class="recap-lbl">Sport(s)</span><span class="recap-val" id="rr-sport">—</span></div>
+          <div class="recap-row"><span class="recap-lbl">Éducateurs</span><span class="recap-val" id="rr-educ">—</span></div>
+          <div class="recap-row"><span class="recap-lbl">Participants</span><span class="recap-val" id="rr-parts">—</span></div>
+          <div class="recap-row"><span class="recap-lbl">Durée / séance</span><span class="recap-val" id="rr-duree">—</span></div>
+        </div>
+        <div class="prix-block">
+          <p class="prix-lbl">Estimation de la prestation</p>
+          <p class="prix-val" id="rr-prix">—</p>
+          <p class="prix-sub">H.T. · 35 €/h/éducateur</p>
+          <strong style="color:rgba(255,255,255,.8);font-size:0.75rem;font-weight:600;display:block;margin-top:0.6rem;padding-top:0.6rem;border-top:1px dashed rgba(0,168,120,.3)">⚠️ Toute heure entamée est due.</strong>
+          <p class="prix-sub" id="prix-facture-lbl" style="margin-top:0.2rem"></p>
+        </div>
+        <div class="ri-row">
+          <input class="ri" id="ri-nom" placeholder="Votre nom *">
+          <input class="ri" id="ri-commune" placeholder="Votre commune *">
+        </div>
+        <input class="ri" id="ri-email" type="email" placeholder="Email *">
+        <input class="ri" id="ri-tel" type="tel" placeholder="Téléphone (optionnel)">
+        <div class="resa-alert ok" id="resa-ok">✅ Demande enregistrée ! Elle est maintenant en attente de validation.</div>
+        <div class="resa-alert err" id="resa-err">❌ Erreur de connexion au serveur.</div>
+      </div>
+    </div>
 
-/* ── SPORTS STICKY ── */
-const spSec=document.getElementById('sp-sec');
-const spE=document.querySelectorAll('.sp-entry'), spV=document.querySelectorAll('.sp-vis');
-function setSport(i){ spE.forEach((el,j)=>el.classList.toggle('on',j===i)); spV.forEach((el,j)=>el.classList.toggle('on',j===i)); }
-window.addEventListener('scroll', () => {
-  const scrolled=Math.max(0,-spSec.getBoundingClientRect().top);
-  const scrollable=spSec.offsetHeight-window.innerHeight;
-  setSport(Math.min(4,Math.floor((scrolled/scrollable)*5)));
-},{passive:true});
+    <div class="rf">
+      <button class="rf-back" id="rf-back" onclick="resaBack()" style="visibility:hidden">← Retour</button>
+      <button class="rf-next" id="rf-next" onclick="resaNext()" disabled>
+        <span id="rf-next-txt">Sélectionnez une date</span> →
+      </button>
+    </div>
+  </div>
+</div>
 
-/* ── SIMULATEUR ── */
-const SIM = { type:'Mercredi après-midi', educ:3, participants:30, duree:2, freq:1, sem:36 };
-const TARIF = 35;
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
-function selectOpt(key, btn) {
-  btn.closest('.sim-options').querySelectorAll('.sim-opt').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-  SIM[key] = btn.dataset.val;
-  updateRecap();
-}
-
-/* Éducateurs : compteur */
-function changeEduc(delta) {
-  SIM.educ = Math.max(1, Math.min(10, SIM.educ + delta));
-  document.getElementById('educ-display').textContent = SIM.educ;
-  document.getElementById('educ-tarif').textContent = SIM.educ;
-  updateRatioIndicator();
-  updateRecap();
-}
-
-/* Participants : saisie libre */
-function updateParticipants(val) {
-  const v = parseInt(val);
-  if (!isNaN(v) && v > 0) { SIM.participants = v; updateRatioIndicator(); updateRecap(); }
-}
-
-/* Indicateur légal de ratio */
-function updateRatioIndicator() {
-  const el = document.getElementById('ratio-indicator');
-  const maxLegal = SIM.educ * 12;
-  if (SIM.participants <= maxLegal) {
-    el.style.background = 'rgba(0,168,120,.1)';
-    el.style.border = '1px solid rgba(0,168,120,.25)';
-    el.style.color = 'var(--g)';
-    el.innerHTML = '✓ <strong>' + SIM.educ + ' éduc' + (SIM.educ > 1 ? 's' : '') + '</strong> pour <strong>' + SIM.participants + ' participants</strong> — Conforme au Code du Sport (max légal : ' + maxLegal + ' participants)';
-  } else {
-    const educsNecessaires = Math.ceil(SIM.participants / 12);
-    el.style.background = 'rgba(255,160,50,.08)';
-    el.style.border = '1px solid rgba(255,160,50,.3)';
-    el.style.color = '#FFB347';
-    el.innerHTML = '⚠ <strong>' + SIM.participants + ' participants</strong> nécessitent au moins <strong>' + educsNecessaires + ' éducateur' + (educsNecessaires > 1 ? 's' : '') + '</strong> pour respecter le ratio légal (1 pour 12). Ajustez les éducateurs ou les participants.';
-  }
-}
-
-/* Durée : boutons rapides */
-function setDuree(val, btn) {
-  document.querySelectorAll('#opt-duree .sim-opt').forEach(b => b.classList.remove('sel'));
-  if (btn) btn.classList.add('sel');
-  document.getElementById('duree-custom').value = '';
-  SIM.duree = val;
-  updateRecap();
-}
-/* Durée : saisie libre */
-function setDureeCustom(val) {
-  const v = parseFloat(val);
-  if (!isNaN(v) && v > 0) {
-    document.querySelectorAll('#opt-duree .sim-opt').forEach(b => b.classList.remove('sel'));
-    SIM.duree = v;
-    updateRecap();
-  }
-}
-
-/* Fréquence : compteur */
-function changeFreq(delta) {
-  SIM.freq = Math.max(1, Math.min(14, SIM.freq + delta));
-  document.getElementById('freq-display').textContent = SIM.freq;
-  document.getElementById('freq-s').textContent = SIM.freq > 1 ? 'x' : '';
-  updateRecap();
-}
-
-/* Semaines : boutons + slider */
-function setSem(val, btn) {
-  SIM.sem = val;
-  document.getElementById('sem-range').value = val;
-  document.getElementById('sem-display').textContent = val + ' semaines';
-  const pct = ((val - 4) / (52 - 4) * 100) + '%';
-  document.getElementById('sem-range').style.setProperty('--pct', pct);
-  document.querySelectorAll('#simulateur .sim-options:last-of-type .sim-opt').forEach(b => b.classList.remove('sel'));
-  if (btn) btn.classList.add('sel');
-  updateRecap();
-}
-function updateSlider(el) {
-  SIM.sem = parseInt(el.value);
-  const pct = ((el.value - el.min) / (el.max - el.min) * 100) + '%';
-  el.style.setProperty('--pct', pct);
-  document.getElementById('sem-display').textContent = el.value + ' semaines';
-  document.querySelectorAll('#simulateur .sim-options').forEach(opts => {
-    if (opts.previousElementSibling && opts.previousElementSibling.textContent.includes('semaines')) {
-      opts.querySelectorAll('.sim-opt').forEach(b => b.classList.remove('sel'));
-    }
-  });
-  updateRecap();
-}
-
-function fmt(n) { return n.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:2}) + ' €'; }
-
-function updateRecap() {
-  const coutSeance = TARIF * SIM.educ * SIM.duree;
-  const nbSeances  = SIM.freq * SIM.sem;
-  const total      = coutSeance * nbSeances;
-  const dureeLabel = SIM.duree % 1 === 0 ? SIM.duree + 'h' : SIM.duree + 'h';
-
-  document.getElementById('r-type').textContent      = SIM.type;
-  document.getElementById('r-educ').textContent      = SIM.educ + ' éduc' + (SIM.educ > 1 ? 's' : '') + ' · ' + SIM.participants + ' participants';
-  document.getElementById('r-duree').textContent     = dureeLabel;
-  document.getElementById('r-freq').textContent      = SIM.freq + ' créneau' + (SIM.freq > 1 ? 'x' : '') + ' / semaine';
-  document.getElementById('r-sem').textContent       = SIM.sem + ' semaines';
-  document.getElementById('r-seance').textContent    = fmt(coutSeance);
-  document.getElementById('r-nb-seances').textContent = nbSeances;
-  document.getElementById('r-total').textContent     = fmt(total);
-}
-
-/* Init */
-(function() {
-  const el = document.getElementById('sem-range');
-  el.style.setProperty('--pct', ((36 - 4) / (52 - 4) * 100) + '%');
-  updateRatioIndicator();
-  updateRecap();
-})();
-
-/* ── EMAILJS + ENVOI DEVIS ── */
-emailjs.init('a5JjZKZsdib1Z8Ze4');
-
-function sendDevis() {
-  const nom    = document.getElementById('s-nom').value.trim();
-  const commune= document.getElementById('s-commune').value.trim();
-  const email  = document.getElementById('s-email').value.trim();
-  const tel    = document.getElementById('s-tel').value.trim();
-
-  if(!nom||!commune||!email){ alert('Merci de remplir les champs obligatoires (nom, commune, email).'); return; }
-
-  const coutSeance = TARIF * SIM.educ * SIM.duree;
-  const total      = coutSeance * SIM.freq * SIM.sem;
-
-  const btn = document.getElementById('sim-btn');
-  const txt = document.getElementById('sim-btn-txt');
-  btn.disabled = true;
-  txt.textContent = 'Envoi en cours...';
-
-  const params = {
-    to_email:    'neoball.collectif@gmail.com',
-    from_name:   nom,
-    commune:     commune,
-    reply_to:    email,
-    telephone:   tel || 'Non renseigné',
-    type_creneau: SIM.type,
-    nb_educateurs: SIM.educ+' éducateur'+(SIM.educ>1?'s':''),
-    participants:  SIM.participants+' participants attendus',
-    duree_seance: SIM.duree+'h',
-    freq_semaine: SIM.freq+' créneau'+(SIM.freq>1?'x':'')+' / semaine',
-    nb_semaines:  SIM.sem+' semaines',
-    cout_seance:  fmt(coutSeance),
-    nb_seances:   (SIM.freq*SIM.sem)+' séances / an',
-    total_annuel: fmt(total),
-    message:     'Demande de devis NeoBall générée depuis le site web.'
+  const firebaseConfig = {
+    apiKey: "AIzaSyCAfoMmouoN2cmCgHYJ07gIyyTLqv_ltto",
+    authDomain: "neoball-e2f1f.firebaseapp.com",
+    projectId: "neoball-e2f1f",
+    storageBucket: "neoball-e2f1f.firebasestorage.app",
+    messagingSenderId: "648867084826",
+    appId: "1:648867084826:web:e86426f3cdd0fe086bafa3"
   };
 
-  emailjs.send('service_2ayatbr', 'template_q453h0k', params)
-    .then(() => {
-      document.getElementById('sim-ok').style.display = 'block';
-      btn.style.display = 'none';
-    })
-    .catch(() => {
-      document.getElementById('sim-err').style.display = 'block';
-      btn.disabled = false;
-      txt.textContent = 'Envoyer mon devis →';
-    });
-}
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.db = db;
+  window.collection = collection;
+  window.addDoc = addDoc;
+  
+  window.BLOCKED_DATES_DB = [];
+
+  window.loadReservations = async function() {
+      try {
+          const q = query(collection(db, "reservations"));
+          const querySnapshot = await getDocs(q);
+          const blocked = [];
+          querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if(Array.isArray(data.date_id)) {
+                  blocked.push(...data.date_id);
+              } else if(data.date_id) {
+                  blocked.push(data.date_id);
+              }
+          });
+          window.BLOCKED_DATES_DB = blocked;
+          if (typeof buildCal === 'function') buildCal();
+      } catch (error) {
+          console.log("Erreur de lecture Firebase", error);
+      }
+  }
+
+  window.loadReservations();
+</script>
+
+<script>
+/* ── CURSOR & DESIGN ── */
+var cur=document.getElementById('cur'),curR=document.getElementById('curR'),mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+window.addEventListener('scroll',function(){document.getElementById('prog').style.transform='scaleX('+(window.scrollY/(document.body.scrollHeight-window.innerHeight))+')';document.getElementById('nav').classList.toggle('s',window.scrollY>60);},{passive:true});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.12});
+document.querySelectorAll('.rv,.rvl,.rvr').forEach(function(el){io.observe(el);});
+
+function countUp(el,target,dur){var s=performance.now();(function step(now){var p=Math.min((now-s)/dur,1);el.textContent=Math.floor((1-Math.pow(1-p,3))*target);if(p<1)requestAnimationFrame(step);else el.textContent=target;})(s);}
+var counted=false;
+new IntersectionObserver(function(es){if(es[0].isIntersecting&&!counted){counted=true;countUp(document.getElementById('c1'),3,1000);countUp(document.getElementById('c2'),5,1200);countUp(document.getElementById('c3'),36,1600);}},{threshold:.4}).observe(document.getElementById('stats'));
+
+var spSec=document.getElementById('sp-sec');
+var spE=document.querySelectorAll('.sp-entry'),spV=document.querySelectorAll('.sp-vis');
+function setSport(i){spE.forEach(function(el,j){el.classList.toggle('on',j===i);});spV.forEach(function(el,j){el.classList.toggle('on',j===i);});}
+window.addEventListener('scroll',function(){var sc=Math.max(0,-spSec.getBoundingClientRect().top),sa=spSec.offsetHeight-window.innerHeight;setSport(Math.min(4,Math.floor((sc/sa)*5)));},{passive:true});
 
 /* ── COMMUNES MAP ── */
-const COMMUNES = [
-  { nom:'Drancy',           dept:'Seine-Saint-Denis (93)', lat:48.9239, lng:2.4591, statut:'actif',    depuis:'janv. 2025', info:'Spikeball & Dodgeball. Mercredi après-midi au gymnase municipal.' },
-  { nom:'Claye-Souilly',    dept:'Seine-et-Marne (77)',    lat:48.9444, lng:2.6847, statut:'actif',    depuis:'mars 2024',  info:'Flag Football & Tchoukball. Programme annuel complet.' },
-  { nom:'Aulnay-sous-Bois', dept:'Seine-Saint-Denis (93)', lat:48.9378, lng:2.4936, statut:'actif',    depuis:'sept. 2024', info:'3 créneaux / semaine. Mercredi + soirées vendredi.' },
-  { nom:'Villeparisis',     dept:'Seine-et-Marne (77)',    lat:48.9447, lng:2.6285, statut:'actif',    depuis:'janv. 2024', info:'Commune siège du collectif. Tous les sports proposés.' },
-  { nom:'Mitry-Mory',       dept:'Seine-et-Marne (77)',    lat:48.9847, lng:2.6208, statut:'actif',    depuis:'oct. 2024',  info:'Strikeball & Spikeball. Accueil ALSH pendant les vacances.' },
-  { nom:'Torcy',            dept:'Seine-et-Marne (77)',    lat:48.8469, lng:2.6542, statut:'prospect', info:'Convention en cours de signature.' },
-  { nom:'Chelles',          dept:'Seine-et-Marne (77)',    lat:48.8786, lng:2.5897, statut:'prospect', info:'Réunion de présentation effectuée — en attente de retour.' },
-  { nom:'Bobigny',          dept:'Seine-Saint-Denis (93)', lat:48.9101, lng:2.4401, statut:'prospect', info:'Premier contact établi. Démo gratuite proposée.' },
+var COMMUNES=[
+  {nom:'Drancy',dept:'Seine-Saint-Denis (93)',lat:48.9239,lng:2.4591,statut:'actif'},
+  {nom:'Claye-Souilly',dept:'Seine-et-Marne (77)',lat:48.9444,lng:2.6847,statut:'actif'},
+  {nom:'Aulnay-sous-Bois',dept:'Seine-Saint-Denis (93)',lat:48.9378,lng:2.4936,statut:'actif'},
+  {nom:'Villeparisis',dept:'Seine-et-Marne (77)',lat:48.9447,lng:2.6285,statut:'actif'},
+  {nom:'Mitry-Mory',dept:'Seine-et-Marne (77)',lat:48.9847,lng:2.6208,statut:'actif'},
+  {nom:'Torcy',dept:'Seine-et-Marne (77)',lat:48.8469,lng:2.6542,statut:'prospect'},
 ];
-
-let mapInst=null, markers={}, activeI=null;
-
-function initMap() {
-  if(mapInst) return;
-  mapInst = L.map('neoball-map', {center:[48.91,2.57],zoom:10});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(mapInst);
-  COMMUNES.forEach((c,i)=>{
-    const a=c.statut==='actif';
-    const icon=L.divIcon({html:'<div style="width:'+(a?20:14)+'px;height:'+(a?20:14)+'px;border-radius:50%;background:'+(a?'#00A878':'rgba(255,255,255,.3)')+';border:2px solid '+(a?'rgba(0,200,140,.6)':'rgba(255,255,255,.15)')+';box-shadow:0 0 '+(a?'10px rgba(0,168,120,.7)':'4px rgba(255,255,255,.1)')+';cursor:pointer"></div>',className:'',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
-    const pop='<div class="pop"><p class="pop-name">'+c.nom+'</p><p class="pop-dept">'+c.dept+'</p><span class="pop-tag '+c.statut+'">'+(a?'✓ Partenaire actif':'○ En discussion')+'</span>'+(c.depuis?'<p class="pop-info">📅 Depuis '+c.depuis+'</p>':'')+(c.info?'<p class="pop-info" style="margin-top:.3rem">'+c.info+'</p>':'')+'</div>';
-    const m=L.marker([c.lat,c.lng],{icon}).addTo(mapInst).bindPopup(pop,{maxWidth:240});
-    m.on('click',()=>selectCommune(i));
-    markers[i]=m;
+var mapInst=null,mapMarkers={},activeCI=null;
+function initMap(){
+  if(mapInst)return;
+  mapInst=L.map('neoball-map',{center:[48.91,2.57],zoom:10});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap',subdomains:'abcd',maxZoom:19}).addTo(mapInst);
+  COMMUNES.forEach(function(c,i){
+    var a=c.statut==='actif';
+    var icon=L.divIcon({html:'<div style="width:'+(a?20:14)+'px;height:'+(a?20:14)+'px;border-radius:50%;background:'+(a?'#00A878':'rgba(255,255,255,.3)')+';border:2px solid '+(a?'rgba(0,200,140,.6)':'rgba(255,255,255,.15)')+';box-shadow:0 0 '+(a?'10px rgba(0,168,120,.7)':'4px rgba(255,255,255,.1)')+';cursor:pointer"></div>',className:'',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
+    var pop='<div class="pop"><p class="pop-name">'+c.nom+'</p><p class="pop-dept">'+c.dept+'</p><span class="pop-tag '+c.statut+'">'+(a?'✓ Partenaire actif':'○ En discussion')+'</span></div>';
+    var m=L.marker([c.lat,c.lng],{icon}).addTo(mapInst).bindPopup(pop,{maxWidth:240});
+    m.on('click',function(){selectCommune(i);});
+    mapMarkers[i]=m;
   });
-  renderList(COMMUNES); updateCmStats();
+  renderCMList(COMMUNES);updateCMStats();
 }
-
-function renderList(data){
-  const list=document.getElementById('cm-list'); if(!list) return;
-  if(!data.length){list.innerHTML='<p style="padding:1.5rem;font-size:.8rem;color:var(--gris);text-align:center">Aucune commune trouvée</p>';return;}
-  list.innerHTML=data.map(c=>{const i=COMMUNES.indexOf(c);return '<div class="cm-item'+(i===activeI?' active':'')+'" id="cmi-'+i+'" onclick="selectCommune('+i+')">'+'<div class="cm-dot '+c.statut+'"></div>'+'<div class="cm-item-info"><p class="cm-item-name">'+c.nom+'</p><p class="cm-item-dept">'+c.dept+'</p></div>'+'<span class="cm-badge '+c.statut+'">'+(c.statut==='actif'?'Actif':'Prospect')+'</span></div>';}).join('');
+function renderCMList(data){
+  var list=document.getElementById('cm-list');if(!list)return;
+  list.innerHTML=data.map(function(c){var i=COMMUNES.indexOf(c);return '<div class="cm-item'+(i===activeCI?' active':'')+'" id="cmi-'+i+'" onclick="selectCommune('+i+')"><div class="cm-dot '+c.statut+'"></div><div class="cm-item-info"><p class="cm-item-name">'+c.nom+'</p><p class="cm-item-dept">'+c.dept+'</p></div><span class="cm-badge '+c.statut+'">'+(c.statut==='actif'?'Actif':'Prospect')+'</span></div>';}).join('');
 }
-
 function selectCommune(i){
-  if(activeI!==null){var o=document.getElementById('cmi-'+activeI);if(o)o.classList.remove('active');}
-  activeI=i;
+  if(activeCI!==null){var o=document.getElementById('cmi-'+activeCI);if(o)o.classList.remove('active');}
+  activeCI=i;
   var item=document.getElementById('cmi-'+i);
   if(item){item.classList.add('active');item.scrollIntoView({behavior:'smooth',block:'nearest'});}
-  if(mapInst&&markers[i]){mapInst.flyTo([COMMUNES[i].lat,COMMUNES[i].lng],13,{duration:.7});markers[i].openPopup();}
+  if(mapInst&&mapMarkers[i]){mapInst.flyTo([COMMUNES[i].lat,COMMUNES[i].lng],13,{duration:.7});mapMarkers[i].openPopup();}
 }
-
-function filterCommunes(q){renderList(COMMUNES.filter(c=>c.nom.toLowerCase().includes(q.toLowerCase())||c.dept.toLowerCase().includes(q.toLowerCase())));}
-function updateCmStats(){
+function filterCommunes(q){renderCMList(COMMUNES.filter(function(c){return c.nom.toLowerCase().includes(q.toLowerCase())||c.dept.toLowerCase().includes(q.toLowerCase());}));}
+function updateCMStats(){
   var t=document.getElementById('cm-n-total'),a=document.getElementById('cm-n-actif'),d=document.getElementById('cm-n-dept');
-  if(t)t.textContent=COMMUNES.length; if(a)a.textContent=COMMUNES.filter(c=>c.statut==='actif').length; if(d)d.textContent=new Set(COMMUNES.map(c=>c.dept)).size;
+  if(t)t.textContent=COMMUNES.length;if(a)a.textContent=COMMUNES.filter(function(c){return c.statut==='actif';}).length;if(d)d.textContent=new Set(COMMUNES.map(function(c){return c.dept;})).size;
+}
+new IntersectionObserver(function(es){if(es[0].isIntersecting)setTimeout(initMap,80);},{threshold:.1}).observe(document.getElementById('communes'));
+
+/* ════════════════════════════════════════
+   SYSTÈME DE RÉSERVATION DYNAMIQUE
+════════════════════════════════════════ */
+var MOIS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+var calY=0,calM=0,selDays=[],resaEduc=3,curStep=1;
+
+const ALLOWED_DAYS = [1, 2, 3, 4, 5, 6]; 
+
+function initTimeSelects() {
+    var opts = '';
+    // Génère les horaires de 08h00 à 22h00 par intervalles de 15 minutes
+    for(var h = 8; h <= 22; h++) {
+        for(var m = 0; m < 60; m+=15) {
+            // Option optionnelle : s'arrêter à 22h00 pile
+            if (h === 22 && m > 0) continue; 
+            
+            var hh = h < 10 ? '0'+h : h;
+            var mm = m === 0 ? '00' : m;
+            opts += '<option value="'+hh+':'+mm+'">'+hh+'h'+mm+'</option>';
+        }
+    }
+    var s1 = document.getElementById('time-start');
+    var s2 = document.getElementById('time-end');
+    if(s1 && s1.options.length === 0) { 
+        s1.innerHTML = opts; 
+        s1.value = '14:00'; 
+    }
+    if(s2 && s2.options.length === 0) { 
+        s2.innerHTML = opts; 
+        s2.value = '16:00'; 
+    }
 }
 
-new IntersectionObserver(es=>{if(es[0].isIntersecting)setTimeout(initMap,80);},{threshold:.1}).observe(document.getElementById('communes'));
+function getSlotForDate(ds) {
+  const d = new Date(ds + 'T12:00:00');
+  const dayOfWeek = d.getDay();
+  if (window.BLOCKED_DATES_DB && window.BLOCKED_DATES_DB.includes(ds)) return null;
+  if (ALLOWED_DAYS.includes(dayOfWeek)) return { id: ds, date: ds, dispo: true };
+  return null;
+}
+
+function openResa(){
+  var now=new Date();calY=now.getFullYear();calM=now.getMonth();
+  selDays=[];resaEduc=3;curStep=1;
+  initTimeSelects();
+  document.getElementById('custom-time-panel').classList.remove('active');
+  document.querySelectorAll('.conf-sport').forEach(function(b,i){b.classList.toggle('on',i===0);});
+  ['ri-nom','ri-commune','ri-email','ri-tel'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('resa-ok').style.display='none';
+  document.getElementById('resa-err').style.display='none';
+  document.getElementById('rf-next').style.display='';
+  goStep(1);
+  buildCal();
+  document.getElementById('resa-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeResa(){
+  document.getElementById('resa-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function calMove(delta){
+  calM+=delta;
+  if(calM>11){calM=0;calY++;}
+  if(calM<0){calM=11;calY--;}
+  buildCal();
+}
+
+function buildCal(){
+  document.getElementById('cal-label').textContent=MOIS[calM]+' '+calY;
+  var grid=document.getElementById('cal-grid');
+  grid.innerHTML='';
+  var today=new Date(); today.setHours(0,0,0,0);
+  var dow=new Date(calY,calM,1).getDay();
+  var offset=(dow===0)?6:dow-1;
+  var daysInMonth=new Date(calY,calM+1,0).getDate();
+  var daysInPrev=new Date(calY,calM,0).getDate();
+  var cells=[];
+  for(var i=0;i<offset;i++) cells.push({d:daysInPrev-offset+1+i,cur:false});
+  for(var i=1;i<=daysInMonth;i++) cells.push({d:i,cur:true});
+  while(cells.length%7!==0) cells.push({d:cells.length-offset-daysInMonth+1,cur:false});
+
+  cells.forEach(function(c){
+    var el=document.createElement('div');
+    el.className='cd';
+    if(!c.cur){ el.classList.add('other'); el.textContent=c.d; grid.appendChild(el); return; }
+
+    var ds = calY + '-' + (calM + 1 < 10 ? '0' : '') + (calM + 1) + '-' + (c.d < 10 ? '0' : '') + c.d;
+    var cellDate = new Date(calY, calM, c.d);
+    el.textContent=c.d;
+
+    if(cellDate < today){
+      el.classList.add('past');
+    } else {
+      var slot = getSlotForDate(ds);
+      if(slot){
+        el.classList.add('avail');
+        var dot=document.createElement('div');dot.className='cd-dot';el.appendChild(dot);
+        if(selDays.includes(ds)) el.classList.add('sel');
+        el.addEventListener('click', function(){ pickDay(ds); });
+      } else if (window.BLOCKED_DATES_DB && window.BLOCKED_DATES_DB.includes(ds)) {
+        el.classList.add('past'); 
+        el.title = "Déjà réservé";
+      }
+    }
+    grid.appendChild(el);
+  });
+}
+
+function pickDay(ds){
+  const idx = selDays.indexOf(ds);
+  if(idx > -1) {
+      selDays.splice(idx, 1); 
+  } else {
+      selDays.push(ds); 
+  }
+  selDays.sort(); 
+  buildCal();
+  
+  if(selDays.length > 0) {
+      var lbl = selDays.length === 1 ? '1 date sélectionnée' : selDays.length + ' dates sélectionnées';
+      document.getElementById('custom-time-title').textContent = lbl;
+      document.getElementById('custom-time-panel').classList.add('active');
+  } else {
+      document.getElementById('custom-time-panel').classList.remove('active');
+  }
+  
+  validateTimes();
+}
+
+function validateTimes() {
+    var start = document.getElementById('time-start').value;
+    var end = document.getElementById('time-end').value;
+    
+    if(selDays.length > 0 && start && end && start < end) {
+        setNextBtn(true, 'Configurer ma séance');
+    } else {
+        setNextBtn(false, selDays.length === 0 ? 'Sélectionnez une date' : 'Horaires invalides');
+    }
+}
+
+function setNextBtn(enabled,txt){
+  var btn=document.getElementById('rf-next');
+  var label=document.getElementById('rf-next-txt');
+  btn.disabled=!enabled;
+  label.textContent=txt;
+}
+
+function goStep(n){
+  curStep=n;
+  document.querySelectorAll('.rs').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('rs'+n).classList.add('active');
+  var steps=[document.getElementById('rhs1'),document.getElementById('rhs2'),document.getElementById('rhs3')];
+  steps.forEach(function(el,i){
+    el.classList.remove('active','done');
+    if(i+1===n) el.classList.add('active');
+    else if(i+1<n) el.classList.add('done');
+  });
+  document.getElementById('rf-back').style.visibility=(n===1)?'hidden':'visible';
+  if(n===1) validateTimes();
+  if(n===2){setNextBtn(true,'Voir le récapitulatif'); fillStep2();}
+  if(n===3){setNextBtn(true,'Envoyer ma demande'); fillStep3();}
+}
+
+function resaNext(){
+  if(curStep===1 && selDays.length > 0) goStep(2);
+  else if(curStep===2) goStep(3);
+  else if(curStep===3) sendResa();
+}
+function resaBack(){if(curStep>1) goStep(curStep-1);}
+
+function fillStep2(){
+  var lbl = selDays.length === 1 ? '1 date' : selDays.length + ' dates';
+  var start = document.getElementById('time-start').value.replace(':', 'h');
+  var end = document.getElementById('time-end').value.replace(':', 'h');
+  
+  document.getElementById('cr-date').textContent=lbl;
+  document.getElementById('cr-hours').textContent=start+' – '+end;
+  document.getElementById('educ-val').textContent=resaEduc;
+  updateRatio();
+}
+function changeEduc(d){
+  resaEduc=Math.max(1,Math.min(10,resaEduc+d));
+  document.getElementById('educ-val').textContent=resaEduc;
+  updateRatio();
+}
+function updateRatio(){
+  var parts=parseInt(document.getElementById('parts-input').value)||0;
+  var max=resaEduc*12;
+  var hint=document.getElementById('ratio-hint');
+  if(!hint)return;
+  if(!parts||parts<=max){hint.className='conf-hint ok';hint.textContent='Max légal : '+max+' participants';}
+  else{hint.className='conf-hint warn';hint.textContent='⚠ '+parts+' participants → '+Math.ceil(parts/12)+' éducs requis';}
+}
+
+function calcDuree(){
+  var start = document.getElementById('time-start').value;
+  var end = document.getElementById('time-end').value;
+  var sh = parseInt(start.split(':')[0]), sm = parseInt(start.split(':')[1]);
+  var eh = parseInt(end.split(':')[0]), em = parseInt(end.split(':')[1]);
+  return ((eh*60+em) - (sh*60+sm)) / 60; // Renvoie un nombre décimal (ex: 1.25 pour 1h15)
+}
+
+function fillStep3(){
+  var datesLbl = selDays.map(function(ds) {
+      return new Date(ds+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+  }).join(', ');
+  
+  var start = document.getElementById('time-start').value.replace(':', 'h');
+  var end = document.getElementById('time-end').value.replace(':', 'h');
+  var sports=[].filter.call(document.querySelectorAll('.conf-sport.on'),function(b){return true;}).map(function(b){return b.textContent.trim();}).join(', ')||'Non précisé';
+  var parts=parseInt(document.getElementById('parts-input').value)||'—';
+  
+  // Calculs avec plafonnement
+  var dureeReelle = calcDuree();
+  var dureeFacturee = Math.ceil(dureeReelle); // 1.25 devient 2
+  var totalHeures = dureeFacturee * selDays.length;
+  var prix = (35 * resaEduc * totalHeures).toLocaleString('fr-FR');
+  
+  // Formatage de la durée réelle pour l'affichage propre (ex: 1h15)
+  var formatTime = function(h) {
+      var min = Math.round((h % 1) * 60);
+      return Math.floor(h) + 'h' + (min < 10 ? '0' : '') + (min > 0 ? min : '');
+  };
+  
+  document.getElementById('rr-date').textContent = datesLbl;
+  document.getElementById('rr-hours').textContent = start+' – '+end;
+  document.getElementById('rr-sport').textContent = sports;
+  document.getElementById('rr-educ').textContent = resaEduc+' éducateur'+(resaEduc>1?'s':'');
+  document.getElementById('rr-parts').textContent = parts+' participants';
+  document.getElementById('rr-duree').textContent = formatTime(dureeReelle);
+  
+  document.getElementById('prix-facture-lbl').textContent = '(Facturé ' + dureeFacturee + 'h par séance × ' + selDays.length + ' séance' + (selDays.length>1?'s':'') + ')';
+  document.getElementById('rr-prix').textContent = prix+' €';
+}
+
+// ── FONCTION D'ENVOI VERS FIREBASE ──
+async function sendResa(){
+  var nom=document.getElementById('ri-nom').value.trim();
+  var commune=document.getElementById('ri-commune').value.trim();
+  var email=document.getElementById('ri-email').value.trim();
+  var tel=document.getElementById('ri-tel').value.trim();
+  
+  if(!nom||!commune||!email){alert('Merci de remplir nom, commune et email.');return;}
+  
+  var btn=document.getElementById('rf-next');
+  btn.disabled=true;
+  document.getElementById('rf-next-txt').textContent='Enregistrement...';
+
+  try {
+      var datesLbl = selDays.map(function(ds) {
+          return new Date(ds+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+      }).join(', ');
+      
+      var start = document.getElementById('time-start').value.replace(':', 'h');
+      var end = document.getElementById('time-end').value.replace(':', 'h');
+      var sports = [].map.call(document.querySelectorAll('.conf-sport.on'),function(b){return b.textContent.trim();}).join(', ')||'Non précisé';
+      var dureeFacturee = Math.ceil(calcDuree());
+      
+      const resaData = {
+          date_id: selDays, 
+          date_texte: datesLbl,
+          horaires: start + ' – ' + end,
+          sports: sports,
+          nb_educateurs: resaEduc,
+          participants: document.getElementById('parts-input').value || 'Non précisé',
+          duree_facturee: dureeFacturee + 'h par séance',
+          prix_estime: document.getElementById('rr-prix').textContent,
+          contact_nom: nom,
+          contact_commune: commune,
+          contact_email: email,
+          contact_tel: tel || 'Non renseigné',
+          message: document.getElementById('conf-msg').value.trim(),
+          statut: 'en_attente',
+          timestamp_demande: new Date().toISOString()
+      };
+
+      // Envoi à Firebase
+      await window.addDoc(window.collection(window.db, "reservations"), resaData);
+      
+      // Succès
+      document.getElementById('resa-ok').style.display='block';
+      btn.style.display='none';
+      
+      // Bloque les dates localement
+      window.BLOCKED_DATES_DB.push(...selDays);
+      
+  } catch(error) {
+      console.error("Erreur d'enregistrement :", error);
+      document.getElementById('resa-err').style.display='block';
+      btn.disabled=false;
+      document.getElementById('rf-next-txt').textContent='Réessayer';
+  }
+}
+
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeResa();});
 </script>
 </body>
 </html>
