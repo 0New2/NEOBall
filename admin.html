@@ -7,13 +7,13 @@
 <meta name="robots" content="noindex, nofollow">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* ... (Garde exactement tout ton CSS actuel ici, ne change rien) ... */
   :root { 
     --g: #00A878; --g-dim: rgba(0, 168, 120, 0.15); --noir: #080C0E; 
     --n2: #0D1517; --n3: #111A1D; --blanc: #fff; 
     --gris: #889296; --border: rgba(255, 255, 255, 0.08);
     --shadow: 0 8px 30px rgba(0,0,0,0.4);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; }
   body { background: var(--noir); color: var(--blanc); min-height: 100vh; overflow-x: hidden; }
 
@@ -31,69 +31,56 @@
 
   /* LAYOUT PRINCIPAL */
   #dashboard-screen { display: none; min-height: 100vh; }
-  
-  /* Sidebar */
   aside { width: 260px; background: var(--n2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 2rem 1.5rem; position: fixed; height: 100vh; }
   .logo-admin { font-family: 'Outfit'; font-size: 1.6rem; font-weight: 800; margin-bottom: 3rem; color: var(--blanc); text-decoration: none; }
   .logo-admin span { color: var(--g); }
-  
   .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--gris); text-decoration: none; border-radius: 12px; margin-bottom: 0.5rem; transition: 0.2s; font-weight: 500; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; }
   .nav-link:hover { background: var(--border); color: white; }
   .nav-link.active { background: var(--g-dim); color: var(--g); }
-  
   .btn-logout { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); color: #ff6b6b; cursor: pointer; opacity: 0.7; transition: 0.2s; }
   .btn-logout:hover { opacity: 1; }
-
-  /* Contenu Principal */
   main { flex: 1; margin-left: 260px; padding: 2.5rem 3rem; }
   .header-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
   .header-main h2 { font-family: 'Outfit'; font-size: 1.8rem; }
-
-  /* Stats Bar */
   .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
   .stat-card { background: var(--n2); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); }
   .stat-label { color: var(--gris); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; display: block; }
   .stat-value { font-family: 'Outfit'; font-size: 1.8rem; font-weight: 700; color: var(--g); }
-
-  /* Grid & Cartes */
   .tab-content { display: none; }
   .tab-content.active { display: block; }
-  
   .section-title { font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--gris); }
   .section-title span { background: var(--border); padding: 2px 10px; border-radius: 20px; font-size: 0.9rem; color: var(--blanc); }
-
   .resa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
   .resa-card { background: var(--n2); border-radius: 18px; border: 1px solid var(--border); padding: 1.8rem; transition: 0.3s; position: relative; overflow: hidden; }
   .resa-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); box-shadow: var(--shadow); }
-  
   .resa-card.attente { border-left: 4px solid #FFB347; }
   .resa-card.valide { border-left: 4px solid var(--g); }
-
   .card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.2rem; }
   .card-head h3 { font-family: 'Outfit'; font-size: 1.25rem; font-weight: 700; }
   .status-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 50px; letter-spacing: 0.5px; }
   .status-badge.attente { background: rgba(255, 179, 71, 0.1); color: #FFB347; border: 1px solid rgba(255, 179, 71, 0.2); }
   .status-badge.valide { background: rgba(0, 168, 120, 0.1); color: var(--g); border: 1px solid rgba(0, 168, 120, 0.2); }
-
   .info-item { display: flex; align-items: center; gap: 10px; margin-bottom: 0.6rem; font-size: 0.92rem; color: var(--gris); }
   .info-item strong { color: var(--blanc); }
   .info-item i { width: 18px; font-style: normal; opacity: 0.8; }
-
   .msg-box { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; border-left: 2px solid var(--border); font-size: 0.85rem; line-height: 1.5; color: #bcc4c7; font-style: italic; }
-
   .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
   .btn-action { padding: 10px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; font-family: 'Outfit'; }
   .btn-approve { background: var(--g); color: var(--noir); }
   .btn-approve:hover { background: #00C98E; }
   .btn-delete { background: rgba(220, 60, 60, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 60, 60, 0.2); }
   .btn-delete:hover { background: rgba(220, 60, 60, 0.2); }
-
   @media (max-width: 900px) {
     aside { width: 70px; padding: 2rem 0.5rem; align-items: center; }
     .logo-admin span, .nav-link span, .header-main h2 { display: none; }
     main { margin-left: 70px; padding: 1.5rem; }
     .stats-bar { grid-template-columns: 1fr; }
   }
+
+  /* STYLES RECHERCHE API */
+  .api-result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.2s; color: var(--blanc); font-size: 0.9rem; }
+  .api-result-item:hover { background: var(--border); color: var(--g); }
+  .api-result-item:last-child { border: none; }
 </style>
 </head>
 <body>
@@ -112,18 +99,9 @@
   <div id="dashboard-screen">
     <aside>
       <a href="#" class="logo-admin">Neo<span>Ball</span></a>
-      
-      <button class="nav-link active" id="btn-tab-resas" onclick="switchTab('resas')">
-        <i>📅</i> <span>Réservations</span>
-      </button>
-      
-      <button class="nav-link" id="btn-tab-communes" onclick="switchTab('communes')">
-        <i>📍</i> <span>Communes</span>
-      </button>
-
-      <div class="btn-logout nav-link" onclick="logout()">
-        <i>🚪</i> <span>Déconnexion</span>
-      </div>
+      <button class="nav-link active" id="btn-tab-resas" onclick="switchTab('resas')"><i>📅</i> <span>Réservations</span></button>
+      <button class="nav-link" id="btn-tab-communes" onclick="switchTab('communes')"><i>📍</i> <span>Communes</span></button>
+      <div class="btn-logout nav-link" onclick="logout()"><i>🚪</i> <span>Déconnexion</span></div>
     </aside>
 
     <main>
@@ -133,43 +111,44 @@
       </div>
 
       <div class="stats-bar" id="stats-bar">
-        <div class="stat-card">
-          <span class="stat-label">En attente</span>
-          <div class="stat-value" id="stat-pending">0</div>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Validés</span>
-          <div class="stat-value" id="stat-valid">0</div>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">Estimation CA (H.T)</span>
-          <div class="stat-value" id="stat-ca">0 €</div>
-        </div>
+        <div class="stat-card"><span class="stat-label">En attente</span><div class="stat-value" id="stat-pending">0</div></div>
+        <div class="stat-card"><span class="stat-label">Validés</span><div class="stat-value" id="stat-valid">0</div></div>
+        <div class="stat-card"><span class="stat-label">Estimation CA (H.T)</span><div class="stat-value" id="stat-ca">0 €</div></div>
       </div>
 
       <div id="tab-resas" class="tab-content active">
         <div class="section-title">🕒 Nouvelles demandes <span id="count-attente">0</span></div>
         <div id="resas-attente" class="resa-grid" style="margin-bottom: 4rem;">Chargement...</div>
-
         <div class="section-title">✅ Historique validé <span id="count-valid">0</span></div>
         <div id="resas-validees" class="resa-grid">Chargement...</div>
       </div>
 
       <div id="tab-communes" class="tab-content">
         <div class="section-title">➕ Ajouter une commune</div>
-        <form id="form-commune" onsubmit="addCommune(event)" style="background: var(--n2); padding: 1.8rem; border-radius: 18px; border: 1px solid var(--border); margin-bottom: 3rem;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem;">
-            <input type="text" id="com-nom" class="input-field" style="margin:0" placeholder="Nom de la ville (ex: Drancy)" required>
-            <input type="text" id="com-dept" class="input-field" style="margin:0" placeholder="Département (ex: Seine-Saint-Denis (93))" required>
-            <input type="number" step="any" id="com-lat" class="input-field" style="margin:0" placeholder="Latitude (ex: 48.9239)" required>
-            <input type="number" step="any" id="com-lng" class="input-field" style="margin:0" placeholder="Longitude (ex: 2.4591)" required>
-            <select id="com-statut" class="input-field" style="margin:0" required>
-              <option value="actif">Actif (Partenaire)</option>
-              <option value="prospect">Prospect (En discussion)</option>
-            </select>
-          </div>
-          <button type="submit" class="btn-action btn-approve" style="width: 100%; padding: 14px; font-size: 1rem;">Ajouter à la carte</button>
-        </form>
+        
+        <div style="background: var(--n2); padding: 1.8rem; border-radius: 18px; border: 1px solid var(--border); margin-bottom: 3rem;">
+            
+            <label style="font-size: 0.85rem; color: var(--gris); margin-bottom: 0.5rem; display: block;">Recherche nationale</label>
+            <div style="position: relative; margin-bottom: 1.2rem;">
+                <input type="text" id="api-search" class="input-field" style="margin:0" placeholder="Tapez le nom d'une ville française..." autocomplete="off">
+                <div id="api-results" style="position:absolute; top:100%; left:0; right:0; background:var(--n3); border:1px solid var(--border); border-radius:8px; z-index:10; display:none; max-height:200px; overflow-y:auto; box-shadow: var(--shadow);"></div>
+            </div>
+
+            <form id="form-commune" onsubmit="addCommune(event)">
+                <input type="hidden" id="com-nom">
+                <input type="hidden" id="com-dept">
+                <input type="hidden" id="com-lat">
+                <input type="hidden" id="com-lng">
+                
+                <label style="font-size: 0.85rem; color: var(--gris); margin-bottom: 0.5rem; display: block;">Statut de la collaboration</label>
+                <select id="com-statut" class="input-field" style="margin-bottom:1.5rem" required>
+                    <option value="actif">✅ Actif (Partenaire officiel)</option>
+                    <option value="prospect">⏳ Prospect (En discussion)</option>
+                </select>
+                
+                <button type="submit" id="btn-add-commune" class="btn-action btn-approve" style="width: 100%; padding: 14px; font-size: 1rem;" disabled>Sélectionnez une ville d'abord</button>
+            </form>
+        </div>
 
         <div class="section-title">📍 Communes sur la carte <span id="count-communes">0</span></div>
         <div id="communes-grid" class="resa-grid">Chargement...</div>
@@ -183,14 +162,14 @@
     import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
     // 🚨 COLLE ICI TON OBJET CONFIG FIREBASE 🚨
-   const firebaseConfig = {
-  apiKey: "AIzaSyCAfoMmouoN2cmCgHYJ07gIyyTLqv_ltto",
-  authDomain: "neoball-e2f1f.firebaseapp.com",
-  projectId: "neoball-e2f1f",
-  storageBucket: "neoball-e2f1f.firebasestorage.app",
-  messagingSenderId: "648867084826",
-  appId: "1:648867084826:web:e86426f3cdd0fe086bafa3"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyCAfoMmouoN2cmCgHYJ07gIyyTLqv_ltto",
+      authDomain: "neoball-e2f1f.firebaseapp.com",
+      projectId: "neoball-e2f1f",
+      storageBucket: "neoball-e2f1f.firebasestorage.app",
+      messagingSenderId: "648867084826",
+      appId: "1:648867084826:web:e86426f3cdd0fe086bafa3"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -302,6 +281,56 @@
       }
     };
 
+    // --- RECHERCHE API GOUVERNEMENT FRANCAIS ---
+    const searchInput = document.getElementById('api-search');
+    const resultsDiv = document.getElementById('api-results');
+    const btnAdd = document.getElementById('btn-add-commune');
+
+    searchInput.addEventListener('input', async (e) => {
+        const query = e.target.value.trim();
+        if(query.length < 2) { resultsDiv.style.display = 'none'; return; }
+        
+        try {
+            // L'API gouvernementale magique
+            const res = await fetch(`https://geo.api.gouv.fr/communes?nom=${query}&fields=nom,codeDepartement,centre&boost=population&limit=5`);
+            const data = await res.json();
+            
+            resultsDiv.innerHTML = '';
+            if(data.length > 0) {
+                data.forEach(city => {
+                    if(!city.centre) return; // Si la ville n'a pas de coordonnées
+                    
+                    const div = document.createElement('div');
+                    div.className = 'api-result-item';
+                    div.innerHTML = `<strong>${city.nom}</strong> <span style="color:var(--gris);font-size:0.8rem">(${city.codeDepartement})</span>`;
+                    
+                    div.onclick = () => {
+                        searchInput.value = `${city.nom} (${city.codeDepartement})`;
+                        document.getElementById('com-nom').value = city.nom;
+                        document.getElementById('com-dept').value = `Département ${city.codeDepartement}`;
+                        document.getElementById('com-lng').value = city.centre.coordinates[0]; // GeoJSON format = [Lng, Lat]
+                        document.getElementById('com-lat').value = city.centre.coordinates[1];
+                        
+                        resultsDiv.style.display = 'none';
+                        btnAdd.disabled = false;
+                        btnAdd.textContent = `Ajouter ${city.nom} à la carte`;
+                    };
+                    resultsDiv.appendChild(div);
+                });
+                resultsDiv.style.display = 'block';
+            } else {
+                resultsDiv.style.display = 'none';
+            }
+        } catch (err) {
+            console.log("Erreur API", err);
+        }
+    });
+    
+    // Fermer les résultats si on clique ailleurs
+    document.addEventListener('click', (e) => {
+        if(e.target !== searchInput) resultsDiv.style.display = 'none';
+    });
+
     // --- GESTION DES COMMUNES ---
     async function loadCommunes() {
       const snapshot = await getDocs(collection(db, "communes"));
@@ -321,7 +350,6 @@
               <span class="status-badge ${isActif ? 'valide' : 'attente'}">${isActif ? 'Actif' : 'Prospect'}</span>
             </div>
             <div class="info-item"><i>🗺️</i> ${d.dept}</div>
-            <div class="info-item"><i>📍</i> Lat: ${d.lat} | Lng: ${d.lng}</div>
             <div class="card-actions" style="margin-top:1rem">
               <button class="btn-action btn-approve" style="background:var(--n3); color:var(--blanc); border:1px solid var(--border)" 
                       onclick="toggleCommuneStatus('${id}', '${isActif ? 'prospect' : 'actif'}')">
@@ -339,9 +367,13 @@
 
     window.addCommune = async (e) => {
       e.preventDefault();
+      
+      const nom = document.getElementById('com-nom').value;
+      if(!nom) return; // Sécurité
+
       const data = {
-        nom: document.getElementById('com-nom').value.trim(),
-        dept: document.getElementById('com-dept').value.trim(),
+        nom: nom,
+        dept: document.getElementById('com-dept').value,
         lat: parseFloat(document.getElementById('com-lat').value),
         lng: parseFloat(document.getElementById('com-lng').value),
         statut: document.getElementById('com-statut').value
@@ -349,7 +381,13 @@
 
       try {
         await addDoc(collection(db, "communes"), data);
+        
+        // Reset l'interface
         document.getElementById('form-commune').reset();
+        searchInput.value = '';
+        btnAdd.disabled = true;
+        btnAdd.textContent = "Sélectionnez une ville d'abord";
+        
         loadCommunes();
       } catch(error) {
         alert("Erreur lors de l'ajout.");

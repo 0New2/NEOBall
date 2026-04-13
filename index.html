@@ -658,9 +658,8 @@ select.conf-input option {
   window.addDoc = addDoc;
   
   window.BLOCKED_DATES_DB = [];
-  window.COMMUNES_DB = []; // Nouveau tableau pour les communes
+  window.COMMUNES_DB = []; 
 
-  // Charger les dates bloquées
   window.loadReservations = async function() {
       try {
           const q = query(collection(db, "reservations"));
@@ -668,32 +667,29 @@ select.conf-input option {
           const blocked = [];
           querySnapshot.forEach((doc) => {
               const data = doc.data();
-              if(Array.isArray(data.date_id)) {
-                  blocked.push(...data.date_id);
-              } else if(data.date_id) {
-                  blocked.push(data.date_id);
-              }
+              if(Array.isArray(data.date_id)) blocked.push(...data.date_id);
+              else if(data.date_id) blocked.push(data.date_id);
           });
           window.BLOCKED_DATES_DB = blocked;
           if (typeof buildCal === 'function') buildCal();
       } catch (error) { console.log("Erreur", error); }
   }
 
-  // Charger les communes depuis Firebase
   window.loadCommunes = async function() {
       try {
           const q = query(collection(db, "communes"));
           const querySnapshot = await getDocs(q);
           const communes = [];
-          querySnapshot.forEach((doc) => {
-              communes.push(doc.data());
-          });
+          querySnapshot.forEach((doc) => { communes.push(doc.data()); });
           window.COMMUNES_DB = communes;
+          
+          // FORCER LA MISE A JOUR DE LA CARTE DES RECEPTION
+          if(typeof refreshMapData === 'function') refreshMapData();
       } catch (error) { console.log("Erreur communes", error); }
   }
 
   window.loadReservations();
-  window.loadCommunes(); // On lance le chargement
+  window.loadCommunes();
 </script>
 
 <script>
@@ -715,24 +711,30 @@ function setSport(i){spE.forEach(function(el,j){el.classList.toggle('on',j===i);
 window.addEventListener('scroll',function(){var sc=Math.max(0,-spSec.getBoundingClientRect().top),sa=spSec.offsetHeight-window.innerHeight;setSport(Math.min(4,Math.floor((sc/sa)*5)));},{passive:true});
 
 /* ── COMMUNES MAP ── */
-/* ── COMMUNES MAP ── */
 var mapInst=null,mapMarkers={},activeCI=null;
 function initMap(){
   if(mapInst)return;
   mapInst=L.map('neoball-map',{center:[48.91,2.57],zoom:10});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap',subdomains:'abcd',maxZoom:19}).addTo(mapInst);
-  
-  // On utilise les données Firebase au lieu de la liste en dur
+  refreshMapData(); // Appelle les données
+}
+
+function refreshMapData() {
   var data = window.COMMUNES_DB || [];
-  
-  data.forEach(function(c,i){
-    var a=c.statut==='actif';
-    var icon=L.divIcon({html:'<div style="width:'+(a?20:14)+'px;height:'+(a?20:14)+'px;border-radius:50%;background:'+(a?'#00A878':'rgba(255,255,255,.3)')+';border:2px solid '+(a?'rgba(0,200,140,.6)':'rgba(255,255,255,.15)')+';box-shadow:0 0 '+(a?'10px rgba(0,168,120,.7)':'4px rgba(255,255,255,.1)')+';cursor:pointer"></div>',className:'',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
-    var pop='<div class="pop"><p class="pop-name">'+c.nom+'</p><p class="pop-dept">'+c.dept+'</p><span class="pop-tag '+c.statut+'">'+(a?'✓ Partenaire actif':'○ En discussion')+'</span></div>';
-    var m=L.marker([c.lat,c.lng],{icon}).addTo(mapInst).bindPopup(pop,{maxWidth:240});
-    m.on('click',function(){selectCommune(i);});
-    mapMarkers[i]=m;
-  });
+  if(mapInst) {
+    // Nettoie les anciens points
+    for(var i in mapMarkers) { mapInst.removeLayer(mapMarkers[i]); }
+    mapMarkers = {};
+    
+    data.forEach(function(c,i){
+      var a=c.statut==='actif';
+      var icon=L.divIcon({html:'<div style="width:'+(a?20:14)+'px;height:'+(a?20:14)+'px;border-radius:50%;background:'+(a?'#00A878':'rgba(255,255,255,.3)')+';border:2px solid '+(a?'rgba(0,200,140,.6)':'rgba(255,255,255,.15)')+';box-shadow:0 0 '+(a?'10px rgba(0,168,120,.7)':'4px rgba(255,255,255,.1)')+';cursor:pointer"></div>',className:'',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
+      var pop='<div class="pop"><p class="pop-name">'+c.nom+'</p><p class="pop-dept">'+c.dept+'</p><span class="pop-tag '+c.statut+'">'+(a?'✓ Partenaire actif':'○ En discussion')+'</span></div>';
+      var m=L.marker([c.lat,c.lng],{icon}).addTo(mapInst).bindPopup(pop,{maxWidth:240});
+      m.on('click',function(){selectCommune(i);});
+      mapMarkers[i]=m;
+    });
+  }
   renderCMList(data);
   updateCMStats(data);
 }
@@ -741,7 +743,6 @@ function renderCMList(data){
   var list=document.getElementById('cm-list');if(!list)return;
   list.innerHTML=data.map(function(c){var i=window.COMMUNES_DB.indexOf(c);return '<div class="cm-item'+(i===activeCI?' active':'')+'" id="cmi-'+i+'" onclick="selectCommune('+i+')"><div class="cm-dot '+c.statut+'"></div><div class="cm-item-info"><p class="cm-item-name">'+c.nom+'</p><p class="cm-item-dept">'+c.dept+'</p></div><span class="cm-badge '+c.statut+'">'+(c.statut==='actif'?'Actif':'Prospect')+'</span></div>';}).join('');
 }
-
 function selectCommune(i){
   if(activeCI!==null){var o=document.getElementById('cmi-'+activeCI);if(o)o.classList.remove('active');}
   activeCI=i;
@@ -749,20 +750,17 @@ function selectCommune(i){
   if(item){item.classList.add('active');item.scrollIntoView({behavior:'smooth',block:'nearest'});}
   if(mapInst&&mapMarkers[i]){mapInst.flyTo([window.COMMUNES_DB[i].lat,window.COMMUNES_DB[i].lng],13,{duration:.7});mapMarkers[i].openPopup();}
 }
-
 function filterCommunes(q){
     renderCMList((window.COMMUNES_DB || []).filter(function(c){
         return c.nom.toLowerCase().includes(q.toLowerCase())||c.dept.toLowerCase().includes(q.toLowerCase());
     }));
 }
-
 function updateCMStats(data){
   var t=document.getElementById('cm-n-total'),a=document.getElementById('cm-n-actif'),d=document.getElementById('cm-n-dept');
   if(t)t.textContent=data.length;
   if(a)a.textContent=data.filter(function(c){return c.statut==='actif';}).length;
   if(d)d.textContent=new Set(data.map(function(c){return c.dept;})).size;
 }
-
 new IntersectionObserver(function(es){if(es[0].isIntersecting)setTimeout(initMap,200);},{threshold:.1}).observe(document.getElementById('communes'));
 
 /* ════════════════════════════════════════
@@ -770,17 +768,13 @@ new IntersectionObserver(function(es){if(es[0].isIntersecting)setTimeout(initMap
 ════════════════════════════════════════ */
 var MOIS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 var calY=0,calM=0,selDays=[],resaEduc=3,curStep=1;
-
 const ALLOWED_DAYS = [1, 2, 3, 4, 5, 6]; 
 
 function initTimeSelects() {
     var opts = '';
-    // Génère les horaires de 08h00 à 22h00 par intervalles de 15 minutes
     for(var h = 8; h <= 22; h++) {
         for(var m = 0; m < 60; m+=15) {
-            // Option optionnelle : s'arrêter à 22h00 pile
             if (h === 22 && m > 0) continue; 
-            
             var hh = h < 10 ? '0'+h : h;
             var mm = m === 0 ? '00' : m;
             opts += '<option value="'+hh+':'+mm+'">'+hh+'h'+mm+'</option>';
@@ -788,14 +782,8 @@ function initTimeSelects() {
     }
     var s1 = document.getElementById('time-start');
     var s2 = document.getElementById('time-end');
-    if(s1 && s1.options.length === 0) { 
-        s1.innerHTML = opts; 
-        s1.value = '14:00'; 
-    }
-    if(s2 && s2.options.length === 0) { 
-        s2.innerHTML = opts; 
-        s2.value = '16:00'; 
-    }
+    if(s1 && s1.options.length === 0) { s1.innerHTML = opts; s1.value = '14:00'; }
+    if(s2 && s2.options.length === 0) { s2.innerHTML = opts; s2.value = '16:00'; }
 }
 
 function getSlotForDate(ds) {
@@ -877,11 +865,8 @@ function buildCal(){
 
 function pickDay(ds){
   const idx = selDays.indexOf(ds);
-  if(idx > -1) {
-      selDays.splice(idx, 1); 
-  } else {
-      selDays.push(ds); 
-  }
+  if(idx > -1) { selDays.splice(idx, 1); } 
+  else { selDays.push(ds); }
   selDays.sort(); 
   buildCal();
   
@@ -892,7 +877,6 @@ function pickDay(ds){
   } else {
       document.getElementById('custom-time-panel').classList.remove('active');
   }
-  
   validateTimes();
 }
 
@@ -941,7 +925,6 @@ function fillStep2(){
   var lbl = selDays.length === 1 ? '1 date' : selDays.length + ' dates';
   var start = document.getElementById('time-start').value.replace(':', 'h');
   var end = document.getElementById('time-end').value.replace(':', 'h');
-  
   document.getElementById('cr-date').textContent=lbl;
   document.getElementById('cr-hours').textContent=start+' – '+end;
   document.getElementById('educ-val').textContent=resaEduc;
@@ -966,7 +949,7 @@ function calcDuree(){
   var end = document.getElementById('time-end').value;
   var sh = parseInt(start.split(':')[0]), sm = parseInt(start.split(':')[1]);
   var eh = parseInt(end.split(':')[0]), em = parseInt(end.split(':')[1]);
-  return ((eh*60+em) - (sh*60+sm)) / 60; // Renvoie un nombre décimal (ex: 1.25 pour 1h15)
+  return ((eh*60+em) - (sh*60+sm)) / 60; 
 }
 
 function fillStep3(){
@@ -979,13 +962,11 @@ function fillStep3(){
   var sports=[].filter.call(document.querySelectorAll('.conf-sport.on'),function(b){return true;}).map(function(b){return b.textContent.trim();}).join(', ')||'Non précisé';
   var parts=parseInt(document.getElementById('parts-input').value)||'—';
   
-  // Calculs avec plafonnement
   var dureeReelle = calcDuree();
-  var dureeFacturee = Math.ceil(dureeReelle); // 1.25 devient 2
+  var dureeFacturee = Math.ceil(dureeReelle); 
   var totalHeures = dureeFacturee * selDays.length;
   var prix = (35 * resaEduc * totalHeures).toLocaleString('fr-FR');
   
-  // Formatage de la durée réelle pour l'affichage propre (ex: 1h15)
   var formatTime = function(h) {
       var min = Math.round((h % 1) * 60);
       return Math.floor(h) + 'h' + (min < 10 ? '0' : '') + (min > 0 ? min : '');
@@ -1002,7 +983,6 @@ function fillStep3(){
   document.getElementById('rr-prix').textContent = prix+' €';
 }
 
-// ── FONCTION D'ENVOI VERS FIREBASE ──
 async function sendResa(){
   var nom=document.getElementById('ri-nom').value.trim();
   var commune=document.getElementById('ri-commune').value.trim();
@@ -1043,24 +1023,19 @@ async function sendResa(){
           timestamp_demande: new Date().toISOString()
       };
 
-      // Envoi à Firebase
       await window.addDoc(window.collection(window.db, "reservations"), resaData);
       
-      // Succès
       document.getElementById('resa-ok').style.display='block';
       btn.style.display='none';
-      
-      // Bloque les dates localement
       window.BLOCKED_DATES_DB.push(...selDays);
       
   } catch(error) {
-      console.error("Erreur d'enregistrement :", error);
+      console.error("Erreur :", error);
       document.getElementById('resa-err').style.display='block';
       btn.disabled=false;
       document.getElementById('rf-next-txt').textContent='Réessayer';
   }
 }
-
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeResa();});
 </script>
 </body>
