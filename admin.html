@@ -3,93 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeoBall - Administration</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<title>NeoBall - Dashboard Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root { --g: #00A878; --noir: #080C0E; --n2: #0D1517; --blanc: #fff; --gris: rgba(255,255,255,.5); }
+  :root { 
+    --g: #00A878; --g-dim: rgba(0, 168, 120, 0.15); --noir: #080C0E; 
+    --n2: #0D1517; --n3: #111A1D; --blanc: #fff; 
+    --gris: #889296; --border: rgba(255, 255, 255, 0.08);
+    --shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; }
-  body { background: var(--noir); color: var(--blanc); display: flex; flex-direction: column; min-height: 100vh; }
-  
-  /* ECRAN DE CONNEXION */
-  #login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-  .login-box { background: var(--n2); padding: 3rem; border-radius: 16px; border: 1px solid rgba(0,168,120,.3); width: 100%; max-width: 400px; text-align: center; }
-  .login-box h1 { font-family: 'Outfit'; font-size: 2rem; margin-bottom: 1.5rem; color: var(--g); }
-  .input-field { width: 100%; padding: 12px 16px; margin-bottom: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.05); color: white; outline: none; }
-  .input-field:focus { border-color: var(--g); }
-  .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--g); color: var(--noir); font-weight: bold; cursor: pointer; transition: 0.2s; font-family: 'Outfit'; font-size: 1.1rem; }
-  .btn:hover { background: #00C98E; }
+  body { background: var(--noir); color: var(--blanc); min-height: 100vh; overflow-x: hidden; }
 
-  /* ECRAN DASHBOARD */
-  #dashboard-screen { display: none; padding: 2rem 5vw; flex: 1; }
-  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 1rem; }
-  header h1 { font-family: 'Outfit'; font-size: 1.8rem; }
-  .btn-logout { background: transparent; color: var(--gris); border: 1px solid var(--gris); padding: 8px 16px; border-radius: 8px; cursor: pointer; }
-  .btn-logout:hover { color: white; border-color: white; }
+  /* CONNEXION */
+  #login-screen { display: flex; align-items: center; justify-content: center; height: 100vh; background: radial-gradient(circle at center, var(--n2), var(--noir)); }
+  .login-box { background: var(--n2); padding: 3rem; border-radius: 24px; border: 1px solid var(--g-dim); width: 100%; max-width: 420px; text-align: center; box-shadow: var(--shadow); }
+  .login-box h1 { font-family: 'Outfit'; font-size: 2.2rem; margin-bottom: 0.5rem; color: var(--blanc); }
+  .login-box h1 span { color: var(--g); }
+  .login-box p { color: var(--gris); margin-bottom: 2rem; font-size: 0.9rem; }
+  .input-field { width: 100%; padding: 14px 18px; margin-bottom: 1.2rem; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: white; outline: none; transition: 0.3s; }
+  .input-field:focus { border-color: var(--g); background: rgba(255,255,255,0.05); }
+  .btn-login { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--g); color: var(--noir); font-weight: 700; cursor: pointer; transition: 0.3s; font-family: 'Outfit'; font-size: 1.1rem; }
+  .btn-login:hover { background: #00C98E; transform: translateY(-2px); }
 
-  /* TABS */
-  .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; }
-  .tab { padding: 10px 20px; background: var(--n2); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; cursor: pointer; color: var(--gris); font-weight: bold; }
-  .tab.active { background: rgba(0,168,120,.1); border-color: var(--g); color: var(--g); }
+  /* LAYOUT PRINCIPAL */
+  #dashboard-screen { display: none; min-height: 100vh; }
   
+  /* Sidebar */
+  aside { width: 260px; background: var(--n2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 2rem 1.5rem; position: fixed; height: 100vh; }
+  .logo-admin { font-family: 'Outfit'; font-size: 1.6rem; font-weight: 800; margin-bottom: 3rem; color: var(--blanc); text-decoration: none; }
+  .logo-admin span { color: var(--g); }
+  
+  .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--gris); text-decoration: none; border-radius: 12px; margin-bottom: 0.5rem; transition: 0.2s; font-weight: 500; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; }
+  .nav-link:hover { background: var(--border); color: white; }
+  .nav-link.active { background: var(--g-dim); color: var(--g); }
+  
+  .btn-logout { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); color: #ff6b6b; cursor: pointer; opacity: 0.7; transition: 0.2s; }
+  .btn-logout:hover { opacity: 1; }
+
+  /* Contenu Principal */
+  main { flex: 1; margin-left: 260px; padding: 2.5rem 3rem; }
+  .header-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+  .header-main h2 { font-family: 'Outfit'; font-size: 1.8rem; }
+
+  /* Stats Bar */
+  .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
+  .stat-card { background: var(--n2); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); }
+  .stat-label { color: var(--gris); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; display: block; }
+  .stat-value { font-family: 'Outfit'; font-size: 1.8rem; font-weight: 700; color: var(--g); }
+
+  /* Grid des Réservations */
   .tab-content { display: none; }
   .tab-content.active { display: block; }
+  
+  .section-title { font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--gris); }
+  .section-title span { background: var(--border); padding: 2px 10px; border-radius: 20px; font-size: 0.9rem; color: var(--blanc); }
 
-  /* CARTES RESERVATION */
-  .resa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
-  .resa-card { background: var(--n2); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
-  .resa-card.attente { border-color: #FFB347; box-shadow: 0 0 15px rgba(255,179,71,.1); }
-  .resa-card.valide { border-color: var(--g); }
-  .resa-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,.05); padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
-  .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
-  .badge.attente { background: rgba(255,179,71,.2); color: #FFB347; }
-  .badge.valide { background: rgba(0,168,120,.2); color: var(--g); }
-  .info-line { font-size: 0.9rem; color: var(--gris); }
-  .info-line strong { color: var(--blanc); }
-  .actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
-  .btn-valider { flex: 1; padding: 8px; border: none; border-radius: 6px; background: var(--g); color: var(--noir); font-weight: bold; cursor: pointer; }
-  .btn-refuser { flex: 1; padding: 8px; border: none; border-radius: 6px; background: rgba(220,60,60,.2); color: #ff6b6b; cursor: pointer; }
+  .resa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+  .resa-card { background: var(--n2); border-radius: 18px; border: 1px solid var(--border); padding: 1.8rem; transition: 0.3s; position: relative; overflow: hidden; }
+  .resa-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); box-shadow: var(--shadow); }
+  
+  .resa-card.attente { border-left: 4px solid #FFB347; }
+  .resa-card.valide { border-left: 4px solid var(--g); }
+
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.2rem; }
+  .card-head h3 { font-family: 'Outfit'; font-size: 1.25rem; font-weight: 700; }
+  .status-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 50px; letter-spacing: 0.5px; }
+  .status-badge.attente { background: rgba(255, 179, 71, 0.1); color: #FFB347; border: 1px solid rgba(255, 179, 71, 0.2); }
+  .status-badge.valide { background: rgba(0, 168, 120, 0.1); color: var(--g); border: 1px solid rgba(0, 168, 120, 0.2); }
+
+  .info-item { display: flex; align-items: center; gap: 10px; margin-bottom: 0.6rem; font-size: 0.92rem; color: var(--gris); }
+  .info-item strong { color: var(--blanc); }
+  .info-item i { width: 18px; font-style: normal; opacity: 0.8; }
+
+  .msg-box { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; border-left: 2px solid var(--border); font-size: 0.85rem; line-height: 1.5; color: #bcc4c7; font-style: italic; }
+
+  .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
+  .btn-action { padding: 10px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; font-family: 'Outfit'; }
+  .btn-approve { background: var(--g); color: var(--noir); }
+  .btn-approve:hover { background: #00C98E; }
+  .btn-delete { background: rgba(220, 60, 60, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 60, 60, 0.2); }
+  .btn-delete:hover { background: rgba(220, 60, 60, 0.2); }
+
+  @media (max-width: 900px) {
+    aside { width: 70px; padding: 2rem 0.5rem; align-items: center; }
+    .logo-admin span, .nav-link span, .header-main h2 { display: none; }
+    main { margin-left: 70px; padding: 1.5rem; }
+    .stats-bar { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 
   <div id="login-screen">
     <div class="login-box">
-      <h1>NeoBall Admin</h1>
-      <input type="email" id="email" class="input-field" placeholder="Email admin">
+      <h1>Neo<span>Ball</span></h1>
+      <p>Administration du collectif</p>
+      <input type="email" id="email" class="input-field" placeholder="Email administrateur">
       <input type="password" id="password" class="input-field" placeholder="Mot de passe">
-      <button class="btn" onclick="login()">Se connecter</button>
-      <p id="login-error" style="color: #ff6b6b; margin-top: 1rem; font-size: 0.85rem; display: none;">Identifiants incorrects.</p>
+      <button class="btn-login" onclick="login()">Accéder au Dashboard</button>
+      <p id="login-error" style="color: #ff6b6b; margin-top: 1.2rem; font-weight: 600; display: none;">Identifiants incorrects.</p>
     </div>
   </div>
 
   <div id="dashboard-screen">
-    <header>
-      <h1>Tour de Contrôle</h1>
-      <button class="btn-logout" onclick="logout()">Se déconnecter</button>
-    </header>
+    <aside>
+      <a href="#" class="logo-admin">Neo<span>Ball</span></a>
+      
+      <button class="nav-link active" id="btn-tab-resas" onclick="switchTab('resas')">
+        <i>📅</i> <span>Réservations</span>
+      </button>
+      
+      <button class="nav-link" id="btn-tab-communes" onclick="switchTab('communes')">
+        <i>📍</i> <span>Communes</span>
+      </button>
 
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('resas')">📅 Réservations</button>
-      <button class="tab" onclick="switchTab('communes')">📍 Communes</button>
-    </div>
-
-    <div id="tab-resas" class="tab-content active">
-      <h2 style="margin-bottom: 1rem; font-family: 'Outfit';">Demandes en attente</h2>
-      <div id="resas-attente" class="resa-grid" style="margin-bottom: 3rem;">Chargement...</div>
-
-      <h2 style="margin-bottom: 1rem; font-family: 'Outfit'; color: var(--gris);">Créneaux Validés</h2>
-      <div id="resas-validees" class="resa-grid">Chargement...</div>
-    </div>
-
-    <div id="tab-communes" class="tab-content">
-      <div style="background: var(--n2); padding: 1.5rem; border-radius: 12px; border: 1px dashed rgba(255,255,255,.2); text-align: center;">
-        <h2 style="margin-bottom: 1rem; font-family: 'Outfit'; color: var(--g);">Base de données des Communes</h2>
-        <p style="color: var(--gris); line-height: 1.6; max-width: 600px; margin: 0 auto;">
-          Pour gérer la carte dynamique depuis ce panel, il faudra migrer les données actuelles (qui sont en dur dans ton code public) vers Firebase. <br><br>
-          <em>(C'est la prochaine étape une fois que tu auras validé le fonctionnement des réservations !)</em>
-        </p>
+      <div class="btn-logout nav-link" onclick="logout()">
+        <i>🚪</i> <span>Déconnexion</span>
       </div>
-    </div>
+    </aside>
+
+    <main>
+      <div class="header-main">
+        <h2 id="page-title">Gestion des Réservations</h2>
+        <div style="font-size: 0.85rem; color: var(--gris);">Session : <strong style="color: var(--blanc);">Admin</strong></div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card">
+          <span class="stat-label">En attente</span>
+          <div class="stat-value" id="stat-pending">0</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Validés</span>
+          <div class="stat-value" id="stat-valid">0</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Estimation CA (H.T)</span>
+          <div class="stat-value" id="stat-ca">0 €</div>
+        </div>
+      </div>
+
+      <div id="tab-resas" class="tab-content active">
+        <div class="section-title">🕒 Nouvelles demandes <span id="count-attente">0</span></div>
+        <div id="resas-attente" class="resa-grid" style="margin-bottom: 4rem;">Chargement...</div>
+
+        <div class="section-title">✅ Historique validé <span id="count-valid">0</span></div>
+        <div id="resas-validees" class="resa-grid">Chargement...</div>
+      </div>
+
+      <div id="tab-communes" class="tab-content">
+        <div style="padding: 4rem 2rem; border-radius: 20px; background: var(--n2); border: 1px dashed var(--border); text-align: center;">
+          <h3 style="font-family: 'Outfit'; margin-bottom: 1rem;">Gestion de la carte</h3>
+          <p style="color: var(--gris); max-width: 500px; margin: 0 auto; line-height: 1.6;">
+            Le module de mise à jour des communes partenaires est en cours de développement.<br>Il vous permettra d'ajouter des points sur la carte en un clic.
+          </p>
+        </div>
+      </div>
+    </main>
   </div>
 
   <script type="module">
@@ -97,8 +170,8 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
     import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
-    // 🚨 A REMPLACER PAR TON CONFIG FIREBASE 🚨
-   const firebaseConfig = {
+    // 🚨 COLLE ICI TON OBJET CONFIG FIREBASE 🚨
+     const firebaseConfig = {
   apiKey: "AIzaSyCAfoMmouoN2cmCgHYJ07gIyyTLqv_ltto",
   authDomain: "neoball-e2f1f.firebaseapp.com",
   projectId: "neoball-e2f1f",
@@ -106,102 +179,108 @@
   messagingSenderId: "648867084826",
   appId: "1:648867084826:web:e86426f3cdd0fe086bafa3"
 };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // GESTION DE L'AFFICHAGE (Login vs Dashboard)
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('dashboard-screen').style.display = 'flex';
-        loadReservations(); // On charge les données si connecté
+        loadReservations();
       } else {
         document.getElementById('login-screen').style.display = 'flex';
         document.getElementById('dashboard-screen').style.display = 'none';
       }
     });
 
-    // FONCTION DE CONNEXION
     window.login = () => {
       const e = document.getElementById('email').value;
       const p = document.getElementById('password').value;
-      signInWithEmailAndPassword(auth, e, p).catch((error) => {
+      signInWithEmailAndPassword(auth, e, p).catch(() => {
         document.getElementById('login-error').style.display = 'block';
       });
     };
 
-    // FONCTION DE DECONNEXION
     window.logout = () => signOut(auth);
 
-    // SYSTEME D'ONGLETS
     window.switchTab = (tabName) => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
+      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
       document.getElementById('tab-' + tabName).classList.add('active');
+      document.getElementById('btn-tab-' + tabName).classList.add('active');
+      document.getElementById('page-title').textContent = tabName === 'resas' ? 'Gestion des Réservations' : 'Gestion des Communes';
     };
 
-    // CHARGER LES RESERVATIONS DEPUIS FIRESTORE
     async function loadReservations() {
       const snapshot = await getDocs(collection(db, "reservations"));
-      let htmlAttente = '';
-      let htmlValide = '';
+      let htmlAttente = '', htmlValide = '';
+      let countA = 0, countV = 0, totalCA = 0;
 
-      snapshot.forEach((firebaseDoc) => {
-        const data = firebaseDoc.data();
-        const id = firebaseDoc.id; // L'ID unique du document
-        const isAttente = data.statut === 'en_attente';
+      snapshot.forEach((fbDoc) => {
+        const d = fbDoc.data();
+        const id = fbDoc.id;
+        const isAttente = d.statut === 'en_attente';
+        
+        // Calcul CA
+        if (d.prix_estime) {
+          const prix = parseInt(d.prix_estime.replace(/[^0-9]/g, ''));
+          if (!isNaN(prix)) totalCA += prix;
+        }
+
+        if (isAttente) countA++; else countV++;
 
         const card = `
           <div class="resa-card ${isAttente ? 'attente' : 'valide'}">
-            <div class="resa-header">
-              <h3 style="font-family:'Outfit'; font-size:1.1rem;">${data.contact_commune}</h3>
-              <span class="badge ${isAttente ? 'attente' : 'valide'}">${isAttente ? 'En attente' : 'Validé'}</span>
+            <div class="card-head">
+              <h3>${d.contact_commune}</h3>
+              <span class="status-badge ${isAttente ? 'attente' : 'valide'}">${isAttente ? 'Demande' : 'Confirmé'}</span>
             </div>
-            <p class="info-line">👤 ${data.contact_nom} (${data.contact_tel})</p>
-            <p class="info-line">📅 <strong>${data.date_texte}</strong></p>
-            <p class="info-line">⏰ ${data.horaires} (${data.duree_facturee})</p>
-            <p class="info-line">🏀 ${data.sports}</p>
-            <p class="info-line">💰 <strong>${data.prix_estime}</strong> (pour ${data.nb_educateurs} éducateurs)</p>
-            ${data.message ? `<p class="info-line" style="margin-top:0.5rem; padding:0.5rem; background:rgba(0,0,0,0.3); border-radius:4px;">💬 <em>"${data.message}"</em></p>` : ''}
             
-            ${isAttente ? `
-              <div class="actions">
-                <button class="btn-valider" onclick="updateStatus('${id}', 'valide')">✅ Valider</button>
-                <button class="btn-refuser" onclick="deleteResa('${id}')">🗑 Refuser/Supprimer</button>
-              </div>
-            ` : `
-              <div class="actions">
-                <button class="btn-refuser" style="width:100%;" onclick="deleteResa('${id}')">🗑 Supprimer (Annulation)</button>
-              </div>
-            `}
+            <div class="info-item"><i>👤</i> <strong>${d.contact_nom}</strong></div>
+            <div class="info-item"><i>📞</i> ${d.contact_tel}</div>
+            <div class="info-item"><i>✉️</i> ${d.contact_email}</div>
+            <div style="margin: 1rem 0; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                <div class="info-item"><i>📅</i> <strong>${d.date_texte}</strong></div>
+                <div class="info-item"><i>⏰</i> ${d.horaires} (${d.duree_facturee})</div>
+            </div>
+            <div class="info-item"><i>🏀</i> ${d.sports}</div>
+            <div class="info-item"><i>💰</i> <strong style="color:var(--g); font-size:1.1rem">${d.prix_estime}</strong> (${d.nb_educateurs} éducs)</div>
+
+            ${d.message ? `<div class="msg-box">"${d.message}"</div>` : ''}
+            
+            <div class="card-actions">
+              ${isAttente ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', 'valide')">Valider</button>` : '<span></span>'}
+              <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
+            </div>
           </div>
         `;
 
-        if (isAttente) htmlAttente += card;
-        else htmlValide += card;
+        if (isAttente) htmlAttente += card; else htmlValide += card;
       });
 
-      document.getElementById('resas-attente').innerHTML = htmlAttente || '<p style="color:var(--gris);">Aucune demande en attente.</p>';
-      document.getElementById('resas-validees').innerHTML = htmlValide || '<p style="color:var(--gris);">Aucun créneau validé.</p>';
+      document.getElementById('resas-attente').innerHTML = htmlAttente || '<p style="color:var(--gris);">Aucune nouvelle demande.</p>';
+      document.getElementById('resas-validees').innerHTML = htmlValide || '<p style="color:var(--gris);">Aucun historique.</p>';
+      
+      // Update Stats
+      document.getElementById('stat-pending').textContent = countA;
+      document.getElementById('stat-valid').textContent = countV;
+      document.getElementById('stat-ca').textContent = totalCA.toLocaleString() + ' €';
+      document.getElementById('count-attente').textContent = countA;
+      document.getElementById('count-valid').textContent = countV;
     }
 
-    // CHANGER LE STATUT (Valider)
     window.updateStatus = async (id, newStatus) => {
       await updateDoc(doc(db, "reservations", id), { statut: newStatus });
-      loadReservations(); // Recharge la liste
+      loadReservations();
     };
 
-    // SUPPRIMER UNE RESERVATION (Refuser)
     window.deleteResa = async (id) => {
-      if(confirm("Êtes-vous sûr de vouloir supprimer cette réservation ? (Cette action libérera la date sur le site public)")) {
+      if(confirm("Confirmer la suppression ?")) {
         await deleteDoc(doc(db, "reservations", id));
-        loadReservations(); // Recharge la liste
+        loadReservations();
       }
     };
-
   </script>
 </body>
 </html>
