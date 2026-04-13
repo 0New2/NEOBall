@@ -42,15 +42,17 @@ nav.s .nr a{opacity:1;transform:none}
 .tag{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g)}
 .ttl{font-family:var(--fs);font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:.01em;line-height:1.1}
 
-/* HERO */
+/* HERO - ESPACEMENTS ET TITRE CORRIGÉS */
 #hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;background:var(--noir)}
 .hbg{position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 60%,rgba(0,168,120,.11),transparent 70%),radial-gradient(ellipse 35% 25% at 15% 15%,rgba(0,168,120,.05),transparent 60%);pointer-events:none}
 .hgrain{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;pointer-events:none}
 .hey{font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-bottom:1.75rem;animation:fu .9s .2s both}
-.ht{font-family:var(--fs);font-size:clamp(3.5rem,9vw,8rem);font-weight:900;line-height:1;letter-spacing:.02em;text-align:center;animation:fu 1s .35s both}
-.ht em{font-style:normal;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.3)}
-.hs{margin-top:2rem;font-size:clamp(.95rem,2vw,1.15rem);font-weight:300;color:var(--gris);text-align:center;max-width:440px;line-height:1.7;animation:fu 1s .5s both}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2.5rem;animation:fu 1s .65s both}
+
+.ht{font-family:var(--fs);font-size:clamp(3.5rem,9vw,8rem);font-weight:900;line-height:1.2;letter-spacing:0.02em;text-align:center;animation:fu 1s .35s both;color:var(--blanc);margin-bottom:0.5rem;}
+.ht em{font-style:normal;color:var(--noir);background-color:var(--g);padding:4px 20px;border-radius:16px;margin-left:12px;box-shadow:6px 6px 0px rgba(255,255,255,0.15);display:inline-block;transform:rotate(-2deg) translateY(-5px);}
+.hs{margin-top:1.5rem;font-size:clamp(.95rem,2vw,1.15rem);font-weight:300;color:var(--gris);text-align:center;max-width:440px;line-height:1.7;animation:fu 1s .5s both;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:3.5rem;animation:fu 1s .65s both;}
+
 .btn-g{padding:14px 32px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fb);font-size:.92rem;font-weight:700;text-decoration:none;transition:all .25s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem}
 .btn-g:hover{background:var(--g2);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,168,120,.35)}
 .btn-gh{padding:14px 32px;border-radius:50px;border:1.5px solid rgba(255,255,255,.2);color:var(--blanc);font-family:var(--fb);font-size:.92rem;font-weight:400;text-decoration:none;transition:all .25s;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem}
@@ -274,7 +276,7 @@ footer span{color:var(--g)}
 .cd.avail:hover{background:rgba(0,168,120,.22);border-color:var(--g);transform:scale(1.06)}
 .cd.sel{background:var(--g)!important;border-color:var(--g)!important;color:var(--noir)!important;font-weight:800;transform:scale(1.06)}
 
-/* Custom Time Panel (MODIFIÉ POUR LES SELECT) */
+/* Custom Time Panel */
 .custom-time-panel {margin-top: 1.5rem; background: rgba(0,168,120,.06); border: 1px solid rgba(0,168,120,.2); border-radius: 12px; padding: 1.25rem; display: none;}
 .custom-time-panel.active {display: block;}
 .time-inputs {display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;}
@@ -288,10 +290,7 @@ select.conf-input {
     padding-right: 30px;
     cursor: pointer;
 }
-select.conf-input option {
-    background: var(--n2);
-    color: var(--blanc);
-}
+select.conf-input option { background: var(--n2); color: var(--blanc); }
 
 /* Step 2 */
 .conf-slot-recap{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;padding:.75rem 1rem;background:rgba(0,168,120,.08);border:1px solid rgba(0,168,120,.2);border-radius:10px;margin-bottom:1.5rem;font-size:.82rem}
@@ -313,6 +312,7 @@ select.conf-input option {
 .conf-hint.warn{color:#FFB347}
 .conf-input{width:100%;padding:.6rem .85rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:var(--blanc);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s;margin-top:.25rem}
 .conf-input:focus{border-color:var(--g)}
+
 /* Step 3 */
 .recap-block{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
 .recap-row{display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem}
@@ -388,7 +388,7 @@ select.conf-input option {
       <div class="sp-entry on" data-i="0"><p class="sp-n">01</p><p class="sp-name">Spikeball</p><p class="sp-desc">Sport 2 contre 2 autour d'un filet circulaire tendu au sol. Ultra-dynamique, idéal en intérieur comme en extérieur. Développe les réflexes, la coordination et l'esprit d'équipe.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Filet + balle</span></div></div>
       <div class="sp-entry" data-i="1"><p class="sp-n">02</p><p class="sp-name">Flag Football</p><p class="sp-desc">Version sans contact du football américain. Stratégie, vitesse, esprit d'équipe. En plein essor — sport prévu aux Jeux Olympiques de Los Angeles 2028.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">JO 2028</span><span class="sp-pill">Flags + ballon</span></div></div>
       <div class="sp-entry" data-i="2"><p class="sp-n">03</p><p class="sp-name">Tchoukball</p><p class="sp-desc">Sport collectif non-violent inventé en Suisse en 1970. Tirs sur cadre élastique incliné. Favorise le fair-play et l'inclusion. Aucun contact défensif.</p><div class="sp-meta"><span class="sp-pill">Tous publics</span><span class="sp-pill">Non-violent</span><span class="sp-pill">Cadres + balle</span></div></div>
-      <div class="sp-entry" data-i="3"><p class="sp-n">04</p><p class="sp-name">Strikeball</p><p class="sp-desc">Jeu de balle alliant frappe, déplacement tactique et strategy collective. Facile à prendre en main, idéal pour une première découverte sportive.</p><div class="sp-meta"><span class="sp-pill">Ados & Adultes</span><span class="sp-pill">Batte + balle</span></div></div>
+      <div class="sp-entry" data-i="3"><p class="sp-n">04</p><p class="sp-name">Strikeball</p><p class="sp-desc">Jeu de balle alliant frappe, déplacement tactique et stratégie collective. Facile à prendre en main, idéal pour une première découverte sportive.</p><div class="sp-meta"><span class="sp-pill">Ados & Adultes</span><span class="sp-pill">Batte + balle</span></div></div>
       <div class="sp-entry" data-i="4"><p class="sp-n">05</p><p class="sp-name">Dodgeball</p><p class="sp-desc">Sport d'esquive en équipes avec balles en mousse. Dynamique et stratégique, idéal pour les séances festives et les événements.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Balles mousse</span></div></div>
     </div>
     <div class="sp-right">
@@ -683,7 +683,6 @@ select.conf-input option {
           querySnapshot.forEach((doc) => { communes.push(doc.data()); });
           window.COMMUNES_DB = communes;
           
-          // FORCER LA MISE A JOUR DE LA CARTE DES RECEPTION
           if(typeof refreshMapData === 'function') refreshMapData();
       } catch (error) { console.log("Erreur communes", error); }
   }
@@ -716,16 +715,14 @@ function initMap(){
   if(mapInst)return;
   mapInst=L.map('neoball-map',{center:[48.91,2.57],zoom:10});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap',subdomains:'abcd',maxZoom:19}).addTo(mapInst);
-  refreshMapData(); // Appelle les données
+  refreshMapData(); 
 }
 
 function refreshMapData() {
   var data = window.COMMUNES_DB || [];
   if(mapInst) {
-    // Nettoie les anciens points
     for(var i in mapMarkers) { mapInst.removeLayer(mapMarkers[i]); }
     mapMarkers = {};
-    
     data.forEach(function(c,i){
       var a=c.statut==='actif';
       var icon=L.divIcon({html:'<div style="width:'+(a?20:14)+'px;height:'+(a?20:14)+'px;border-radius:50%;background:'+(a?'#00A878':'rgba(255,255,255,.3)')+';border:2px solid '+(a?'rgba(0,200,140,.6)':'rgba(255,255,255,.15)')+';box-shadow:0 0 '+(a?'10px rgba(0,168,120,.7)':'4px rgba(255,255,255,.1)')+';cursor:pointer"></div>',className:'',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
