@@ -25,6 +25,7 @@
   .login-box p { color: var(--gris); margin-bottom: 2rem; font-size: 0.9rem; }
   .input-field { width: 100%; padding: 14px 18px; margin-bottom: 1.2rem; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: white; outline: none; transition: 0.3s; }
   .input-field:focus { border-color: var(--g); background: rgba(255,255,255,0.05); }
+  select.input-field option { background: var(--n2); color: var(--blanc); }
   .btn-login { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--g); color: var(--noir); font-weight: 700; cursor: pointer; transition: 0.3s; font-family: 'Outfit'; font-size: 1.1rem; }
   .btn-login:hover { background: #00C98E; transform: translateY(-2px); }
 
@@ -54,7 +55,7 @@
   .stat-label { color: var(--gris); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; display: block; }
   .stat-value { font-family: 'Outfit'; font-size: 1.8rem; font-weight: 700; color: var(--g); }
 
-  /* Grid des Réservations */
+  /* Grid & Cartes */
   .tab-content { display: none; }
   .tab-content.active { display: block; }
   
@@ -131,7 +132,7 @@
         <div style="font-size: 0.85rem; color: var(--gris);">Session : <strong style="color: var(--blanc);">Admin</strong></div>
       </div>
 
-      <div class="stats-bar">
+      <div class="stats-bar" id="stats-bar">
         <div class="stat-card">
           <span class="stat-label">En attente</span>
           <div class="stat-value" id="stat-pending">0</div>
@@ -155,12 +156,23 @@
       </div>
 
       <div id="tab-communes" class="tab-content">
-        <div style="padding: 4rem 2rem; border-radius: 20px; background: var(--n2); border: 1px dashed var(--border); text-align: center;">
-          <h3 style="font-family: 'Outfit'; margin-bottom: 1rem;">Gestion de la carte</h3>
-          <p style="color: var(--gris); max-width: 500px; margin: 0 auto; line-height: 1.6;">
-            Le module de mise à jour des communes partenaires est en cours de développement.<br>Il vous permettra d'ajouter des points sur la carte en un clic.
-          </p>
-        </div>
+        <div class="section-title">➕ Ajouter une commune</div>
+        <form id="form-commune" onsubmit="addCommune(event)" style="background: var(--n2); padding: 1.8rem; border-radius: 18px; border: 1px solid var(--border); margin-bottom: 3rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem;">
+            <input type="text" id="com-nom" class="input-field" style="margin:0" placeholder="Nom de la ville (ex: Drancy)" required>
+            <input type="text" id="com-dept" class="input-field" style="margin:0" placeholder="Département (ex: Seine-Saint-Denis (93))" required>
+            <input type="number" step="any" id="com-lat" class="input-field" style="margin:0" placeholder="Latitude (ex: 48.9239)" required>
+            <input type="number" step="any" id="com-lng" class="input-field" style="margin:0" placeholder="Longitude (ex: 2.4591)" required>
+            <select id="com-statut" class="input-field" style="margin:0" required>
+              <option value="actif">Actif (Partenaire)</option>
+              <option value="prospect">Prospect (En discussion)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-action btn-approve" style="width: 100%; padding: 14px; font-size: 1rem;">Ajouter à la carte</button>
+        </form>
+
+        <div class="section-title">📍 Communes sur la carte <span id="count-communes">0</span></div>
+        <div id="communes-grid" class="resa-grid">Chargement...</div>
       </div>
     </main>
   </div>
@@ -168,10 +180,10 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
     // 🚨 COLLE ICI TON OBJET CONFIG FIREBASE 🚨
-     const firebaseConfig = {
+   const firebaseConfig = {
   apiKey: "AIzaSyCAfoMmouoN2cmCgHYJ07gIyyTLqv_ltto",
   authDomain: "neoball-e2f1f.firebaseapp.com",
   projectId: "neoball-e2f1f",
@@ -179,6 +191,7 @@
   messagingSenderId: "648867084826",
   appId: "1:648867084826:web:e86426f3cdd0fe086bafa3"
 };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -188,6 +201,7 @@
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('dashboard-screen').style.display = 'flex';
         loadReservations();
+        loadCommunes();
       } else {
         document.getElementById('login-screen').style.display = 'flex';
         document.getElementById('dashboard-screen').style.display = 'none';
@@ -209,9 +223,17 @@
       document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
       document.getElementById('tab-' + tabName).classList.add('active');
       document.getElementById('btn-tab-' + tabName).classList.add('active');
-      document.getElementById('page-title').textContent = tabName === 'resas' ? 'Gestion des Réservations' : 'Gestion des Communes';
+      
+      if(tabName === 'resas') {
+          document.getElementById('page-title').textContent = 'Gestion des Réservations';
+          document.getElementById('stats-bar').style.display = 'grid';
+      } else {
+          document.getElementById('page-title').textContent = 'Gestion des Communes';
+          document.getElementById('stats-bar').style.display = 'none';
+      }
     };
 
+    // --- GESTION DES RÉSERVATIONS ---
     async function loadReservations() {
       const snapshot = await getDocs(collection(db, "reservations"));
       let htmlAttente = '', htmlValide = '';
@@ -222,7 +244,6 @@
         const id = fbDoc.id;
         const isAttente = d.statut === 'en_attente';
         
-        // Calcul CA
         if (d.prix_estime) {
           const prix = parseInt(d.prix_estime.replace(/[^0-9]/g, ''));
           if (!isNaN(prix)) totalCA += prix;
@@ -262,7 +283,6 @@
       document.getElementById('resas-attente').innerHTML = htmlAttente || '<p style="color:var(--gris);">Aucune nouvelle demande.</p>';
       document.getElementById('resas-validees').innerHTML = htmlValide || '<p style="color:var(--gris);">Aucun historique.</p>';
       
-      // Update Stats
       document.getElementById('stat-pending').textContent = countA;
       document.getElementById('stat-valid').textContent = countV;
       document.getElementById('stat-ca').textContent = totalCA.toLocaleString() + ' €';
@@ -281,6 +301,73 @@
         loadReservations();
       }
     };
+
+    // --- GESTION DES COMMUNES ---
+    async function loadCommunes() {
+      const snapshot = await getDocs(collection(db, "communes"));
+      let html = '';
+      let count = 0;
+
+      snapshot.forEach((fbDoc) => {
+        const d = fbDoc.data();
+        const id = fbDoc.id;
+        const isActif = d.statut === 'actif';
+        count++;
+
+        html += `
+          <div class="resa-card ${isActif ? 'valide' : ''}">
+            <div class="card-head">
+              <h3>${d.nom}</h3>
+              <span class="status-badge ${isActif ? 'valide' : 'attente'}">${isActif ? 'Actif' : 'Prospect'}</span>
+            </div>
+            <div class="info-item"><i>🗺️</i> ${d.dept}</div>
+            <div class="info-item"><i>📍</i> Lat: ${d.lat} | Lng: ${d.lng}</div>
+            <div class="card-actions" style="margin-top:1rem">
+              <button class="btn-action btn-approve" style="background:var(--n3); color:var(--blanc); border:1px solid var(--border)" 
+                      onclick="toggleCommuneStatus('${id}', '${isActif ? 'prospect' : 'actif'}')">
+                Passer en ${isActif ? 'Prospect' : 'Actif'}
+              </button>
+              <button class="btn-action btn-delete" onclick="deleteCommune('${id}')">Retirer</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('communes-grid').innerHTML = html || '<p style="color:var(--gris);">Aucune commune enregistrée.</p>';
+      document.getElementById('count-communes').textContent = count;
+    }
+
+    window.addCommune = async (e) => {
+      e.preventDefault();
+      const data = {
+        nom: document.getElementById('com-nom').value.trim(),
+        dept: document.getElementById('com-dept').value.trim(),
+        lat: parseFloat(document.getElementById('com-lat').value),
+        lng: parseFloat(document.getElementById('com-lng').value),
+        statut: document.getElementById('com-statut').value
+      };
+
+      try {
+        await addDoc(collection(db, "communes"), data);
+        document.getElementById('form-commune').reset();
+        loadCommunes();
+      } catch(error) {
+        alert("Erreur lors de l'ajout.");
+      }
+    };
+
+    window.toggleCommuneStatus = async (id, newStatus) => {
+      await updateDoc(doc(db, "communes", id), { statut: newStatus });
+      loadCommunes();
+    };
+
+    window.deleteCommune = async (id) => {
+      if(confirm("Retirer cette commune de la carte ?")) {
+        await deleteDoc(doc(db, "communes", id));
+        loadCommunes();
+      }
+    };
+
   </script>
 </body>
 </html>

@@ -658,7 +658,9 @@ select.conf-input option {
   window.addDoc = addDoc;
   
   window.BLOCKED_DATES_DB = [];
+  window.COMMUNES_DB = []; // Nouveau tableau pour les communes
 
+  // Charger les dates bloquées
   window.loadReservations = async function() {
       try {
           const q = query(collection(db, "reservations"));
@@ -674,12 +676,24 @@ select.conf-input option {
           });
           window.BLOCKED_DATES_DB = blocked;
           if (typeof buildCal === 'function') buildCal();
-      } catch (error) {
-          console.log("Erreur de lecture Firebase", error);
-      }
+      } catch (error) { console.log("Erreur", error); }
+  }
+
+  // Charger les communes depuis Firebase
+  window.loadCommunes = async function() {
+      try {
+          const q = query(collection(db, "communes"));
+          const querySnapshot = await getDocs(q);
+          const communes = [];
+          querySnapshot.forEach((doc) => {
+              communes.push(doc.data());
+          });
+          window.COMMUNES_DB = communes;
+      } catch (error) { console.log("Erreur communes", error); }
   }
 
   window.loadReservations();
+  window.loadCommunes(); // On lance le chargement
 </script>
 
 <script>
@@ -701,20 +715,17 @@ function setSport(i){spE.forEach(function(el,j){el.classList.toggle('on',j===i);
 window.addEventListener('scroll',function(){var sc=Math.max(0,-spSec.getBoundingClientRect().top),sa=spSec.offsetHeight-window.innerHeight;setSport(Math.min(4,Math.floor((sc/sa)*5)));},{passive:true});
 
 /* ── COMMUNES MAP ── */
-var COMMUNES=[
-  {nom:'Drancy',dept:'Seine-Saint-Denis (93)',lat:48.9239,lng:2.4591,statut:'actif'},
-  {nom:'Claye-Souilly',dept:'Seine-et-Marne (77)',lat:48.9444,lng:2.6847,statut:'actif'},
-  {nom:'Aulnay-sous-Bois',dept:'Seine-Saint-Denis (93)',lat:48.9378,lng:2.4936,statut:'actif'},
-  {nom:'Villeparisis',dept:'Seine-et-Marne (77)',lat:48.9447,lng:2.6285,statut:'actif'},
-  {nom:'Mitry-Mory',dept:'Seine-et-Marne (77)',lat:48.9847,lng:2.6208,statut:'actif'},
-  {nom:'Torcy',dept:'Seine-et-Marne (77)',lat:48.8469,lng:2.6542,statut:'prospect'},
-];
+/* ── COMMUNES MAP ── */
 var mapInst=null,mapMarkers={},activeCI=null;
 function initMap(){
   if(mapInst)return;
   mapInst=L.map('neoball-map',{center:[48.91,2.57],zoom:10});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap',subdomains:'abcd',maxZoom:19}).addTo(mapInst);
-  COMMUNES.forEach(function(c,i){
+  
+  // On utilise les données Firebase au lieu de la liste en dur
+  var data = window.COMMUNES_DB || [];
+  
+  data.forEach(function(c,i){
     var a=c.statut==='actif';
     var icon=L.divIcon({html:'<div style="width:'+(a?20:14)+'px;height:'+(a?20:14)+'px;border-radius:50%;background:'+(a?'#00A878':'rgba(255,255,255,.3)')+';border:2px solid '+(a?'rgba(0,200,140,.6)':'rgba(255,255,255,.15)')+';box-shadow:0 0 '+(a?'10px rgba(0,168,120,.7)':'4px rgba(255,255,255,.1)')+';cursor:pointer"></div>',className:'',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
     var pop='<div class="pop"><p class="pop-name">'+c.nom+'</p><p class="pop-dept">'+c.dept+'</p><span class="pop-tag '+c.statut+'">'+(a?'✓ Partenaire actif':'○ En discussion')+'</span></div>';
@@ -722,25 +733,37 @@ function initMap(){
     m.on('click',function(){selectCommune(i);});
     mapMarkers[i]=m;
   });
-  renderCMList(COMMUNES);updateCMStats();
+  renderCMList(data);
+  updateCMStats(data);
 }
+
 function renderCMList(data){
   var list=document.getElementById('cm-list');if(!list)return;
-  list.innerHTML=data.map(function(c){var i=COMMUNES.indexOf(c);return '<div class="cm-item'+(i===activeCI?' active':'')+'" id="cmi-'+i+'" onclick="selectCommune('+i+')"><div class="cm-dot '+c.statut+'"></div><div class="cm-item-info"><p class="cm-item-name">'+c.nom+'</p><p class="cm-item-dept">'+c.dept+'</p></div><span class="cm-badge '+c.statut+'">'+(c.statut==='actif'?'Actif':'Prospect')+'</span></div>';}).join('');
+  list.innerHTML=data.map(function(c){var i=window.COMMUNES_DB.indexOf(c);return '<div class="cm-item'+(i===activeCI?' active':'')+'" id="cmi-'+i+'" onclick="selectCommune('+i+')"><div class="cm-dot '+c.statut+'"></div><div class="cm-item-info"><p class="cm-item-name">'+c.nom+'</p><p class="cm-item-dept">'+c.dept+'</p></div><span class="cm-badge '+c.statut+'">'+(c.statut==='actif'?'Actif':'Prospect')+'</span></div>';}).join('');
 }
+
 function selectCommune(i){
   if(activeCI!==null){var o=document.getElementById('cmi-'+activeCI);if(o)o.classList.remove('active');}
   activeCI=i;
   var item=document.getElementById('cmi-'+i);
   if(item){item.classList.add('active');item.scrollIntoView({behavior:'smooth',block:'nearest'});}
-  if(mapInst&&mapMarkers[i]){mapInst.flyTo([COMMUNES[i].lat,COMMUNES[i].lng],13,{duration:.7});mapMarkers[i].openPopup();}
+  if(mapInst&&mapMarkers[i]){mapInst.flyTo([window.COMMUNES_DB[i].lat,window.COMMUNES_DB[i].lng],13,{duration:.7});mapMarkers[i].openPopup();}
 }
-function filterCommunes(q){renderCMList(COMMUNES.filter(function(c){return c.nom.toLowerCase().includes(q.toLowerCase())||c.dept.toLowerCase().includes(q.toLowerCase());}));}
-function updateCMStats(){
+
+function filterCommunes(q){
+    renderCMList((window.COMMUNES_DB || []).filter(function(c){
+        return c.nom.toLowerCase().includes(q.toLowerCase())||c.dept.toLowerCase().includes(q.toLowerCase());
+    }));
+}
+
+function updateCMStats(data){
   var t=document.getElementById('cm-n-total'),a=document.getElementById('cm-n-actif'),d=document.getElementById('cm-n-dept');
-  if(t)t.textContent=COMMUNES.length;if(a)a.textContent=COMMUNES.filter(function(c){return c.statut==='actif';}).length;if(d)d.textContent=new Set(COMMUNES.map(function(c){return c.dept;})).size;
+  if(t)t.textContent=data.length;
+  if(a)a.textContent=data.filter(function(c){return c.statut==='actif';}).length;
+  if(d)d.textContent=new Set(data.map(function(c){return c.dept;})).size;
 }
-new IntersectionObserver(function(es){if(es[0].isIntersecting)setTimeout(initMap,80);},{threshold:.1}).observe(document.getElementById('communes'));
+
+new IntersectionObserver(function(es){if(es[0].isIntersecting)setTimeout(initMap,200);},{threshold:.1}).observe(document.getElementById('communes'));
 
 /* ════════════════════════════════════════
    SYSTÈME DE RÉSERVATION DYNAMIQUE
