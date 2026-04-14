@@ -90,7 +90,7 @@ nav.s .nr a{opacity:1;transform:none}
 .sp-vis{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .7s cubic-bezier(.25,.46,.45,.94)}
 .sp-vis.on{opacity:1}
 .sp-vi{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem}
-.sp-emoji{font-size:clamp(7rem,15vw,11rem);animation:fl 4s ease-in-out infinite}
+.sp-emoji{width:clamp(140px,22vw,220px);height:clamp(140px,22vw,220px);object-fit:contain;animation:fl 4s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(255,255,255,.15))}
 @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 .sp-wordmark{font-family:var(--fs);font-size:clamp(1.2rem,2.8vw,2.5rem);font-weight:900;letter-spacing:.1em;color:rgba(255,255,255,.06)}
 .sp-glow{position:absolute;inset:0;opacity:.14;transition:opacity .7s;pointer-events:none}
@@ -394,11 +394,11 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
       <div class="sp-entry" data-i="4"><p class="sp-n">05</p><p class="sp-name">Dodgeball</p><p class="sp-desc">Sport d'esquive en équipes avec balles en mousse. Dynamique et stratégique, idéal pour les séances festives et les événements.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Balles mousse</span></div></div>
     </div>
     <div class="sp-right">
-      <div class="sp-vis on"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(0,168,120,1),transparent 60%)"></div><div class="sp-vi"><div class="sp-emoji">🏐</div><p class="sp-wordmark">SPIKEBALL</p></div></div>
-      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(255,110,40,1),transparent 60%)"></div><div class="sp-vi"><div class="sp-emoji">🏈</div><p class="sp-wordmark">FLAG FOOTBALL</p></div></div>
-      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(80,140,255,1),transparent 60%)"></div><div class="sp-vi"><div class="sp-emoji">🎯</div><p class="sp-wordmark">TCHOUKBALL</p></div></div>
-      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(255,195,40,1),transparent 60%)"></div><div class="sp-vi"><div class="sp-emoji">⚾</div><p class="sp-wordmark">STRIKEBALL</p></div></div>
-      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(220,60,60,1),transparent 60%)"></div><div class="sp-vi"><div class="sp-emoji">💥</div><p class="sp-wordmark">DODGEBALL</p></div></div>
+      <div class="sp-vis on"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(0,168,120,1),transparent 60%)"></div><div class="sp-vi"><img class="sp-emoji" src="logo-spikeball.png" alt="Spikeball"><p class="sp-wordmark">SPIKEBALL</p></div></div>
+      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(255,110,40,1),transparent 60%)"></div><div class="sp-vi"><img class="sp-emoji" src="logo-flagfootball.png" alt="Flag Football"><p class="sp-wordmark">FLAG FOOTBALL</p></div></div>
+      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(80,140,255,1),transparent 60%)"></div><div class="sp-vi"><img class="sp-emoji" src="logo-tchoukball.png" alt="Tchoukball"><p class="sp-wordmark">TCHOUKBALL</p></div></div>
+      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(255,195,40,1),transparent 60%)"></div><div class="sp-vi"><img class="sp-emoji" src="logo-strikeball.png" alt="Strikeball"><p class="sp-wordmark">STRIKEBALL</p></div></div>
+      <div class="sp-vis"><div class="sp-glow" style="background:radial-gradient(ellipse at 50% 50%,rgba(220,60,60,1),transparent 60%)"></div><div class="sp-vi"><img class="sp-emoji" src="logo-dodgeball.png" alt="Dodgeball"><p class="sp-wordmark">DODGEBALL</p></div></div>
     </div>
   </div>
   <div class="sp-spacer"></div>
