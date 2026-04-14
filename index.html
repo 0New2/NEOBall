@@ -7,6 +7,7 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -644,7 +645,7 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 window.VACANCES_SCOLAIRES = [];
 
@@ -695,6 +696,8 @@ window.estPendantVacances = function(dateCliqueeStr) {
   window.db = db;
   window.collection = collection;
   window.addDoc = addDoc;
+  window.updateDoc = updateDoc;
+  window.doc = doc;
   
   window.BLOCKED_DATES_DB = [];
   window.COMMUNES_DB = []; 
@@ -709,13 +712,20 @@ window.estPendantVacances = function(dateCliqueeStr) {
               if(Array.isArray(data.date_id)) blocked.push(...data.date_id);
               else if(data.date_id) blocked.push(data.date_id);
           });
-          // Stocker à la fois les slots détaillés et les dates seules (rétrocompat)
-          window.BLOCKED_SLOTS_DB = blocked.map(function(item) {
-            if (item.indexOf('_') > 7) { // format "YYYY-MM-DD_HH:MM_HH:MM"
+          // Séparer nouveaux slots (avec horaire) des anciens (date seule)
+          window.BLOCKED_SLOTS_DB = [];
+          window.BLOCKED_DATES_LEGACY = []; // anciennes resas sans horaire
+          blocked.forEach(function(item) {
+            if (typeof item === 'string' && item.indexOf('_') > 7) {
+              // Nouveau format : "YYYY-MM-DD_HH:MM_HH:MM"
               var parts = item.split('_');
-              return { date: parts[0], start: parts[1].replace('h',':'), end: parts[2] ? parts[2].replace('h',':') : '23:59' };
+              var startStr = parts[1] ? parts[1].replace('h',':') : '00:00';
+              var endStr   = parts[2] ? parts[2].replace('h',':') : '23:59';
+              window.BLOCKED_SLOTS_DB.push({ date: parts[0], start: startStr, end: endStr });
+            } else if (typeof item === 'string') {
+              // Ancien format : juste la date — on marque le jour mais sans bloquer un horaire précis
+              window.BLOCKED_DATES_LEGACY.push(item);
             }
-            return { date: item, start: '00:00', end: '23:59' }; // ancien format = jour entier
           });
           window.BLOCKED_DATES_DB = blocked;
           if (typeof buildCal === 'function') buildCal();
@@ -739,6 +749,14 @@ window.estPendantVacances = function(dateCliqueeStr) {
 </script>
 
 <script>
+/* ── EMAILJS ── */
+emailjs.init('H0v9sswSbS9Q3TCXo');
+
+// Envoie un email via EmailJS — templateId + params
+function sendEmail(templateId, params) {
+  return emailjs.send('service_gdaddh6', templateId, params);
+}
+
 /* ── CURSOR & DESIGN ── */
 var cur=document.getElementById('cur'),curR=document.getElementById('curR'),mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
@@ -915,8 +933,10 @@ function buildCal(){
         if(selDays.includes(ds)) el.classList.add('sel');
         el.addEventListener('click', function(){ pickDay(ds); });
       }
-      // Indicateur partiel si au moins un slot est déjà pris sur ce jour
-      if (window.BLOCKED_SLOTS_DB && window.BLOCKED_SLOTS_DB.some(function(s){ return s.date===ds; })) {
+      // Indicateur partiel si au moins un slot est déjà pris sur ce jour (nouveau ou ancien format)
+      var hasExisting = (window.BLOCKED_SLOTS_DB && window.BLOCKED_SLOTS_DB.some(function(s){ return s.date===ds; }))
+                     || (window.BLOCKED_DATES_LEGACY && window.BLOCKED_DATES_LEGACY.includes(ds));
+      if (hasExisting) {
         var dot2 = document.createElement('div');
         dot2.className = 'cd-dot-partial';
         el.appendChild(dot2);
@@ -1192,8 +1212,27 @@ async function sendResa(){
           timestamp_demande: new Date().toISOString()
       };
 
-      await window.addDoc(window.collection(window.db, "reservations"), resaData);
-      
+      // Sauvegarder dans Firebase
+      var docRef = await window.addDoc(window.collection(window.db, "reservations"), resaData);
+
+      // Email de confirmation au CLIENT
+      try {
+        var emailResult = await sendEmail('template_hbssga4', {
+          to_email:   email,
+          client_nom: nom,
+          subject:    'NeoBall - Votre demande a bien ete recue',
+          message:    'Nous avons bien recu votre demande pour ' + commune + '.\n'
+                    + 'Date(s) : ' + datesLbl + '\n'
+                    + 'Horaire : ' + start + ' - ' + end + '\n'
+                    + 'Sport(s) : ' + sports + '\n'
+                    + 'Educateurs : ' + resaEduc + '\n\n'
+                    + 'Votre demande est en cours d\'etude. Reponse sous 48h.'
+        });
+        console.log('Email confirmation envoye avec succes:', emailResult.status, emailResult.text);
+      } catch(emailErr) {
+        console.error('ERREUR EMAIL - status:', emailErr.status, '| text:', emailErr.text, '| details:', JSON.stringify(emailErr));
+      }
+
       document.getElementById('resa-ok').style.display='block';
       btn.style.display='none';
 
