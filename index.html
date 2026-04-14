@@ -550,7 +550,7 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
         </div>
         <div id="cal-grid" class="cal-grid"></div>
         
-        <div id="custom-time-panel" class="custom-time-panel">
+      <div id="custom-time-panel" class="custom-time-panel">
             <p class="slot-panel-title" id="custom-time-title">—</p>
             <div class="time-inputs">
                 <div>
@@ -562,9 +562,29 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
                     <select id="time-end" class="conf-input" onchange="validateTimes()"></select>
                 </div>
             </div>
-        </div>
-      </div>
 
+            <div id="choix-type-resa" style="margin-top: 20px; text-align: left; background: #f8f9fa; color: #111; padding: 15px; border-radius: 8px;"> </div>
+                <p style="font-weight: bold; margin-bottom: 10px;">🔄 Répéter ce créneau ?</p>
+                
+                <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                    <input type="radio" name="type_resa" value="unique" checked> 
+                    Juste à cette date (Événement unique)
+                </label>
+
+                <label id="label-stage" style="display: block; margin-bottom: 8px; cursor: pointer;">
+                    <input type="radio" name="type_resa" value="stage" id="radio-stage"> 
+                    Toute la semaine (Stage sportif du Lun. au Ven.)
+                    <br><span id="msg-vacances" style="color: #e74c3c; font-size: 0.85em; display: none; margin-left: 20px;">
+                    ⚠️ Uniquement pendant les vacances scolaires (Zone C).
+                    </span>
+                </label>
+
+                <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                    <input type="radio" name="type_resa" value="annee"> 
+                    Toute l'année (Le même jour chaque semaine)
+                </label>
+            </div>
+            </div>
       <div id="rs2" class="rs">
         <p class="rs-title">Configurez votre séance</p>
         <div class="conf-slot-recap" id="conf-recap">
@@ -641,6 +661,35 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, query } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+window.VACANCES_SCOLAIRES = [];
+
+  async function chargerVacances() {
+      const apiUrl = "https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-calendrier-scolaire/records?where=location%3D%22Cr%C3%A9teil%22&limit=50";
+      try {
+          const reponse = await fetch(apiUrl);
+          const data = await reponse.json();
+          window.VACANCES_SCOLAIRES = data.results.map(vacance => {
+              return {
+                  nom: vacance.description,
+                  debut: new Date(vacance.start_date).setHours(0,0,0,0),
+                  fin: new Date(vacance.end_date).setHours(23,59,59,999)
+              };
+          });
+          console.log("Vacances chargées :", window.VACANCES_SCOLAIRES);
+      } catch (erreur) {
+          console.error("Erreur de chargement des vacances :", erreur);
+      }
+  }
+
+  function estPendantVacances(dateCliqueeStr) {
+      const dateCible = new Date(dateCliqueeStr).getTime();
+      return window.VACANCES_SCOLAIRES.some(vac => {
+          return dateCible >= vac.debut && dateCible <= vac.fin;
+      });
+  }
+
+  chargerVacances();
 
   const firebaseConfig = {
     apiKey: "AIzaSyCAfoMmouoN2cmCgHYJ07gIyyTLqv_ltto",
