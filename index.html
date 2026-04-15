@@ -100,7 +100,7 @@ nav.s .nr a{opacity:1;transform:none}
 
 /* CRÉNEAUX */
 #creneaux{padding:8rem 5vw;background:var(--n3)}
-.cr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:4rem}
+.cr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:4rem}
 .cr-card{padding:2.5rem 2rem;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:.75rem;transition:background .3s,border-color .3s}
 .cr-card:hover{background:rgba(0,168,120,.04);border-color:rgba(0,168,120,.2)}
 .cr-icon{font-size:1.6rem;margin-bottom:.5rem}
@@ -390,7 +390,7 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
       <div class="sp-entry on" data-i="0"><p class="sp-n">01</p><p class="sp-name">Spikeball</p><p class="sp-desc">Sport 2 contre 2 autour d'un filet circulaire tendu au sol. Ultra-dynamique, idéal en intérieur comme en extérieur. Développe les réflexes, la coordination et l'esprit d'équipe.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Filet + balle</span></div></div>
       <div class="sp-entry" data-i="1"><p class="sp-n">02</p><p class="sp-name">Flag Football</p><p class="sp-desc">Version sans contact du football américain. Stratégie, vitesse, esprit d'équipe. En plein essor — sport prévu aux Jeux Olympiques de Los Angeles 2028.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">JO 2028</span><span class="sp-pill">Flags + ballon</span></div></div>
       <div class="sp-entry" data-i="2"><p class="sp-n">03</p><p class="sp-name">Tchoukball</p><p class="sp-desc">Sport collectif non-violent inventé en Suisse en 1970. Tirs sur cadre élastique incliné. Favorise le fair-play et l'inclusion. Aucun contact défensif.</p><div class="sp-meta"><span class="sp-pill">Tous publics</span><span class="sp-pill">Non-violent</span><span class="sp-pill">Cadres + balle</span></div></div>
-      <div class="sp-entry" data-i="3"><p class="sp-n">04</p><p class="sp-name">Strikeball</p><p class="sp-desc">Jeu de balle alliant frappe, déplacement tactique et stratégie collective. Facile à prendre en main, idéal pour une première découverte sportive.</p><div class="sp-meta"><span class="sp-pill">Ados & Adultes</span><span class="sp-pill">Batte + balle</span></div></div>
+      <div class="sp-entry" data-i="3"><p class="sp-n">04</p><p class="sp-name">Strikeball</p><p class="sp-desc">Sport collectif innovant créé par Kelian Le Guen. Deux équipes s’affrontent avec un Swiss ball souple. Le porteur est statique — passer ou tirer. Les éliminés peuvent revenir grâce aux actions collectives. La règle � Last Player » permet des retournements spectaculaires.</p><div class="sp-meta"><span class="sp-pill">Dès 6 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Swiss ball</span></div></div>
       <div class="sp-entry" data-i="4"><p class="sp-n">05</p><p class="sp-name">Dodgeball</p><p class="sp-desc">Sport d'esquive en équipes avec balles en mousse. Dynamique et stratégique, idéal pour les séances festives et les événements.</p><div class="sp-meta"><span class="sp-pill">Dès 8 ans</span><span class="sp-pill">Mixte</span><span class="sp-pill">Balles mousse</span></div></div>
     </div>
     <div class="sp-right">
@@ -408,10 +408,9 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
   <p class="tag rv">Quand on intervient</p>
   <h2 class="ttl rv" style="transition-delay:.1s;margin-top:.75rem">Des créneaux pour chaque public.</h2>
   <div class="cr-grid">
-    <div class="cr-card rv" style="transition-delay:.05s"><div class="cr-icon">🌤</div><p class="cr-time">Mercredi après-midi</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Enfants & Ados · 6–17 ans</p><p class="cr-desc">Découverte et initiation aux sports innovants. Format ludique et pédagogique. Idéal en complément des centres de loisirs.</p></div>
-    <div class="cr-card rv" style="transition-delay:.1s"><div class="cr-icon">🌆</div><p class="cr-time">Soirées semaine</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Ados & Adultes · 14 ans+</p><p class="cr-desc">Sessions sport-loisir, tournois entre équipes, découverte de nouvelles disciplines. Format convivial et accessible.</p></div>
-    <div class="cr-card rv" style="transition-delay:.15s"><div class="cr-icon">☀️</div><p class="cr-time">Vacances scolaires</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Enfants & Ados · 6–17 ans</p><p class="cr-desc">Animations sportives multi-disciplines. Idéal pour les centres de loisirs et accueils ALSH.</p></div>
-    <div class="cr-card rv" style="transition-delay:.2s"><div class="cr-icon">🏆</div><p class="cr-time">Événements spéciaux</p><p class="cr-hours">Sur mesure</p><p class="cr-pub">Tout public</p><p class="cr-desc">Démonstrations, tournois, fêtes de quartier, forums des associations. Un stand NeoBall qui attire et fédère.</p></div>
+    <div class="cr-card rv" style="transition-delay:.05s"><div class="cr-icon">🔁</div><p class="cr-time">Séance régulière</p><p class="cr-hours">Horaire sur mesure · hebdomadaire</p><p class="cr-pub">Tout public</p><p class="cr-desc">Un créneau fixe chaque semaine. Les séances pendant les vacances scolaires sont automatiquement exclues.</p></div>
+    <div class="cr-card rv" style="transition-delay:.1s"><div class="cr-icon">🏕</div><p class="cr-time">Stage</p><p class="cr-hours">Horaire sur mesure · 5 jours consécutifs</p><p class="cr-pub">Tout public</p><p class="cr-desc">Une semaine intensive de découverte sportive. Idéal pour les ALSH et centres de loisirs.</p></div>
+    <div class="cr-card rv" style="transition-delay:.15s"><div class="cr-icon">📌</div><p class="cr-time">Événement</p><p class="cr-hours">Horaire sur mesure · Date unique</p><p class="cr-pub">Tout public</p><p class="cr-desc">Démonstration, tournoi, fête de quartier… Un créneau ponctuel à la date de votre choix.</p></div>
   </div>
 </section>
 
@@ -562,14 +561,14 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
             <div id="choix-type-resa" style="margin-top: 20px; text-align: left; background: rgba(0,168,120,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(0,168,120,0.15);">
                 <p style="font-weight: 700; margin-bottom: 12px; font-size: 0.9rem; color: #00A878;">🔄 Répéter ce créneau ?</p>
                 <label style="display: block; margin-bottom: 10px; cursor: pointer;">
-                    <input type="radio" name="type_resa" value="unique" id="radio-unique" checked onchange="toggleDateFin()"> Juste à cette date
+                    <input type="radio" name="type_resa" value="unique" id="radio-unique" checked onchange="toggleDateFin()"> Événement (date unique)
                 </label>
                 <label id="label-stage" style="display: block; margin-bottom: 10px; cursor: pointer;">
                     <input type="radio" name="type_resa" value="stage" id="radio-stage" onchange="toggleDateFin()"> Stage (Lundi au Vendredi)
                     <br><span id="msg-vacances" style="color: #ff4757; font-size: 0.75rem; display: none; margin-left: 25px;">⚠️ Uniquement en vacances.</span>
                 </label>
                 <label id="label-annee" style="display: block; cursor: pointer;">
-                    <input type="radio" name="type_resa" value="annee" id="radio-annee" onchange="toggleDateFin()"> Récurrence hebdomadaire
+                    <input type="radio" name="type_resa" value="annee" id="radio-annee" onchange="toggleDateFin()"> Séance régulière
                     <br><span id="msg-ecole" style="color: #ff4757; font-size: 0.75rem; display: none; margin-left: 25px;">⚠️ Indisponible en vacances.</span>
                 </label>
                 <div id="zone-date-fin" style="display: none; margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1);">
@@ -673,7 +672,7 @@ window.estPendantVacances = function(dateCliqueeStr) {
         console.warn("L'API n'a pas encore chargé les dates.");
         return false; 
     }
-    const dateCible = new Date(dateCliqueeStr).getTime();
+    const dateCible = new Date(dateCliqueeStr + 'T12:00:00').getTime();
     return window.VACANCES_SCOLAIRES.some(vac => {
         return dateCible >= vac.debut && dateCible <= vac.fin;
     });
@@ -1199,8 +1198,16 @@ async function sendResa(){
       var endRaw = document.getElementById('time-end').value;
       var slotIds = allDates.map(function(d){ return d + '_' + startRaw + '_' + endRaw; });
 
+      var finResaInput = document.getElementById('date-fin-recurrence').value;
+      var typeResaLabel = typeResa === 'unique' ? 'Événement' : typeResa === 'stage' ? 'Stage' : 'Séance régulière';
+      var dateFinLabel = (typeResa === 'annee' && finResaInput)
+        ? new Date(finResaInput + 'T12:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'})
+        : null;
+
       const resaData = {
-          date_id: slotIds, 
+          date_id: slotIds,
+          type_resa: typeResaLabel,
+          date_fin: dateFinLabel || null,
           date_texte: datesLbl,
           horaires: start + ' – ' + end,
           sports: sports,
