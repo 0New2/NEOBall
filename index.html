@@ -235,7 +235,7 @@ nav.s .nr a{opacity:1;transform:none}
 .co-btns{margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
 .co-info{margin-top:2.5rem;font-size:.78rem;color:rgba(255,255,255,.2);letter-spacing:.05em;position:relative;z-index:2}
 .co-info a{color:var(--g);text-decoration:none}
-footer{padding:1.5rem 5vw;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:rgba(255,255,255,.18)}
+footer{padding:1.5rem 5vw;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center;font-size:.72rem;color:rgba(255,255,255,.18)}
 footer span{color:var(--g)}
 
 /* ════════════════════════════════
@@ -517,7 +517,7 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
 
 <footer>
   <span>© 2025 <span>NeoBall</span> — Collectif de Micro-entreprises — Éducateurs Diplômés d'État</span>
-  <span>Villeparisis (77) · Île-de-France</span>
+  <a href="https://0new2.github.io/Pixel-Forge/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:.6rem;color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;font-size:.78rem;font-weight:500;letter-spacing:.02em" onmouseover="this.style.filter='drop-shadow(0 0 12px rgba(168,85,247,.8)) drop-shadow(0 0 6px rgba(56,189,248,.6))'" onmouseout="this.style.filter='none'"><span style="font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:.03em">Site réalisé par</span><span style="font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;background:linear-gradient(90deg,#ff6ec7,#a855f7,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 8px rgba(168,85,247,.5))">PIXEL-FORGE</span><img src="logo-pf.png" alt="Pixel-Forge" style="height:28px;vertical-align:middle;opacity:.9;transition:opacity .2s"></a>
 </footer>
 
 <button class="resa-fab" onclick="openResa()">📅 Demander un créneau</button>
