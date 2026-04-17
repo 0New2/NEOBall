@@ -359,6 +359,7 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
     <li><a href="#communes">Communes</a></li>
     <li><a href="#equipe">Équipe</a></li>
     <li><a href="#" onclick="openResa();return false;" class="nr-resa">📅 Réserver</a></li>
+    <li><a href="#contact-form">Contact</a></li>
     <li><a href="#contact" class="nc">Nous contacter</a></li>
   </ul>
 </nav>
@@ -511,6 +512,47 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
       <a href="mailto:neoball.collectif@gmail.com" class="btn-gh">neoball.collectif@gmail.com</a>
     </div>
     <p class="co-info rv" style="transition-delay:.4s">Kelian Le Guen · Lucas Leone · Luis Ferreira<br>Villeparisis (77) · Île-de-France · <a href="mailto:neoball.collectif@gmail.com" style="color:var(--g);text-decoration:none">neoball.collectif@gmail.com</a></p>
+  </div>
+</section>
+
+
+<!-- CONTACT FORM -->
+<section id="contact-form" style="padding:8rem 5vw;background:var(--n3);position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 45% at 50% 50%,rgba(0,168,120,.06),transparent 65%);pointer-events:none"></div>
+  <div style="max-width:580px;margin:0 auto;position:relative;z-index:1">
+    <p class="tag rv" style="text-align:center;margin-bottom:.75rem">Contact</p>
+    <h2 class="ttl rv" style="text-align:center;transition-delay:.1s;margin-bottom:.5rem">Envoyez-nous<br>un message.</h2>
+    <p class="rv" style="text-align:center;transition-delay:.18s;font-size:.9rem;color:var(--gris);line-height:1.7;margin-bottom:2.5rem">Une question, une demande d’information ? Écrivez-nous directement.</p>
+
+    <div class="rv" style="transition-delay:.22s;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:.85rem">
+        <div>
+          <label style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g);font-weight:700;display:block;margin-bottom:.4rem">Nom *</label>
+          <input id="cf-nom" type="text" placeholder="Votre nom" style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--g)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        </div>
+        <div>
+          <label style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g);font-weight:700;display:block;margin-bottom:.4rem">Commune *</label>
+          <input id="cf-commune" type="text" placeholder="Votre commune" style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--g)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        </div>
+      </div>
+      <div style="margin-bottom:.85rem">
+        <label style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g);font-weight:700;display:block;margin-bottom:.4rem">Email *</label>
+        <input id="cf-email" type="email" placeholder="votre@email.fr" style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--g)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+      </div>
+      <div style="margin-bottom:.85rem">
+        <label style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g);font-weight:700;display:block;margin-bottom:.4rem">Téléphone <span style="font-weight:400;color:rgba(255,255,255,.25)">(optionnel)</span></label>
+        <input id="cf-tel" type="tel" placeholder="06 00 00 00 00" style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--g)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+      </div>
+      <div style="margin-bottom:1.25rem">
+        <label style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g);font-weight:700;display:block;margin-bottom:.4rem">Message *</label>
+        <textarea id="cf-message" rows="4" placeholder="Votre message..." style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s;resize:none" onfocus="this.style.borderColor='var(--g)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"></textarea>
+      </div>
+      <button id="cf-btn" onclick="sendContactForm()" style="width:100%;padding:13px;border-radius:50px;background:var(--g);color:var(--noir);font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:800;border:none;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.5rem" onmouseover="this.style.background='var(--g2)'" onmouseout="this.style.background='var(--g)'">
+        <span id="cf-btn-txt">Envoyer le message →</span>
+      </button>
+      <div id="cf-ok" style="display:none;margin-top:.85rem;text-align:center;padding:.75rem;background:rgba(0,168,120,.12);color:var(--g);border:1px solid rgba(0,168,120,.25);border-radius:8px;font-size:.82rem">✅ Message envoyé ! Nous vous répondons sous 48h.</div>
+      <div id="cf-err" style="display:none;margin-top:.85rem;text-align:center;padding:.75rem;background:rgba(220,60,60,.1);color:#ff6b6b;border:1px solid rgba(220,60,60,.2);border-radius:8px;font-size:.82rem">❌ Erreur. Écrivez directement à neoball.collectif@gmail.com</div>
+    </div>
   </div>
 </section>
 
@@ -1256,6 +1298,32 @@ async function sendResa(){
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeResa();});
+
+function sendContactForm() {
+  var nom     = document.getElementById('cf-nom').value.trim();
+  var commune = document.getElementById('cf-commune').value.trim();
+  var email   = document.getElementById('cf-email').value.trim();
+  var tel     = document.getElementById('cf-tel').value.trim();
+  var message = document.getElementById('cf-message').value.trim();
+  if (!nom || !commune || !email || !message) { alert('Merci de remplir les champs obligatoires.'); return; }
+  var btn = document.getElementById('cf-btn');
+  btn.disabled = true;
+  document.getElementById('cf-btn-txt').textContent = 'Envoi en cours...';
+  sendEmail('template_hbssga4', {
+    to_email:   'neoball.collectif@gmail.com',
+    client_nom: nom,
+    subject:    'Message de ' + nom + ' (' + commune + ')',
+    message:    'Commune : ' + commune + '\nEmail : ' + email + '\nTél : ' + (tel || 'Non renseigné') + '\n\n' + message
+  }).then(function() {
+    document.getElementById('cf-ok').style.display = 'block';
+    btn.style.display = 'none';
+  }).catch(function(e) {
+    console.error('Email erreur:', e);
+    document.getElementById('cf-err').style.display = 'block';
+    btn.disabled = false;
+    document.getElementById('cf-btn-txt').textContent = 'Réessayer →';
+  });
+}
 </script>
 </body>
 </html>
