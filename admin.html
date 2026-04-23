@@ -68,6 +68,8 @@
   .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
   .btn-action { padding: 10px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; font-family: 'Outfit'; }
   .btn-approve { background: var(--g); color: var(--noir); }
+  .conflict-badge { background: rgba(220,60,60,.12); color: #ff6b6b; border: 1px solid rgba(220,60,60,.3); border-radius: 10px; padding: .6rem .9rem; font-size: .78rem; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: .5rem; line-height: 1.5; }
+  .conflict-badge i { flex-shrink: 0; }
   .btn-approve:hover { background: #00C98E; }
   .btn-delete { background: rgba(220, 60, 60, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 60, 60, 0.2); }
   .btn-delete:hover { background: rgba(220, 60, 60, 0.2); }
@@ -88,6 +90,12 @@
   .agenda-event.valide { background: rgba(0,168,120,.25); color: #00e0a0; }
   .agenda-event.attente { background: rgba(255,179,71,.2); color: #FFB347; }
   .agenda-event.stage { background: rgba(100,160,255,.2); color: #7ab0ff; }
+  /* Couleurs par éducateur */
+  .agenda-event.prof-kelian, .agenda-sem-event.prof-kelian { background: rgba(0,168,120,.3); color: #00e0a0; border-left: 3px solid #00A878; }
+  .agenda-event.prof-lucas, .agenda-sem-event.prof-lucas { background: rgba(56,189,248,.2); color: #7ab0ff; border-left: 3px solid #38bdf8; }
+  .agenda-event.prof-luis, .agenda-sem-event.prof-luis { background: rgba(168,85,247,.2); color: #c084fc; border-left: 3px solid #a855f7; }
+  .agenda-event.prof-all, .agenda-sem-event.prof-all { background: linear-gradient(90deg,rgba(0,168,120,.25),rgba(56,189,248,.2),rgba(168,85,247,.2)); color: var(--blanc); border-left: 3px solid var(--g); }
+  .agenda-event.prof-multi, .agenda-sem-event.prof-multi { background: rgba(255,179,71,.2); color: #FFB347; border-left: 3px solid #FFB347; }
   .agenda-semaine { display: grid; grid-template-columns: 60px repeat(7, 1fr); gap: 2px; }
   .agenda-sem-day-head { text-align: center; padding: .5rem .25rem; font-size: .78rem; font-weight: 600; color: var(--gris); border-bottom: 1px solid var(--border); }
   .agenda-sem-day-head.today { color: var(--g); }
@@ -173,9 +181,11 @@
         </div>
         <div id="agenda-grid"></div>
         <div style="display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap">
-          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:rgba(0,168,120,.5);display:inline-block"></span>Validé</span>
-          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:rgba(255,179,71,.5);display:inline-block"></span>En attente</span>
-          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:rgba(100,160,255,.5);display:inline-block"></span>Stage</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:#00A878;display:inline-block"></span>Kelian</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:#38bdf8;display:inline-block"></span>Lucas</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:#a855f7;display:inline-block"></span>Luis</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:#FFB347;display:inline-block"></span>Multi-profs</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:4px;border-radius:2px;background:linear-gradient(90deg,#00A878,#38bdf8,#a855f7);display:inline-block"></span>Tous les 3</span>
         </div>
       </div>
 
@@ -292,25 +302,25 @@ window.VACANCES_SCOLAIRES = [];
     const MOIS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
     const JOURS_COURTS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 
-    function setVue(v) {
+    window.setVue = function(v) {
       agendaVue = v;
       document.querySelectorAll('.btn-vue').forEach(b => b.classList.remove('active'));
       document.getElementById('btn-vue-' + v).classList.add('active');
       renderAgenda();
-    }
+    };
 
-    function setFiltrProf(btn) {
+    window.setFiltrProf = function(btn) {
       agendaFiltrProf = btn.dataset.prof;
       document.querySelectorAll('.btn-prof-filter').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderAgenda();
-    }
+    };
 
-    function agendaMove(d) {
+    window.agendaMove = function(d) {
       if(agendaVue === 'mois') agendaDate.setMonth(agendaDate.getMonth() + d);
       else agendaDate.setDate(agendaDate.getDate() + d * 7);
       renderAgenda();
-    }
+    };
 
     function resaMatchDate(resa, ds) {
       // ds = 'YYYY-MM-DD'
@@ -329,7 +339,7 @@ window.VACANCES_SCOLAIRES = [];
 
     function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
-    function showTooltip(e, resa) {
+    window.showTooltip = function(e, resa) {
       const tt = document.getElementById('agenda-tooltip');
       tt.style.display = 'block';
       tt.innerHTML = '<strong>' + (resa.contact_nom || '—') + '</strong>'
@@ -341,9 +351,9 @@ window.VACANCES_SCOLAIRES = [];
       tt.style.top  = Math.min(e.clientY + 12, window.innerHeight - 200) + 'px';
     }
 
-    function hideTooltip() {
+    window.hideTooltip = function() {
       document.getElementById('agenda-tooltip').style.display = 'none';
-    }
+    };
 
     function renderAgenda() {
       const resas = filteredResas();
@@ -377,7 +387,16 @@ window.VACANCES_SCOLAIRES = [];
         html += '<div class="agenda-day-num">' + c.d + '</div>';
         if(c.cur) {
           resas.filter(r => resaMatchDate(r, ds)).forEach(r => {
-            const cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
+            // Couleur par éducateur (priorité sur statut)
+            let cls;
+            const profs = r.profs || '';
+            if(profs.includes('Kelian')) cls = 'prof-kelian';
+            else if(profs.includes('Lucas')) cls = 'prof-lucas';
+            else if(profs.includes('Luis')) cls = 'prof-luis';
+            else cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
+            // Si plusieurs profs → mix
+            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
+            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
             html += '<div class="agenda-event ' + cls + '" '
               + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
               + 'onmouseleave="hideTooltip()">'
@@ -432,8 +451,17 @@ window.VACANCES_SCOLAIRES = [];
             const startH = parseInt(hor.split('h')[0]) || 0;
             const endH = parseInt((hor.split('–')[1] || hor.split('-')[1] || '').trim().split('h')[0]) || 0;
             if(h >= startH && h < endH) {
-              const cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
-              evts += '<div class="agenda-sem-event ' + cls + '" '
+              // Couleur par éducateur (priorité sur statut)
+            let cls;
+            const profs = r.profs || '';
+            if(profs.includes('Kelian')) cls = 'prof-kelian';
+            else if(profs.includes('Lucas')) cls = 'prof-lucas';
+            else if(profs.includes('Luis')) cls = 'prof-luis';
+            else cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
+            // Si plusieurs profs → mix
+            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
+            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
+              evts +=  '<div class="agenda-sem-event ' + cls + '" '
                 + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
                 + 'onmouseleave="hideTooltip()">'
                 + (h === startH ? (r.contact_commune || '?') + ' · ' + hor : '')
@@ -471,6 +499,23 @@ window.VACANCES_SCOLAIRES = [];
     // --- GESTION DES RÉSERVATIONS ---
     async function loadReservations() {
       const snapshot = await getDocs(collection(db, "reservations"));
+      // Build educator schedule for conflict detection
+      const educSchedule = {}; // educName -> [{date, start, end, commune, id}]
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if(!d.profs || !d.date_id) return;
+        const ids = Array.isArray(d.date_id) ? d.date_id : [d.date_id];
+        d.profs.split(',').map(p => p.trim()).forEach(prof => {
+          if(!educSchedule[prof]) educSchedule[prof] = [];
+          ids.forEach(slotId => {
+            const parts = slotId.split('_');
+            if(parts.length >= 3) {
+              educSchedule[prof].push({ date: parts[0], start: parts[1], end: parts[2], commune: d.contact_commune||'?', id: doc.id });
+            }
+          });
+        });
+      });
+      window._educSchedule = educSchedule;
       allResas = []; // reset global
       let htmlAttente = '', htmlValide = '';
       let countA = 0, countV = 0, totalCA = 0;
@@ -503,9 +548,35 @@ window.VACANCES_SCOLAIRES = [];
                 <div class="info-item"><i>⏰</i> ${d.horaires} (${d.duree_facturee})</div>
             </div>
             <div class="info-item"><i>🏀</i> ${d.sports}</div>
+            ${d.profs ? `<div class="info-item"><i>👨‍🏫</i> <strong style="color:var(--g)">${d.profs}</strong></div>` : (d.nb_educateurs ? `<div class="info-item"><i>👨‍🏫</i> ${d.nb_educateurs} éducateur(s)</div>` : '')}
             <div class="info-item"><i>💰</i> <strong style="color:var(--g); font-size:1.1rem">${d.prix_estime}</strong> (${d.nb_educateurs} éducs)</div>
 
             ${d.message ? `<div class="msg-box">"${d.message}"</div>` : ''}
+            ${(() => {
+              // Détecter les conflits éduc sur cette résa
+              if(!d.profs || !d.date_id || !window._educSchedule) return '';
+              const ids = Array.isArray(d.date_id) ? d.date_id : [d.date_id];
+              const conflicts = [];
+              d.profs.split(',').map(p => p.trim()).forEach(prof => {
+                const schedule = window._educSchedule[prof] || [];
+                ids.forEach(slotId => {
+                  const parts = slotId.split('_');
+                  if(parts.length < 3) return;
+                  const [date, start, end] = parts;
+                  schedule.forEach(s => {
+                    if(s.id === id) return; // même resa
+                    if(s.date !== date) return;
+                    // chevauchement horaire
+                    const toM = t => { const [h,m] = t.replace('h',':').split(':'); return +h*60+(+m||0); };
+                    if(toM(start) < toM(s.end) && toM(end) > toM(s.start)) {
+                      conflicts.push(prof + ' → ' + s.commune + ' (' + new Date(date+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) + ')');
+                    }
+                  });
+                });
+              });
+              const uniq = [...new Set(conflicts)];
+              return uniq.length ? `<div class="conflict-badge"><i>⚠️</i><div><strong>Conflit détecté</strong><br>${uniq.join('<br>')}</div></div>` : '';
+            })()}
             
             <div class="card-actions">
               ${isAttente ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', 'valide')">Valider</button>` : '<span></span>'}
