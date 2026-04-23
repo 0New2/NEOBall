@@ -7,7 +7,6 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <meta name="robots" content="noindex, nofollow">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   /* ... (Garde exactement tout ton CSS actuel ici, ne change rien) ... */
   :root { 
@@ -62,13 +61,6 @@
   .status-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 50px; letter-spacing: 0.5px; }
   .status-badge.attente { background: rgba(255, 179, 71, 0.1); color: #FFB347; border: 1px solid rgba(255, 179, 71, 0.2); }
   .status-badge.valide { background: rgba(0, 168, 120, 0.1); color: var(--g); border: 1px solid rgba(0, 168, 120, 0.2); }
-  .type-badge { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; padding: 3px 9px; border-radius: 50px; letter-spacing: 0.5px; border: 1px solid; display: inline-block; margin-bottom: 0.75rem; }
-  .type-badge.evenement { background: rgba(100,160,255,.1); color: #7ab0ff; border-color: rgba(100,160,255,.3); }
-  .type-badge.stage { background: rgba(255,179,71,.1); color: #FFB347; border-color: rgba(255,179,71,.3); }
-  .type-badge.recurrence { background: rgba(0,168,120,.1); color: var(--g); border-color: rgba(0,168,120,.3); }
-  .date-bloc { margin: 1rem 0; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 10px; border-left: 3px solid rgba(0,168,120,.3); }
-  .status-badge.refuse { background: rgba(220,60,60,.1); color: #ff6b6b; border: 1px solid rgba(220,60,60,.2); }
-  .resa-card.refuse { border-left: 4px solid #ff6b6b; }
   .info-item { display: flex; align-items: center; gap: 10px; margin-bottom: 0.6rem; font-size: 0.92rem; color: var(--gris); }
   .info-item strong { color: var(--blanc); }
   .info-item i { width: 18px; font-style: normal; opacity: 0.8; }
@@ -78,16 +70,33 @@
   .btn-approve { background: var(--g); color: var(--noir); }
   .btn-approve:hover { background: #00C98E; }
   .btn-delete { background: rgba(220, 60, 60, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 60, 60, 0.2); }
-  .btn-reject { background: rgba(220, 60, 60, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 60, 60, 0.2); }
-  .btn-reject:hover { background: rgba(220, 60, 60, 0.2); }
-  .reject-row { display:none; grid-column:1/-1; gap:8px; }
-  .reject-row.open { display:flex; }
-  .reject-input { flex:1; padding:8px 12px; border-radius:8px; border:1px solid rgba(220,60,60,.3); background:rgba(220,60,60,.05); color:#fff; font-family:"DM Sans",sans-serif; font-size:.85rem; outline:none; }
-  .reject-input::placeholder { color:rgba(255,255,255,.3); }
-  .btn-confirm-reject { padding:8px 16px; border-radius:8px; border:none; background:rgba(220,60,60,.3); color:#ff6b6b; font-weight:700; cursor:pointer; font-family:"Outfit"; white-space:nowrap; }
-  .btn-confirm-reject:hover { background:rgba(220,60,60,.5); }
-  .card-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:1.5rem; }
   .btn-delete:hover { background: rgba(220, 60, 60, 0.2); }
+  /* AGENDA */
+  .btn-vue { padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--gris); font-family: 'DM Sans'; font-size: .82rem; cursor: pointer; transition: all .2s; }
+  .btn-vue.active { background: var(--g-dim); color: var(--g); border-color: var(--g); }
+  .btn-prof-filter { padding: 6px 14px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--gris); font-family: 'DM Sans'; font-size: .78rem; cursor: pointer; transition: all .2s; }
+  .btn-prof-filter.active { background: var(--g-dim); color: var(--g); border-color: var(--g); }
+  .btn-nav-cal { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--blanc); cursor: pointer; font-size: 1rem; transition: all .2s; }
+  .btn-nav-cal:hover { background: var(--border); }
+  .agenda-mois { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .agenda-wd { text-align: center; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gris); padding: .5rem 0; }
+  .agenda-day { min-height: 90px; background: var(--n2); border: 1px solid var(--border); border-radius: 10px; padding: .5rem; transition: border-color .2s; }
+  .agenda-day.today { border-color: var(--g); }
+  .agenda-day.other-month { opacity: .3; }
+  .agenda-day-num { font-size: .75rem; font-weight: 600; color: var(--gris); margin-bottom: .4rem; }
+  .agenda-event { font-size: .68rem; padding: 3px 6px; border-radius: 5px; margin-bottom: 3px; line-height: 1.4; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .agenda-event.valide { background: rgba(0,168,120,.25); color: #00e0a0; }
+  .agenda-event.attente { background: rgba(255,179,71,.2); color: #FFB347; }
+  .agenda-event.stage { background: rgba(100,160,255,.2); color: #7ab0ff; }
+  .agenda-semaine { display: grid; grid-template-columns: 60px repeat(7, 1fr); gap: 2px; }
+  .agenda-sem-day-head { text-align: center; padding: .5rem .25rem; font-size: .78rem; font-weight: 600; color: var(--gris); border-bottom: 1px solid var(--border); }
+  .agenda-sem-day-head.today { color: var(--g); }
+  .agenda-sem-slot { min-height: 36px; border-bottom: 1px solid rgba(255,255,255,.03); padding: 2px; }
+  .agenda-sem-event { border-radius: 5px; padding: 3px 6px; font-size: .68rem; line-height: 1.4; margin-bottom: 2px; cursor: pointer; }
+  .agenda-tooltip { position: fixed; z-index: 9999; background: var(--n2); border: 1px solid var(--g); border-radius: 12px; padding: 1rem 1.25rem; min-width: 220px; max-width: 280px; box-shadow: 0 8px 32px rgba(0,0,0,.6); pointer-events: none; display: none; font-size: .82rem; line-height: 1.6; }
+  .agenda-tooltip strong { color: var(--blanc); font-family: 'Outfit'; display: block; margin-bottom: .3rem; }
+  .agenda-tooltip .tt-lbl { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: var(--g); display: block; margin-bottom: .15rem; }
+
   @media (max-width: 900px) {
     aside { width: 70px; padding: 2rem 0.5rem; align-items: center; }
     .logo-admin span, .nav-link span, .header-main h2 { display: none; }
@@ -114,11 +123,13 @@
     </div>
   </div>
 
+  <div id="agenda-tooltip" class="agenda-tooltip"></div>
   <div id="dashboard-screen">
     <aside>
       <a href="#" class="logo-admin">Neo<span>Ball</span></a>
       <button class="nav-link active" id="btn-tab-resas" onclick="switchTab('resas')"><i>📅</i> <span>Réservations</span></button>
       <button class="nav-link" id="btn-tab-communes" onclick="switchTab('communes')"><i>📍</i> <span>Communes</span></button>
+      <button class="nav-link" id="btn-tab-agenda" onclick="switchTab('agenda')"><i>📆</i> <span>Agenda</span></button>
       <div class="btn-logout nav-link" onclick="logout()"><i>🚪</i> <span>Déconnexion</span></div>
     </aside>
 
@@ -139,6 +150,33 @@
         <div id="resas-attente" class="resa-grid" style="margin-bottom: 4rem;">Chargement...</div>
         <div class="section-title">✅ Historique validé <span id="count-valid">0</span></div>
         <div id="resas-validees" class="resa-grid">Chargement...</div>
+      </div>
+
+      <div id="tab-agenda" class="tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+            <button class="btn-vue active" id="btn-vue-mois" onclick="setVue('mois')">📅 Mois</button>
+            <button class="btn-vue" id="btn-vue-semaine" onclick="setVue('semaine')">📋 Semaine</button>
+          </div>
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
+            <span style="font-size:.8rem;color:var(--gris)">Filtrer par éducateur :</span>
+            <button class="btn-prof-filter active" data-prof="tous" onclick="setFiltrProf(this)">Tous</button>
+            <button class="btn-prof-filter" data-prof="Kelian Le Guen" onclick="setFiltrProf(this)">Kelian</button>
+            <button class="btn-prof-filter" data-prof="Lucas Leone" onclick="setFiltrProf(this)">Lucas</button>
+            <button class="btn-prof-filter" data-prof="Luis Ferreira" onclick="setFiltrProf(this)">Luis</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <button class="btn-nav-cal" onclick="agendaMove(-1)">←</button>
+          <h3 id="agenda-label" style="font-family:'Outfit';font-size:1.2rem;font-weight:700;color:var(--blanc)">—</h3>
+          <button class="btn-nav-cal" onclick="agendaMove(1)">→</button>
+        </div>
+        <div id="agenda-grid"></div>
+        <div style="display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:rgba(0,168,120,.5);display:inline-block"></span>Validé</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:rgba(255,179,71,.5);display:inline-block"></span>En attente</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--gris)"><span style="width:12px;height:12px;border-radius:3px;background:rgba(100,160,255,.5);display:inline-block"></span>Stage</span>
+        </div>
       </div>
 
       <div id="tab-communes" class="tab-content">
@@ -242,6 +280,173 @@ window.VACANCES_SCOLAIRES = [];
       });
     };
 
+
+    // ══════════════════════════════════════
+    //  AGENDA
+    // ══════════════════════════════════════
+    var agendaVue = 'mois';
+    var agendaFiltrProf = 'tous';
+    var agendaDate = new Date();
+    var allResas = []; // stocké lors du loadReservations
+
+    const MOIS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    const JOURS_COURTS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+
+    function setVue(v) {
+      agendaVue = v;
+      document.querySelectorAll('.btn-vue').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-vue-' + v).classList.add('active');
+      renderAgenda();
+    }
+
+    function setFiltrProf(btn) {
+      agendaFiltrProf = btn.dataset.prof;
+      document.querySelectorAll('.btn-prof-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAgenda();
+    }
+
+    function agendaMove(d) {
+      if(agendaVue === 'mois') agendaDate.setMonth(agendaDate.getMonth() + d);
+      else agendaDate.setDate(agendaDate.getDate() + d * 7);
+      renderAgenda();
+    }
+
+    function resaMatchDate(resa, ds) {
+      // ds = 'YYYY-MM-DD'
+      if(!resa.date_id) return false;
+      const ids = Array.isArray(resa.date_id) ? resa.date_id : [resa.date_id];
+      return ids.some(id => (id.split('_')[0] || id) === ds);
+    }
+
+    function filteredResas() {
+      if(agendaFiltrProf === 'tous') return allResas;
+      return allResas.filter(r => {
+        const profs = r.profs || '';
+        return profs.includes(agendaFiltrProf);
+      });
+    }
+
+    function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function showTooltip(e, resa) {
+      const tt = document.getElementById('agenda-tooltip');
+      tt.style.display = 'block';
+      tt.innerHTML = '<strong>' + (resa.contact_nom || '—') + '</strong>'
+        + '<span class="tt-lbl">Commune</span>' + (resa.contact_commune || '—')
+        + '<span class="tt-lbl" style="margin-top:.4rem">Horaire</span>' + (resa.horaires || '—')
+        + (resa.profs ? '<span class="tt-lbl" style="margin-top:.4rem">Éducateurs</span>' + resa.profs : '')
+        + '<span class="tt-lbl" style="margin-top:.4rem">Statut</span>' + (resa.statut || '—');
+      tt.style.left = Math.min(e.clientX + 12, window.innerWidth - 300) + 'px';
+      tt.style.top  = Math.min(e.clientY + 12, window.innerHeight - 200) + 'px';
+    }
+
+    function hideTooltip() {
+      document.getElementById('agenda-tooltip').style.display = 'none';
+    }
+
+    function renderAgenda() {
+      const resas = filteredResas();
+      if(agendaVue === 'mois') renderMois(resas);
+      else renderSemaine(resas);
+    }
+
+    function renderMois(resas) {
+      const y = agendaDate.getFullYear(), m = agendaDate.getMonth();
+      document.getElementById('agenda-label').textContent = MOIS_FR[m] + ' ' + y;
+
+      const today = new Date(); today.setHours(0,0,0,0);
+      const firstDow = new Date(y, m, 1).getDay();
+      const off = (firstDow === 0) ? 6 : firstDow - 1;
+      const dim = new Date(y, m + 1, 0).getDate();
+      const dip = new Date(y, m, 0).getDate();
+
+      let html = '<div class="agenda-mois">';
+      JOURS_COURTS.forEach(j => { html += '<div class="agenda-wd">' + j + '</div>'; });
+
+      let cells = [];
+      for(let i = 0; i < off; i++) cells.push({ d: dip - off + 1 + i, cur: false });
+      for(let i = 1; i <= dim; i++) cells.push({ d: i, cur: true });
+      while(cells.length % 7 !== 0) cells.push({ d: cells.length - off - dim + 1, cur: false });
+
+      cells.forEach(c => {
+        const ds = y + '-' + pad2(m + 1) + '-' + pad2(c.d);
+        const cd = new Date(y, m, c.d);
+        const isToday = c.cur && cd.toDateString() === today.toDateString();
+        html += '<div class="agenda-day' + (!c.cur ? ' other-month' : '') + (isToday ? ' today' : '') + '">';
+        html += '<div class="agenda-day-num">' + c.d + '</div>';
+        if(c.cur) {
+          resas.filter(r => resaMatchDate(r, ds)).forEach(r => {
+            const cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
+            html += '<div class="agenda-event ' + cls + '" '
+              + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
+              + 'onmouseleave="hideTooltip()">'
+              + (r.contact_commune || r.contact_nom || '?') + ' · ' + (r.horaires || '')
+              + '</div>';
+          });
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+      document.getElementById('agenda-grid').innerHTML = html;
+    }
+
+    function renderSemaine(resas) {
+      // Find Monday of current week
+      const d = new Date(agendaDate);
+      const dow = (d.getDay() + 6) % 7;
+      d.setDate(d.getDate() - dow);
+      const lundi = new Date(d);
+
+      const today = new Date(); today.setHours(0,0,0,0);
+      const days = [];
+      for(let i = 0; i < 7; i++) {
+        const dd = new Date(lundi); dd.setDate(lundi.getDate() + i);
+        days.push(dd);
+      }
+
+      const du = lundi.toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+      const au = days[6].toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+      document.getElementById('agenda-label').textContent = du + ' – ' + au;
+
+      let html = '<div class="agenda-semaine">';
+      // Header
+      html += '<div></div>';
+      days.forEach(dd => {
+        const isToday = dd.toDateString() === today.toDateString();
+        html += '<div class="agenda-sem-day-head' + (isToday ? ' today' : '') + '">'
+          + JOURS_COURTS[(dd.getDay() + 6) % 7] + ' ' + dd.getDate()
+          + '</div>';
+      });
+
+      // 1 row per hour 7h–22h
+      for(let h = 7; h <= 22; h++) {
+        html += '<div style="font-size:.65rem;color:var(--gris);text-align:right;padding:.4rem .5rem 0 0;grid-column:1">' + h + 'h</div>';
+        days.forEach(dd => {
+          const ds = dd.getFullYear() + '-' + pad2(dd.getMonth() + 1) + '-' + pad2(dd.getDate());
+          const dayResas = resas.filter(r => resaMatchDate(r, ds));
+          let evts = '';
+          dayResas.forEach(r => {
+            // Check if this hour falls in the slot
+            const hor = r.horaires || '';
+            const startH = parseInt(hor.split('h')[0]) || 0;
+            const endH = parseInt((hor.split('–')[1] || hor.split('-')[1] || '').trim().split('h')[0]) || 0;
+            if(h >= startH && h < endH) {
+              const cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
+              evts += '<div class="agenda-sem-event ' + cls + '" '
+                + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
+                + 'onmouseleave="hideTooltip()">'
+                + (h === startH ? (r.contact_commune || '?') + ' · ' + hor : '')
+                + '</div>';
+            }
+          });
+          html += '<div class="agenda-sem-slot">' + evts + '</div>';
+        });
+      }
+      html += '</div>';
+      document.getElementById('agenda-grid').innerHTML = html;
+    }
+
     window.logout = () => signOut(auth);
 
     window.switchTab = (tabName) => {
@@ -253,23 +458,28 @@ window.VACANCES_SCOLAIRES = [];
       if(tabName === 'resas') {
           document.getElementById('page-title').textContent = 'Gestion des Réservations';
           document.getElementById('stats-bar').style.display = 'grid';
-      } else {
+      } else if(tabName === 'communes') {
           document.getElementById('page-title').textContent = 'Gestion des Communes';
           document.getElementById('stats-bar').style.display = 'none';
+      } else if(tabName === 'agenda') {
+          document.getElementById('page-title').textContent = 'Agenda';
+          document.getElementById('stats-bar').style.display = 'none';
+          renderAgenda();
       }
     };
 
     // --- GESTION DES RÉSERVATIONS ---
     async function loadReservations() {
       const snapshot = await getDocs(collection(db, "reservations"));
+      allResas = []; // reset global
       let htmlAttente = '', htmlValide = '';
       let countA = 0, countV = 0, totalCA = 0;
 
       snapshot.forEach((fbDoc) => {
         const d = fbDoc.data();
+        allResas.push({...d, _id: fbDoc.id});
         const id = fbDoc.id;
         const isAttente = d.statut === 'en_attente';
-        const isRefuse = d.statut === 'refuse';
         
         if (d.prix_estime) {
           const prix = parseInt(d.prix_estime.replace(/[^0-9]/g, ''));
@@ -279,46 +489,32 @@ window.VACANCES_SCOLAIRES = [];
         if (isAttente) countA++; else countV++;
 
         const card = `
-          <div class="resa-card ${isAttente ? 'attente' : isRefuse ? 'refuse' : 'valide'}">
+          <div class="resa-card ${isAttente ? 'attente' : 'valide'}">
             <div class="card-head">
               <h3>${d.contact_commune}</h3>
-              <span class="status-badge ${isAttente ? 'attente' : isRefuse ? 'refuse' : 'valide'}">${isAttente ? 'Demande' : isRefuse ? 'Refusé' : 'Confirmé'}</span>
+              <span class="status-badge ${isAttente ? 'attente' : 'valide'}">${isAttente ? 'Demande' : 'Confirmé'}</span>
             </div>
             
             <div class="info-item"><i>👤</i> <strong>${d.contact_nom}</strong></div>
             <div class="info-item"><i>📞</i> ${d.contact_tel}</div>
             <div class="info-item"><i>✉️</i> ${d.contact_email}</div>
-            ${d.type_resa ? `<span class="type-badge ${
-                d.type_resa === 'Stage' ? 'stage' :
-                d.type_resa === 'Récurrence hebdomadaire' ? 'recurrence' : 'evenement'
-              }">${ d.type_resa === 'Stage' ? '🏕 Stage' :
-                   d.type_resa === 'Récurrence hebdomadaire' ? '🔁 Récurrence' : '📌 Événement' }</span>` : ''}
-            <div class="date-bloc">
-              <div class="info-item"><i>📅</i> <strong>${d.date_texte}</strong></div>
-              <div class="info-item"><i>⏰</i> ${d.horaires} (${d.duree_facturee})</div>
-              ${d.date_fin ? `<div class="info-item"><i>🏁</i> Jusqu'au <strong>${d.date_fin}</strong></div>` : ''}
-              ${d.type_resa === 'Récurrence hebdomadaire' && d.date_id ? `<div class="info-item" style="color:rgba(255,255,255,.3);font-size:.78rem"><i>📆</i> ${Array.isArray(d.date_id) ? d.date_id.length : 1} séance(s) réservée(s)</div>` : ''}
+            <div style="margin: 1rem 0; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                <div class="info-item"><i>📅</i> <strong>${d.date_texte}</strong></div>
+                <div class="info-item"><i>⏰</i> ${d.horaires} (${d.duree_facturee})</div>
             </div>
             <div class="info-item"><i>🏀</i> ${d.sports}</div>
-            <div class="info-item"><i>💰</i> <strong style="color:var(--g); font-size:1.1rem">${d.prix_estime}</strong> (${d.nb_educateurs} éducs · ${d.participants || '?'} participants)</div>
+            <div class="info-item"><i>💰</i> <strong style="color:var(--g); font-size:1.1rem">${d.prix_estime}</strong> (${d.nb_educateurs} éducs)</div>
 
             ${d.message ? `<div class="msg-box">"${d.message}"</div>` : ''}
             
-            <div class="card-actions" id="actions-${id}">
-              ${isAttente ? `
-                <button class="btn-action btn-approve" onclick="validerResa('${id}', '${d.contact_email}', '${d.contact_nom}', '${(d.date_texte||'').replace(/'/g,"\'")}', '${d.horaires||''}')">✅ Valider</button>
-                <button class="btn-action btn-reject" onclick="toggleReject('${id}')">❌ Rejeter</button>
-                <div class="reject-row" id="reject-row-${id}">
-                  <input class="reject-input" id="motif-${id}" placeholder="Motif du refus (optionnel)...">
-                  <button class="btn-confirm-reject" onclick="rejeterResa('${id}', '${d.contact_email}', '${d.contact_nom}', '${(d.date_texte||'').replace(/'/g,"\'")}', '${d.horaires||''}')">Confirmer le refus</button>
-                </div>
-              ` : '<span></span>'}
+            <div class="card-actions">
+              ${isAttente ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', 'valide')">Valider</button>` : '<span></span>'}
               <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
             </div>
           </div>
         `;
 
-        if (isAttente) htmlAttente += card; else if (!isRefuse) htmlValide += card;
+        if (isAttente) htmlAttente += card; else htmlValide += card;
       });
 
       document.getElementById('resas-attente').innerHTML = htmlAttente || '<p style="color:var(--gris);">Aucune nouvelle demande.</p>';
@@ -331,65 +527,9 @@ window.VACANCES_SCOLAIRES = [];
       document.getElementById('count-valid').textContent = countV;
     }
 
-    // Init EmailJS
-    emailjs.init('H0v9sswSbS9Q3TCXo');
-
-    // Affiche/masque le champ motif de refus
-    window.toggleReject = (id) => {
-      const row = document.getElementById('reject-row-' + id);
-      row.classList.toggle('open');
-    };
-
-    // Valider une réservation + envoyer email d'acceptation au client
-    window.validerResa = async (id, clientEmail, clientNom, dateResa, horaires) => {
-      if (!confirm('Confirmer la validation de cette réservation ?')) return;
-      try {
-        await updateDoc(doc(db, "reservations", id), { statut: 'valide' });
-
-        // Email au client — template generique
-        await emailjs.send('service_gdaddh6', 'template_hbssga4', {
-          to_email:   clientEmail,
-          client_nom: clientNom,
-          subject:    'NeoBall - Votre reservation est confirmee !',
-          message:    'Bonne nouvelle ! Votre reservation a ete validee.\n\n'
-                    + 'Date(s) : ' + dateResa + '\n'
-                    + 'Horaire : ' + horaires + '\n\n'
-                    + 'Nous serons presents avec tout le materiel. A bientot !'
-        });
-
-        loadReservations();
-      } catch(e) {
-        console.error('Erreur validation:', e);
-        alert('Réservation validée dans Firebase mais email non envoyé : ' + e.text);
-        loadReservations();
-      }
-    };
-
-    // Rejeter une réservation + envoyer email de refus au client
-    window.rejeterResa = async (id, clientEmail, clientNom, dateResa, horaires) => {
-      const motif = document.getElementById('motif-' + id).value.trim();
-      if (!confirm('Confirmer le refus de cette réservation ?')) return;
-      try {
-        await updateDoc(doc(db, "reservations", id), { statut: 'refuse', motif_refus: motif });
-
-        // Email au client — template generique
-        await emailjs.send('service_gdaddh6', 'template_hbssga4', {
-          to_email:   clientEmail,
-          client_nom: clientNom,
-          subject:    'NeoBall - Mise a jour de votre demande',
-          message:    'Nous ne sommes pas en mesure de confirmer votre demande pour :\n\n'
-                    + 'Date(s) : ' + dateResa + '\n'
-                    + 'Horaire : ' + horaires + '\n\n'
-                    + (motif ? 'Motif : ' + motif + '\n\n' : '')
-                    + 'N\'hesitez pas a nous recontacter pour trouver une autre date.'
-        });
-
-        loadReservations();
-      } catch(e) {
-        console.error('Erreur refus:', e);
-        alert('Réservation refusée dans Firebase mais email non envoyé : ' + e.text);
-        loadReservations();
-      }
+    window.updateStatus = async (id, newStatus) => {
+      await updateDoc(doc(db, "reservations", id), { statut: newStatus });
+      loadReservations();
     };
 
     window.deleteResa = async (id) => {

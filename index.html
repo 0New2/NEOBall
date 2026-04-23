@@ -231,7 +231,7 @@ nav.s .nr a{opacity:1;transform:none}
 .co-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(0,168,120,.09),transparent 65%);pointer-events:none}
 .co-ttl{font-family:var(--fs);font-size:clamp(2.8rem,7vw,7rem);font-weight:900;letter-spacing:.02em;line-height:1.05;position:relative;z-index:2}
 .co-ttl em{font-style:normal;color:var(--g)}
-.co-sub{margin-top:1.75rem;font-size:1rem;font-weight:300;color:var(--gris);max-width:400px;line-height:1.7;position:relative;z-index:2}
+.co-sub{margin-top:1.75rem;font-size:1rem;font-weight:300;color:var(--gris);max-width:400px;line-height:1.7;position:relative;z-index:2;text-align:center;margin-left:auto;margin-right:auto}
 .co-btns{margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
 .co-info{margin-top:2.5rem;font-size:.78rem;color:rgba(255,255,255,.2);letter-spacing:.05em;position:relative;z-index:2}
 .co-info a{color:var(--g);text-decoration:none}
@@ -344,6 +344,21 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
 .resa-fab{position:fixed;bottom:2rem;right:2rem;z-index:400;padding:14px 24px;border-radius:50px;background:var(--g);color:var(--noir);font-family:var(--fs);font-size:.88rem;font-weight:800;border:none;cursor:pointer;box-shadow:0 8px 32px rgba(0,168,120,.45);transition:all .3s;display:flex;align-items:center;gap:.5rem;letter-spacing:.02em}
 .resa-fab:hover{background:var(--g2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,168,120,.55)}
 @media(max-width:600px){.conf-grid{grid-template-columns:1fr}.ri-row{grid-template-columns:1fr}.time-inputs{grid-template-columns:1fr}.resa-fab{bottom:1rem;right:1rem}}
+.prof-select{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:.5rem}
+.prof-card{position:relative;padding:1.1rem .75rem 1rem;border-radius:14px;border:2px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;gap:.5rem;text-align:center;overflow:hidden}
+.prof-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s;background:rgba(0,168,120,.08)}
+.prof-card:hover::before{opacity:1}
+.prof-card:hover{border-color:rgba(0,168,120,.3);transform:translateY(-2px)}
+.prof-card.on{border-color:var(--g);background:rgba(0,168,120,.1)}
+.prof-card.on::before{opacity:1}
+.prof-av2{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:.85rem;font-weight:800;flex-shrink:0;border:2px solid rgba(0,168,120,.3);transition:border-color .25s;position:relative;z-index:1}
+.prof-card.on .prof-av2{border-color:var(--g);box-shadow:0 0 14px rgba(0,168,120,.35)}
+.prof-card-name{font-family:var(--fs);font-size:.78rem;font-weight:700;color:rgba(255,255,255,.6);transition:color .25s;position:relative;z-index:1;line-height:1.2}
+.prof-card.on .prof-card-name{color:var(--blanc)}
+.prof-card-role{font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.25);position:relative;z-index:1}
+.prof-card-check{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:transparent;transition:all .25s;position:relative;z-index:1;margin-top:.1rem}
+.prof-card.on .prof-card-check{background:var(--g);border-color:var(--g);color:var(--noir)}
+@media(max-width:600px){.prof-select{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -634,14 +649,29 @@ select.conf-input option { background: var(--n2); color: var(--blanc); }
           <button class="conf-sport" onclick="this.classList.toggle('on')">💥 Dodgeball</button>
         </div>
         <div class="conf-grid">
-          <div class="conf-block">
-            <p class="conf-lbl">Éducateurs</p>
-            <div class="conf-counter">
-              <button class="ccb" onclick="changeEduc(-1)">−</button>
-              <span class="conf-val" id="educ-val">3</span>
-              <button class="ccb" onclick="changeEduc(1)">+</button>
+          <div class="conf-block" style="grid-column:1/-1">
+            <p class="conf-lbl">Éducateurs <span style="font-weight:400;color:rgba(255,255,255,.25)">(sélectionnez ceux qui interviennent)</span></p>
+            <div class="prof-select" id="prof-select">
+              <button class="prof-card" data-prof="Kelian Le Guen" onclick="toggleProf(this)">
+                <div class="prof-av2" style="background:linear-gradient(135deg,#00A878,#2E4555)">KL</div>
+                <span class="prof-card-name">Kelian<br>Le Guen</span>
+                <span class="prof-card-role">Éducateur</span>
+                <span class="prof-card-check">✓</span>
+              </button>
+              <button class="prof-card" data-prof="Lucas Leone" onclick="toggleProf(this)">
+                <div class="prof-av2" style="background:linear-gradient(135deg,#00C98E,#2E4555)">LL</div>
+                <span class="prof-card-name">Lucas<br>Leone</span>
+                <span class="prof-card-role">Éducateur</span>
+                <span class="prof-card-check">✓</span>
+              </button>
+              <button class="prof-card" data-prof="Luis Ferreira" onclick="toggleProf(this)">
+                <div class="prof-av2" style="background:linear-gradient(135deg,#3D5F74,#00A878)">LF</div>
+                <span class="prof-card-name">Luis<br>Ferreira</span>
+                <span class="prof-card-role">Éducateur</span>
+                <span class="prof-card-check">✓</span>
+              </button>
             </div>
-            <p class="conf-hint ok" id="ratio-hint">Max légal : 36 participants</p>
+            <p class="conf-hint ok" id="ratio-hint" style="margin-top:.6rem">Max légal : 36 participants</p>
           </div>
           <div class="conf-block">
             <p class="conf-lbl">Participants</p>
@@ -869,7 +899,7 @@ new IntersectionObserver(function(es){if(es[0].isIntersecting)setTimeout(initMap
    SYSTÈME DE RÉSERVATION DYNAMIQUE
 ════════════════════════════════════════ */
 var MOIS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-var calY=0,calM=0,selDays=[],resaEduc=3,curStep=1;
+var calY=0,calM=0,selDays=[],resaEduc=3,selProfs=[],curStep=1;
 const ALLOWED_DAYS = [1, 2, 3, 4, 5, 6]; 
 
 function initTimeSelects() {
@@ -914,7 +944,7 @@ function toMin(t) {
 
 function openResa(){
   var now=new Date();calY=now.getFullYear();calM=now.getMonth();
-  selDays=[];resaEduc=3;curStep=1;
+  selDays=[];resaEduc=3;selProfs=[];curStep=1;
   initTimeSelects();
   document.getElementById('custom-time-panel').classList.remove('active');
   document.querySelectorAll('.conf-sport').forEach(function(b,i){b.classList.toggle('on',i===0);});
@@ -1092,6 +1122,12 @@ function resaNext(){
 function resaBack(){if(curStep>1) goStep(curStep-1);}
 
 function fillStep2(){
+  // Reset + restore prof buttons
+  document.querySelectorAll('.prof-card').forEach(function(b){
+    var isOn=selProfs.indexOf(b.dataset.prof)>=0;
+    b.classList.toggle('on',isOn);
+  });
+  resaEduc=selProfs.length||1;
   var lbl = selDays.length === 1 ? '1 date' : selDays.length + ' dates';
   var start = document.getElementById('time-start').value.replace(':', 'h');
   var end = document.getElementById('time-end').value.replace(':', 'h');
@@ -1100,9 +1136,10 @@ function fillStep2(){
   document.getElementById('educ-val').textContent=resaEduc;
   updateRatio();
 }
-function changeEduc(d){
-  resaEduc=Math.max(1,Math.min(10,resaEduc+d));
-  document.getElementById('educ-val').textContent=resaEduc;
+function toggleProf(btn){
+  btn.classList.toggle('on');
+  selProfs=[].map.call(document.querySelectorAll('.prof-card.on'),function(b){return b.dataset.prof;});
+  resaEduc=selProfs.length||1;
   updateRatio();
 }
 function updateRatio(){
@@ -1140,6 +1177,11 @@ function fillStep3(){
     else if (type === 'stage') texteDates = "Stage de 5 jours (Semaine complète)";
     else texteDates = "Récurrence hebdo (" + nbSeances + " séances)";
 
+    // Profs sélectionnés
+    selProfs=[].map.call(document.querySelectorAll('.prof-card.on'),function(b){return b.dataset.prof;});
+    resaEduc=selProfs.length||1;
+    var profsLabel=selProfs.length?selProfs.join(', '):'Non précisé';
+    document.getElementById('rr-educ').textContent=profsLabel;
     document.getElementById('rr-date').textContent = texteDates;
     document.getElementById('rr-hours').textContent = start + ' – ' + end;
     document.getElementById('rr-prix').textContent = prixTotal.toLocaleString('fr-FR') + ' €';
@@ -1252,7 +1294,8 @@ async function sendResa(){
           date_texte: datesLbl,
           horaires: start + ' – ' + end,
           sports: sports,
-          nb_educateurs: resaEduc,
+          nb_educateurs: selProfs.length || resaEduc,
+          profs: selProfs.join(', ') || 'Non précisé',
           participants: document.getElementById('parts-input').value || 'Non précisé',
           duree_facturee: dureeFacturee + 'h par séance',
           prix_estime: document.getElementById('rr-prix').textContent,
@@ -1278,7 +1321,7 @@ async function sendResa(){
                     + 'Date(s) : ' + datesLbl + '\n'
                     + 'Horaire : ' + start + ' - ' + end + '\n'
                     + 'Sport(s) : ' + sports + '\n'
-                    + 'Educateurs : ' + resaEduc + '\n\n'
+                    + 'Éducateurs : ' + (selProfs.length ? selProfs.join(', ') : resaEduc) + '\n\n'
                     + 'Votre demande est en cours d\'etude. Reponse sous 48h.'
         });
         console.log('Email confirmation envoye avec succes:', emailResult.status, emailResult.text);
