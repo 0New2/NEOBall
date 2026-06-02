@@ -390,13 +390,12 @@ window.VACANCES_SCOLAIRES = [];
             // Couleur par éducateur (priorité sur statut)
             let cls;
             const profs = r.profs || '';
-            if(profs.includes('Kelian')) cls = 'prof-kelian';
+            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
+            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
+            else if(profs.includes('Kelian')) cls = 'prof-kelian';
             else if(profs.includes('Lucas')) cls = 'prof-lucas';
             else if(profs.includes('Luis')) cls = 'prof-luis';
             else cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
-            // Si plusieurs profs → mix
-            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
-            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
             html += '<div class="agenda-event ' + cls + '" '
               + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
               + 'onmouseleave="hideTooltip()">'
@@ -454,13 +453,12 @@ window.VACANCES_SCOLAIRES = [];
               // Couleur par éducateur (priorité sur statut)
             let cls;
             const profs = r.profs || '';
-            if(profs.includes('Kelian')) cls = 'prof-kelian';
+            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
+            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
+            else if(profs.includes('Kelian')) cls = 'prof-kelian';
             else if(profs.includes('Lucas')) cls = 'prof-lucas';
             else if(profs.includes('Luis')) cls = 'prof-luis';
             else cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
-            // Si plusieurs profs → mix
-            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
-            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
               evts +=  '<div class="agenda-sem-event ' + cls + '" '
                 + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
                 + 'onmouseleave="hideTooltip()">'
