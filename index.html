@@ -26,7 +26,7 @@
     <li><a href="#equipe">Équipe</a></li>
     <li><a href="#" onclick="openResa();return false;" class="nr-resa">📅 Réserver</a></li>
     <li><a href="#contact-form">Contact</a></li>
-    <li><a href="#contact-form" class="nc">Nous contacter</a></li>
+    <li><a href="#contact" class="nc">Nous contacter</a></li>
   </ul>
 </nav>
 
@@ -300,29 +300,14 @@
           <button class="conf-sport" onclick="this.classList.toggle('on')">💥 Dodgeball</button>
         </div>
         <div class="conf-grid">
-          <div class="conf-block" style="grid-column:1/-1">
-            <p class="conf-lbl">Éducateurs <span style="font-weight:400;color:rgba(255,255,255,.25)">(sélectionnez ceux qui interviennent)</span></p>
-            <div class="prof-select" id="prof-select">
-              <button class="prof-card" data-prof="Kelian Le Guen" onclick="toggleProf(this)">
-                <div class="prof-av2" style="background:linear-gradient(135deg,#00A878,#2E4555)">KL</div>
-                <span class="prof-card-name">Kelian<br>Le Guen</span>
-                <span class="prof-card-role">Éducateur</span>
-                <span class="prof-card-check">✓</span>
-              </button>
-              <button class="prof-card" data-prof="Lucas Leone" onclick="toggleProf(this)">
-                <div class="prof-av2" style="background:linear-gradient(135deg,#00C98E,#2E4555)">LL</div>
-                <span class="prof-card-name">Lucas<br>Leone</span>
-                <span class="prof-card-role">Éducateur</span>
-                <span class="prof-card-check">✓</span>
-              </button>
-              <button class="prof-card" data-prof="Luis Ferreira" onclick="toggleProf(this)">
-                <div class="prof-av2" style="background:linear-gradient(135deg,#3D5F74,#00A878)">LF</div>
-                <span class="prof-card-name">Luis<br>Ferreira</span>
-                <span class="prof-card-role">Éducateur</span>
-                <span class="prof-card-check">✓</span>
-              </button>
+          <div class="conf-block">
+            <p class="conf-lbl">Nombre d'éducateurs</p>
+            <div class="conf-counter" style="margin-top:.5rem">
+              <button class="ccb" onclick="chgEduc(-1)">−</button>
+              <span class="conf-val" id="educ-val">1</span>
+              <button class="ccb" onclick="chgEduc(1)">+</button>
             </div>
-            <p class="conf-hint ok" id="ratio-hint" style="margin-top:.6rem">Max légal : 36 participants</p>
+            <p class="conf-hint ok" id="ratio-hint" style="margin-top:.5rem">Max légal : 12 participants</p>
           </div>
           <div class="conf-block">
             <p class="conf-lbl">Participants</p>

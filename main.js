@@ -78,7 +78,7 @@ new IntersectionObserver(function(es){if(es[0].isIntersecting)setTimeout(initMap
    SYSTÈME DE RÉSERVATION DYNAMIQUE
 ════════════════════════════════════════ */
 var MOIS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-var calY=0,calM=0,selDays=[],resaEduc=3,selProfs=[],curStep=1;
+var calY=0,calM=0,selDays=[],resaEduc=1,curStep=1;
 const ALLOWED_DAYS = [1, 2, 3, 4, 5, 6]; 
 
 function initTimeSelects() {
@@ -151,7 +151,7 @@ function toMin(t) {
 
 function openResa(){
   var now=new Date();calY=now.getFullYear();calM=now.getMonth();
-  selDays=[];resaEduc=3;selProfs=[];curStep=1;
+  selDays=[];resaEduc=1;curStep=1;
   initTimeSelects();
   document.getElementById('custom-time-panel').classList.remove('active');
   document.querySelectorAll('.conf-sport').forEach(function(b,i){b.classList.toggle('on',i===0);});
@@ -323,48 +323,13 @@ function goStep(n){
 
 function resaNext(){
   if(curStep===1 && selDays.length > 0) goStep(2);
-  else if(curStep===2) {
-    // Vérification des conflits d'éducateurs
-    var startV2 = document.getElementById('time-start').value;
-    var endV2   = document.getElementById('time-end').value;
-    selProfs = [].map.call(document.querySelectorAll('.prof-card.on'), function(b){ return b.dataset.prof; });
-
-    if (!selProfs.length) {
-      alert('⚠ Merci de sélectionner au moins un éducateur.');
-      return;
-    }
-
-    // Verif conflits educateurs
-    var educConflicts = checkEducConflicts(selDays, startV2, endV2, selProfs);
-    if (educConflicts.length > 0) {
-      var seen = {};
-      var uniq = educConflicts.filter(function(c) {
-        var key = c.educ + '_' + c.date;
-        if (seen[key]) return false;
-        seen[key] = true; return true;
-      });
-      var msg = 'Conflit educateur detecte :\n\n';
-      uniq.forEach(function(c) {
-        msg += '- ' + c.educ + ' est deja reserve le ' + c.date + ' de ' + c.horaire + ' (commune: ' + c.commune + ')\n';
-      });
-      msg += '\nCette demande ne peut pas etre envoyee. Choisissez un autre horaire ou d\'autres educateurs.';
-      alert(msg);
-      return; // BLOCAGE DUR - pas de goStep(3)
-    }
-    goStep(3);
-  }
-  else if(curStep===3) sendResa();
+  else if(curStep===2) goStep(3);
   else if(curStep===3) sendResa();
 }
 function resaBack(){if(curStep>1) goStep(curStep-1);}
 
 function fillStep2(){
-  // Reset + restore prof buttons
-  document.querySelectorAll('.prof-card').forEach(function(b){
-    var isOn=selProfs.indexOf(b.dataset.prof)>=0;
-    b.classList.toggle('on',isOn);
-  });
-  resaEduc=selProfs.length||1;
+  document.getElementById('educ-val').textContent=resaEduc;
   var lbl = selDays.length === 1 ? '1 date' : selDays.length + ' dates';
   var start = document.getElementById('time-start').value.replace(':', 'h');
   var end = document.getElementById('time-end').value.replace(':', 'h');
@@ -373,10 +338,9 @@ function fillStep2(){
   document.getElementById('educ-val').textContent=resaEduc;
   updateRatio();
 }
-function toggleProf(btn){
-  btn.classList.toggle('on');
-  selProfs=[].map.call(document.querySelectorAll('.prof-card.on'),function(b){return b.dataset.prof;});
-  resaEduc=selProfs.length||1;
+function chgEduc(d){
+  resaEduc=Math.max(1,Math.min(3,resaEduc+d));
+  document.getElementById('educ-val').textContent=resaEduc;
   updateRatio();
 }
 function updateRatio(){
@@ -414,11 +378,7 @@ function fillStep3(){
     else if (type === 'stage') texteDates = "Stage de 5 jours (Semaine complète)";
     else texteDates = "Récurrence hebdo (" + nbSeances + " séances)";
 
-    // Profs sélectionnés
-    selProfs=[].map.call(document.querySelectorAll('.prof-card.on'),function(b){return b.dataset.prof;});
-    resaEduc=selProfs.length||1;
-    var profsLabel=selProfs.length?selProfs.join(', '):'Non précisé';
-    document.getElementById('rr-educ').textContent=profsLabel;
+    document.getElementById('rr-educ').textContent=resaEduc+' éducateur'+(resaEduc>1?'s':'');
     document.getElementById('rr-date').textContent = texteDates;
     document.getElementById('rr-hours').textContent = start + ' – ' + end;
     document.getElementById('rr-prix').textContent = prixTotal.toLocaleString('fr-FR') + ' €';
@@ -531,8 +491,7 @@ async function sendResa(){
           date_texte: datesLbl,
           horaires: start + ' – ' + end,
           sports: sports,
-          nb_educateurs: selProfs.length || resaEduc,
-          profs: selProfs.join(', ') || 'Non précisé',
+          nb_educateurs: resaEduc,
           participants: document.getElementById('parts-input').value || 'Non précisé',
           duree_facturee: dureeFacturee + 'h par séance',
           prix_estime: document.getElementById('rr-prix').textContent,
@@ -558,7 +517,7 @@ async function sendResa(){
                     + 'Date(s) : ' + datesLbl + '\n'
                     + 'Horaire : ' + start + ' - ' + end + '\n'
                     + 'Sport(s) : ' + sports + '\n'
-                    + 'Éducateurs : ' + (selProfs.length ? selProfs.join(', ') : resaEduc) + '\n\n'
+                    + 'Educateurs demandes : ' + resaEduc + '\n\n'
                     + 'Votre demande est en cours d\'etude. Reponse sous 48h.'
         });
         console.log('Email confirmation envoye avec succes:', emailResult.status, emailResult.text);

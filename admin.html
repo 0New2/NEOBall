@@ -68,6 +68,19 @@
   .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
   .btn-action { padding: 10px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; font-family: 'Outfit'; }
   .btn-approve { background: var(--g); color: var(--noir); }
+  .educ-assign { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.75rem; }
+  .educ-btn { padding:5px 12px; border-radius:50px; border:1.5px solid rgba(255,255,255,.15); background:transparent; color:rgba(255,255,255,.4); font-family:'DM Sans'; font-size:.75rem; cursor:pointer; transition:all .2s; }
+  .educ-btn:hover { border-color:rgba(0,168,120,.4); color:var(--blanc); }
+  .educ-btn.on.kelian { border-color:#00A878; background:rgba(0,168,120,.2); color:#00e0a0; }
+  .educ-btn.on.lucas  { border-color:#38bdf8; background:rgba(56,189,248,.15); color:#7ab0ff; }
+  .educ-btn.on.luis   { border-color:#a855f7; background:rgba(168,85,247,.15); color:#c084fc; }
+  /* Modal édition éducs */
+  .modal-profs-ov { position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;display:none; }
+  .modal-profs-ov.open { display:flex; }
+  .modal-profs-box { background:var(--n2);border:1px solid rgba(0,168,120,.25);border-radius:16px;padding:1.5rem;width:380px;max-width:95vw; }
+  .modal-profs-title { font-family:'Outfit';font-size:1rem;font-weight:800;color:var(--blanc);margin-bottom:1.25rem; }
+  .modal-profs-btns { display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem; }
+  .modal-profs-actions { display:flex;gap:.75rem; }
   .conflict-badge { background: rgba(220,60,60,.12); color: #ff6b6b; border: 1px solid rgba(220,60,60,.3); border-radius: 10px; padding: .6rem .9rem; font-size: .78rem; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: .5rem; line-height: 1.5; }
   .conflict-badge i { flex-shrink: 0; }
   .btn-approve:hover { background: #00C98E; }
@@ -390,12 +403,13 @@ window.VACANCES_SCOLAIRES = [];
             // Couleur par éducateur (priorité sur statut)
             let cls;
             const profs = r.profs || '';
-            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
-            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
-            else if(profs.includes('Kelian')) cls = 'prof-kelian';
+            if(profs.includes('Kelian')) cls = 'prof-kelian';
             else if(profs.includes('Lucas')) cls = 'prof-lucas';
             else if(profs.includes('Luis')) cls = 'prof-luis';
             else cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
+            // Si plusieurs profs → mix
+            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
+            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
             html += '<div class="agenda-event ' + cls + '" '
               + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
               + 'onmouseleave="hideTooltip()">'
@@ -453,12 +467,13 @@ window.VACANCES_SCOLAIRES = [];
               // Couleur par éducateur (priorité sur statut)
             let cls;
             const profs = r.profs || '';
-            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
-            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
-            else if(profs.includes('Kelian')) cls = 'prof-kelian';
+            if(profs.includes('Kelian')) cls = 'prof-kelian';
             else if(profs.includes('Lucas')) cls = 'prof-lucas';
             else if(profs.includes('Luis')) cls = 'prof-luis';
             else cls = r.type_resa === 'Stage' ? 'stage' : (r.statut === 'valide' ? 'valide' : 'attente');
+            // Si plusieurs profs → mix
+            if(profs.includes('Kelian') && profs.includes('Lucas') && profs.includes('Luis')) cls = 'prof-all';
+            else if((profs.match(/Kelian|Lucas|Luis/g)||[]).length > 1) cls = 'prof-multi';
               evts +=  '<div class="agenda-sem-event ' + cls + '" '
                 + 'onmouseenter="showTooltip(event,' + JSON.stringify(r).replace(/"/g,'&quot;') + ')" '
                 + 'onmouseleave="hideTooltip()">'
@@ -532,7 +547,7 @@ window.VACANCES_SCOLAIRES = [];
         if (isAttente) countA++; else countV++;
 
         const card = `
-          <div class="resa-card ${isAttente ? 'attente' : 'valide'}">
+          <div class="resa-card ${isAttente ? 'attente' : 'valide'}" data-nb-educ="${d.nb_educateurs || 0}">
             <div class="card-head">
               <h3>${d.contact_commune}</h3>
               <span class="status-badge ${isAttente ? 'attente' : 'valide'}">${isAttente ? 'Demande' : 'Confirmé'}</span>
@@ -577,7 +592,9 @@ window.VACANCES_SCOLAIRES = [];
             })()}
             
             <div class="card-actions">
-              ${isAttente ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', 'valide')">Valider</button>` : '<span></span>'}
+              ${isAttente ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', 'valide')">Valider</button>` : `
+                <button class="btn-action" style="background:rgba(56,189,248,.15);color:#7ab0ff;border:1px solid rgba(56,189,248,.3)" onclick="openEditProfs('${id}','${d.profs||''}')">✏️ Modifier les éducateurs</button>
+              `}
               <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
             </div>
           </div>
@@ -599,6 +616,66 @@ window.VACANCES_SCOLAIRES = [];
     window.updateStatus = async (id, newStatus) => {
       await updateDoc(doc(db, "reservations", id), { statut: newStatus });
       loadReservations();
+    };
+
+    window.validerResa = async function(id, clientEmail, clientNom, dateResa, horaires, educDiv) {
+      var profsAssignes = [];
+      if(educDiv) {
+        educDiv.querySelectorAll('.educ-btn.on').forEach(function(b){ profsAssignes.push(b.dataset.name); });
+      }
+      if(!profsAssignes.length) {
+        alert("Merci d'assigner au moins un éducateur avant de valider.");
+        return;
+      }
+      // Vérifier que le nombre d'éducs assignés correspond à la demande
+      var nbDemande = parseInt(educDiv.closest('.resa-card').dataset.nbEduc) || 0;
+      if(nbDemande > 0 && profsAssignes.length !== nbDemande) {
+        if(!confirm('La demande est pour ' + nbDemande + ' éducateur(s) mais vous en avez sélectionné ' + profsAssignes.length + '.\nContinuer quand même ?')) return;
+      } else {
+        if(!confirm('Valider avec : ' + profsAssignes.join(', ') + ' ?')) return;
+      }
+      try {
+        await updateDoc(doc(db, "reservations", id), { statut: 'valide', profs: profsAssignes.join(', ') });
+        // Email acceptation au client
+        await emailjs.send('service_gdaddh6', 'template_hbssga4', {
+          to_email: clientEmail,
+          client_nom: clientNom,
+          subject: 'NeoBall - Votre reservation est confirmee !',
+          message: 'Votre reservation a ete validee.\n\nDate(s) : ' + dateResa + '\nHoraire : ' + horaires + '\nEducateurs : ' + profsAssignes.join(', ') + '\n\nNous serons presents avec tout le materiel. A bientot !'
+        });
+        loadReservations();
+      } catch(e) {
+        console.error('Erreur validation:', e);
+        alert('Erreur lors de la validation : ' + e.message);
+        loadReservations();
+      }
+    };
+
+    var _editingResaId = null;
+
+    window.openEditProfs = function(id, currentProfs) {
+      _editingResaId = id;
+      // Reset buttons
+      document.querySelectorAll('#modal-profs-btns .educ-btn').forEach(function(b) {
+        b.classList.toggle('on', currentProfs.includes(b.dataset.name.split(' ')[0]));
+      });
+      document.getElementById('modal-profs-ov').classList.add('open');
+    };
+
+    window.closeEditProfs = function() {
+      document.getElementById('modal-profs-ov').classList.remove('open');
+      _editingResaId = null;
+    };
+
+    window.saveEditProfs = async function() {
+      var selected = [];
+      document.querySelectorAll('#modal-profs-btns .educ-btn.on').forEach(function(b){ selected.push(b.dataset.name); });
+      if(!selected.length) { alert("Sélectionnez au moins un éducateur."); return; }
+      try {
+        await updateDoc(doc(db, "reservations", _editingResaId), { profs: selected.join(', ') });
+        closeEditProfs();
+        loadReservations();
+      } catch(e) { alert('Erreur : ' + e.message); }
     };
 
     window.deleteResa = async (id) => {
@@ -734,5 +811,21 @@ window.VACANCES_SCOLAIRES = [];
     };
 
   </script>
+<!-- Modal édition éducateurs -->
+<div class="modal-profs-ov" id="modal-profs-ov">
+  <div class="modal-profs-box">
+    <p class="modal-profs-title">✏️ Modifier les éducateurs assignés</p>
+    <div class="modal-profs-btns" id="modal-profs-btns">
+      <button class="educ-btn kelian" data-name="Kelian Le Guen" onclick="this.classList.toggle('on')">KL · Kelian</button>
+      <button class="educ-btn lucas"  data-name="Lucas Leone"   onclick="this.classList.toggle('on')">LL · Lucas</button>
+      <button class="educ-btn luis"   data-name="Luis Ferreira" onclick="this.classList.toggle('on')">LF · Luis</button>
+    </div>
+    <div class="modal-profs-actions">
+      <button class="btn-action btn-approve" style="flex:1" onclick="saveEditProfs()">💾 Enregistrer</button>
+      <button class="btn-action btn-delete"  style="flex:1" onclick="closeEditProfs()">Annuler</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
