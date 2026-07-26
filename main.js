@@ -93,14 +93,8 @@ function initTimeSelects() {
     }
     var s1 = document.getElementById('time-start');
     var s2 = document.getElementById('time-end');
-    if(s1 && s1.options.length === 0) {
-        s1.innerHTML = '<option value="">-- Heure de début --</option>' + opts;
-        s1.value = '';
-    }
-    if(s2 && s2.options.length === 0) {
-        s2.innerHTML = '<option value="">-- Heure de fin --</option>' + opts;
-        s2.value = '';
-    }
+    if(s1 && s1.options.length === 0) { s1.innerHTML = opts; s1.value = '14:00'; }
+    if(s2 && s2.options.length === 0) { s2.innerHTML = opts; s2.value = '16:00'; }
 }
 
 function getSlotForDate(ds) {
@@ -216,13 +210,20 @@ function buildCal(){
         if(selDays.includes(ds)) el.classList.add('sel');
         el.addEventListener('click', function(){ pickDay(ds); });
       }
-      // Indicateur partiel si au moins un slot est déjà pris sur ce jour (nouveau ou ancien format)
+      // Indicateur partiel si au moins un slot est déjà pris sur ce jour
       var hasExisting = (window.BLOCKED_SLOTS_DB && window.BLOCKED_SLOTS_DB.some(function(s){ return s.date===ds; }))
                      || (window.BLOCKED_DATES_LEGACY && window.BLOCKED_DATES_LEGACY.includes(ds));
       if (hasExisting) {
         var dot2 = document.createElement('div');
         dot2.className = 'cd-dot-partial';
         el.appendChild(dot2);
+      }
+      // Indicateur orange si jour en vacances scolaires
+      if (typeof window.estPendantVacances === 'function' && window.estPendantVacances(ds)) {
+        var dotVac = document.createElement('div');
+        dotVac.className = 'cd-dot-vac';
+        el.appendChild(dotVac);
+        el.title = 'Vacances scolaires';
       }
     }
     grid.appendChild(el);
@@ -240,14 +241,6 @@ function pickDay(ds){
       var lbl = selDays.length === 1 ? '1 date sélectionnée' : selDays.length + ' dates sélectionnées';
       document.getElementById('custom-time-title').textContent = lbl;
       document.getElementById('custom-time-panel').classList.add('active');
-      setTimeout(function() {
-        var panel = document.getElementById('custom-time-panel');
-        if(panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 150);
-      setTimeout(function() {
-        var panel = document.getElementById('custom-time-panel');
-        if(panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 150);
 
       // --- LOGIQUE DE BLOCAGE DES OPTIONS ---
       const radioUnique = document.getElementById('radio-unique');
@@ -290,17 +283,12 @@ toggleDateFin();
 
 function validateTimes() {
     var start = document.getElementById('time-start').value;
-    var end   = document.getElementById('time-end').value;
-    if(selDays.length === 0) {
-        setNextBtn(false, 'Sélectionnez une date');
-    } else if(!start) {
-        setNextBtn(false, 'Choisissez une heure de début');
-    } else if(!end) {
-        setNextBtn(false, 'Choisissez une heure de fin');
-    } else if(end <= start) {
-        setNextBtn(false, 'La fin doit être après le début');
-    } else {
+    var end = document.getElementById('time-end').value;
+    
+    if(selDays.length > 0 && start && end && start < end) {
         setNextBtn(true, 'Configurer ma séance');
+    } else {
+        setNextBtn(false, selDays.length === 0 ? 'Sélectionnez une date' : 'Horaires invalides');
     }
 }
 

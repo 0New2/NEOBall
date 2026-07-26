@@ -95,7 +95,7 @@ window.estPendantVacances = function(dateCliqueeStr) {
           window.COMMUNES_DB = communes;
           
           if(typeof refreshMapData === 'function') refreshMapData();
-      } catch (error) { console.log("Erreur communes", error); }
+      } catch (error) { console.log("Erreur communes CODE:", error.code, "MESSAGE:", error.message); }
   }
 
   window.loadReservations();

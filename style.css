@@ -264,6 +264,9 @@ footer span{color:var(--g)}
 .cd.avail{color:var(--blanc);cursor:pointer;background:rgba(0,168,120,.1);border-color:rgba(0,168,120,.25)}
 .cd.avail:hover{background:rgba(0,168,120,.22);border-color:var(--g);transform:scale(1.06)}
 .cd.sel{background:var(--g)!important;border-color:var(--g)!important;color:var(--noir)!important;font-weight:800;transform:scale(1.06)}
+.cd-dot{width:4px;height:4px;border-radius:50%;background:var(--g);margin:1px auto 0;flex-shrink:0}
+.cd-dot-partial{width:4px;height:4px;border-radius:50%;background:#FFB347;margin:1px auto 0;flex-shrink:0}
+.cd-dot-vac{width:5px;height:5px;border-radius:50%;background:#FFB347;margin:1px auto 0;flex-shrink:0}
 
 /* Custom Time Panel */
 .custom-time-panel {margin-top: 1.5rem; background: rgba(0,168,120,.06); border: 1px solid rgba(0,168,120,.2); border-radius: 12px; padding: 1.25rem; display: none;}
