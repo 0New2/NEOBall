@@ -591,11 +591,26 @@ window.VACANCES_SCOLAIRES = [];
               return uniq.length ? `<div class="conflict-badge"><i>⚠️</i><div><strong>Conflit détecté</strong><br>${uniq.join('<br>')}</div></div>` : '';
             })()}
             
-            <div class="card-actions">
-              ${isAttente ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', 'valide')">Valider</button>` : `
-                <button class="btn-action" style="background:rgba(56,189,248,.15);color:#7ab0ff;border:1px solid rgba(56,189,248,.3)" onclick="openEditProfs('${id}','${d.profs||''}')">✏️ Modifier les éducateurs</button>
+            <div class="card-actions" style="display:block">
+              ${isAttente ? `
+                <div style="margin-bottom:.75rem">
+                  <p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.5rem;font-weight:700">Assigner un éducateur</p>
+                  <div class="educ-assign" id="ea-${id}">
+                    <button class="educ-btn kelian" data-name="Kelian Le Guen" onclick="this.classList.toggle('on')">KL · Kelian</button>
+                    <button class="educ-btn lucas"  data-name="Lucas Leone"   onclick="this.classList.toggle('on')">LL · Lucas</button>
+                    <button class="educ-btn luis"   data-name="Luis Ferreira" onclick="this.classList.toggle('on')">LF · Luis</button>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <button class="btn-action btn-approve" onclick="validerResa('${id}','${d.contact_email}','${d.contact_nom}','${d.date_texte||''}','${d.horaires||''}',document.getElementById('ea-${id}'))">&#x2705; Valider</button>
+                  <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
+                </div>
+              ` : `
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <button class="btn-action" style="background:rgba(56,189,248,.15);color:#7ab0ff;border:1px solid rgba(56,189,248,.3)" onclick="openEditProfs('${id}','${d.profs||''}')">&#x270F;&#xFE0F; Modifier</button>
+                  <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
+                </div>
               `}
-              <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
             </div>
           </div>
         `;
