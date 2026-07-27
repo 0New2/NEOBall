@@ -93,8 +93,14 @@ function initTimeSelects() {
     }
     var s1 = document.getElementById('time-start');
     var s2 = document.getElementById('time-end');
-    if(s1 && s1.options.length === 0) { s1.innerHTML = opts; s1.value = '14:00'; }
-    if(s2 && s2.options.length === 0) { s2.innerHTML = opts; s2.value = '16:00'; }
+    if(s1 && s1.options.length === 0) {
+        s1.innerHTML = '<option value="">-- Heure de début --</option>' + opts;
+        s1.value = '';
+    }
+    if(s2 && s2.options.length === 0) {
+        s2.innerHTML = '<option value="">-- Heure de fin --</option>' + opts;
+        s2.value = '';
+    }
 }
 
 function getSlotForDate(ds) {
@@ -210,20 +216,13 @@ function buildCal(){
         if(selDays.includes(ds)) el.classList.add('sel');
         el.addEventListener('click', function(){ pickDay(ds); });
       }
-      // Indicateur partiel si au moins un slot est déjà pris sur ce jour
+      // Indicateur partiel si au moins un slot est déjà pris sur ce jour (nouveau ou ancien format)
       var hasExisting = (window.BLOCKED_SLOTS_DB && window.BLOCKED_SLOTS_DB.some(function(s){ return s.date===ds; }))
                      || (window.BLOCKED_DATES_LEGACY && window.BLOCKED_DATES_LEGACY.includes(ds));
       if (hasExisting) {
         var dot2 = document.createElement('div');
         dot2.className = 'cd-dot-partial';
         el.appendChild(dot2);
-      }
-      // Indicateur orange si jour en vacances scolaires
-      if (typeof window.estPendantVacances === 'function' && window.estPendantVacances(ds)) {
-        var dotVac = document.createElement('div');
-        dotVac.className = 'cd-dot-vac';
-        el.appendChild(dotVac);
-        el.title = 'Vacances scolaires';
       }
     }
     grid.appendChild(el);

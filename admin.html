@@ -83,6 +83,10 @@
   .modal-profs-title { font-family:'Outfit';font-size:1rem;font-weight:800;color:var(--blanc);margin-bottom:1.25rem; }
   .modal-profs-btns { display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem; }
   .modal-profs-actions { display:flex;gap:.75rem; }
+  .type-badge { font-size:.65rem; font-weight:800; text-transform:uppercase; padding:3px 10px; border-radius:50px; letter-spacing:.5px; border:1px solid; display:inline-block; margin-bottom:.6rem; }
+  .type-badge.evenement { background:rgba(100,160,255,.1); color:#7ab0ff; border-color:rgba(100,160,255,.3); }
+  .type-badge.stage { background:rgba(255,179,71,.1); color:#FFB347; border-color:rgba(255,179,71,.3); }
+  .type-badge.regulier { background:rgba(0,168,120,.1); color:var(--g); border-color:rgba(0,168,120,.3); }
   .conflict-badge { background: rgba(220,60,60,.12); color: #ff6b6b; border: 1px solid rgba(220,60,60,.3); border-radius: 10px; padding: .6rem .9rem; font-size: .78rem; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: .5rem; line-height: 1.5; }
   .conflict-badge i { flex-shrink: 0; }
   .btn-approve:hover { background: #00C98E; }
@@ -554,6 +558,7 @@ window.VACANCES_SCOLAIRES = [];
               <h3>${d.contact_commune}</h3>
               <span class="status-badge ${isAttente ? 'attente' : 'valide'}">${isAttente ? 'Demande' : 'Confirmé'}</span>
             </div>
+            ${d.type_resa ? '<span class="type-badge ' + (d.type_resa === 'Stage' ? 'stage' : d.type_resa && d.type_resa.includes('nement') ? 'evenement' : 'regulier') + '">' + (d.type_resa === 'Stage' ? '🏕 Stage' : d.type_resa && d.type_resa.includes('nement') ? '📌 Événement' : '🔁 Séance régulière') + '</span>' : ''}
             
             <div class="info-item"><i>👤</i> <strong>${d.contact_nom}</strong></div>
             <div class="info-item"><i>📞</i> ${d.contact_tel}</div>
@@ -593,26 +598,11 @@ window.VACANCES_SCOLAIRES = [];
               return uniq.length ? `<div class="conflict-badge"><i>⚠️</i><div><strong>Conflit détecté</strong><br>${uniq.join('<br>')}</div></div>` : '';
             })()}
             
-            <div class="card-actions" style="display:block">
-              ${isAttente ? `
-                <div style="margin-bottom:.75rem">
-                  <p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.5rem;font-weight:700">Assigner un éducateur</p>
-                  <div class="educ-assign" id="ea-${id}">
-                    <button class="educ-btn kelian" data-name="Kelian Le Guen" onclick="this.classList.toggle('on')">KL · Kelian</button>
-                    <button class="educ-btn lucas"  data-name="Lucas Leone"   onclick="this.classList.toggle('on')">LL · Lucas</button>
-                    <button class="educ-btn luis"   data-name="Luis Ferreira" onclick="this.classList.toggle('on')">LF · Luis</button>
-                  </div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                  <button class="btn-action btn-approve" onclick="validerResa('${id}','${d.contact_email}','${d.contact_nom}','${d.date_texte||''}','${d.horaires||''}',document.getElementById('ea-${id}'))">&#x2705; Valider</button>
-                  <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
-                </div>
-              ` : `
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                  <button class="btn-action" style="background:rgba(56,189,248,.15);color:#7ab0ff;border:1px solid rgba(56,189,248,.3)" onclick="openEditProfs('${id}','${d.profs||''}')">&#x270F;&#xFE0F; Modifier</button>
-                  <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
-                </div>
+            <div class="card-actions">
+              ${isAttente ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', 'valide')">Valider</button>` : `
+                <button class="btn-action" style="background:rgba(56,189,248,.15);color:#7ab0ff;border:1px solid rgba(56,189,248,.3)" onclick="openEditProfs('${id}','${d.profs||''}')">✏️ Modifier les éducateurs</button>
               `}
+              <button class="btn-action btn-delete" onclick="deleteResa('${id}')">Supprimer</button>
             </div>
           </div>
         `;
