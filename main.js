@@ -224,6 +224,13 @@ function buildCal(){
         dot2.className = 'cd-dot-partial';
         el.appendChild(dot2);
       }
+      // Point orange = vacances scolaires
+      if (typeof window.estPendantVacances === 'function' && window.estPendantVacances(ds)) {
+        var dotVac = document.createElement('div');
+        dotVac.className = 'cd-dot-vac';
+        el.appendChild(dotVac);
+        el.title = 'Vacances scolaires';
+      }
     }
     grid.appendChild(el);
   });
